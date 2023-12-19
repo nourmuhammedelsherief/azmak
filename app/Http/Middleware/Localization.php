@@ -18,12 +18,20 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
-        if ($request->hasHeader("Accept-Language")) {
-            /**
-             * If Accept-Language header found then set it to the default locale
-             */
-            App::setLocale($request->header("Accept-Language"));
-        }
+        if(in_array($request->segment(1) , ['restaurant'])):
+            $lang = session()->has('lang_restaurant') ? session('lang_restaurant') : app()->getLocale();
+            if(!session()->has('lang_restaurant')):
+                session()->put('lang_restaurant' ,$lang );
+            endif;
+
+            app()->setLocale($lang);
+        else:
+
+            if (session()->has('locale')) {
+                App::setLocale(session()->get('locale'));
+            }
+        endif;
+
         return $next($request);
     }
 }

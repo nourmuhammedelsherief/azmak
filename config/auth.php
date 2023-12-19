@@ -45,26 +45,16 @@ return [
             'provider' => 'admins',
             'hash' => false,
         ],
-        'hotel' => [
+        'restaurant' => [
             'driver' => 'session',
-            'provider' => 'hotels',
-            'hash' => false,
+            'provider' => 'restaurants',
         ],
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
         ],
-        'admin-api' => [
-            'driver' => 'token',
-            'provider' => 'admins',
-            'hash' => false,
-        ],
-        'hotel-api' => [
-            'driver' => 'token',
-            'provider' => 'hotels',
-            'hash' => false,
-        ],
+
     ],
 
     /*
@@ -93,9 +83,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'hotels' => [
+        'restaurants' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Hotel::class,
+            'model' => App\Models\Restaurant::class,
         ],
 
         // 'users' => [
@@ -136,9 +126,9 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'hotels' => [
-            'provider' => 'hotels',
-            'table' => 'password_reset_tokens',
+        'restaurants' => [
+            'provider' => 'restaurants',
+            'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Reservation\ReservationBranch;
+use App\Models\Reservation\ReservationTable;
+use App\Models\Waiting\WaitingOrder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
