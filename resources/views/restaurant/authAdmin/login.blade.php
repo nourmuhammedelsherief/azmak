@@ -8,7 +8,7 @@
             font-size: 1rem;
             font-weight: bold;
         }
- 
+
         .btn{
                         background-color:#5d4c72 !important;
                         color:white !important ;
@@ -16,9 +16,9 @@
 
         }
         a{
-           font-family: 'Cairo';  
+           font-family: 'Cairo';
         }
-        
+
         .forget-password ,
         .text-center {
             color :#5d4c72 !important ;
@@ -39,8 +39,8 @@
                                     font-weight:400 !important;;
 
         }
-            
-        
+
+
 </style>
 @endsection
 @section('content')
@@ -60,7 +60,7 @@
                     {{ session('warning_login') }}
                 </div>
             @endif
-            @include('flash::message')
+{{--            @include('flash::message')--}}
             <div class="card-body login-card-body">
                 <p class="login-box-msg">{{ trans('messages.welcome_login_message') }}</p>
                 <form action="{{route('restaurant.login.submit')}}" method="post">
