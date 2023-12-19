@@ -1,0 +1,355 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+
+class Restaurant extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $guard = 'restaurant';
+    protected $table = 'restaurants';
+    protected $fillable = [
+        'restaurant_id',
+        'name_ar',
+        'name_en',
+        'country_id',
+        'city_id',
+        'package_id',
+        'phone_number',
+        'email',
+        'password',
+        'phone_verification',
+        'latitude',
+        'longitude',
+        'status',     //ENUM( 'inComplete','tentative','active','finished' ),
+        'logo',
+        'ar',    // true , false
+        'en',    // true , false
+        'archive',    // true , false
+        'cart',    // true , false
+        'name_barcode', // the name used for barcode,
+        'menu_arrange',
+        'product_arrange',
+        'total_tax_price',
+        'tax_value',
+        'tax',
+        'tax_foodics_id',
+        'foodics_charge_id',
+        'information_ar',
+        'information_en',
+        'description_ar',
+        'description_en',
+        'views',
+        'myfatoora_token',
+        'show_branches_list',
+        'menu',        // ENUM('vertical','horizontal'),
+        'state',       // ENUM('open','closed','busy' , 'un_available')
+        'enable_feedback',
+        'foodics_status', // Emun (true,false)
+        'foodics_referance',
+        'foodics_state',
+        'foodics_access_token', // text
+        'delivery_price',     // delivery price used for foodics deliveries
+        'enable_bank', // Emun (true,false)
+        'enable_reservation_online_pay', 'enable_reservation_bank',
+        'enable_online_payment', // Emun (true,false)
+        'reservation_description_ar',
+        'reservation_description_en',
+        'reservation_service',     // true , false
+        'answer_id',
+        'orders',
+        'foodics_orders',
+        'whatsapp_orders',
+        'enable_fixed_category',  //true , false
+        'enable_contact_us',  //true , false
+        'enable_reservation_cash', //true , false
+        'default_lang',
+        'is_call_phone', //true , false
+        'is_whatsapp', //true , false
+        'call_phone',
+        'whatsapp_number',
+        'payment_company',
+        'online_token',
+        'theme_id',
+        'archive_category_id',
+        'merchant_key',
+        'express_password',
+        'stop_menu',
+        'admin_activation',
+        'type',   // restaurant , employee
+        'online_payment_fees',
+        'last_session',
+        'reservation_to_restaurant', // true , false
+        'last_activity',
+        'reservation_call_number', 'reservation_is_call_phone', 'reservation_whatsapp_number', 'reservation_tax_value', 'reservation_is_whatsapp', 'reservation_tax',
+        'enable_loyalty_point', // true, false
+        'enable_loyalty_point_paymet_method', //true , false
+        'header', 'footer',
+        'sms_method', // enum [taqnyat]
+        'sms_sender',  'sms_token',
+        'slider_down_contact_us_title',
+        'archive_reason', 'archived_by_id',
+        'enable_party_payment_bank',  // enum [true , false]
+        'enable_party_payment_online',  // enum [true , false]
+        'enable_party', // enum [true , false]
+        'reservation_title_ar', 'reservation_title_en', 'party_description_ar', 'party_description_en', 'enable_party_payment_cash', // enum [true , false]
+        'party_to_restaurant', 'party_is_call_phone', 'party_is_whatsapp', 'party_tax', 'party_tax_value', 'party_call_phone', 'party_whatsapp_number',
+        'product_menu_view',
+        'enable_reservation_email_notification', // enum [true , false]
+        'reservation_sms_otp', 'reservation_sms_success', // enum [true , false]
+        'reservation_email_notification',
+        'enable_party_email_notification', // enum [true , false]
+        'party_email_notification',
+        'enable_waiter', // enum [true , false]
+        'bio_description_ar', 'bio_description_en', // description of restaurant show in bio links
+        'waiting_progress_time', 'waiting_max_new_request', 'waiting_new_request', 'waiting_alert_type', 'enable_waiting', 'waiting_privacy_en', 'waiting_privacy_ar',
+        'lucky_day_wins_count', 'enable_lucky_wheel',
+        'enable_loyalty_offer', 'enable_contact_us_links' ,
+    ];
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+    protected $casts = [
+        'waiting_new_request' => 'json',
+    ];
+    public function getImagePathAttribute()
+    {
+        return 'uploads/restaurants/logo/' . $this->logo;
+    }
+    public function getBioDescriptionAttribute()
+    {
+        return app()->getLocale() == 'ar' ? $this->bio_description_ar : $this->bio_description_en;
+    }
+    public function getNameAttribute()
+    {
+        return app()->getLocale() == 'en' ? $this->name_en : $this->name_ar;
+    }
+    public function getDescriptionAttribute()
+    {
+        return app()->getLocale() == 'en' ? $this->description_en : $this->description_ar;
+    }
+    public function getWaitingPrivacyAttribute()
+    {
+        return app()->getLocale() == 'en' ? $this->waiting_privacy_en : $this->waiting_privacy_ar;
+    }
+    public function getReservationTitleAttribute()
+    {
+        return app()->getLocale() == 'en' ? $this->reservation_title_en : $this->reservation_title_ar;
+    }
+    public function getPartyDescriptionAttribute()
+    {
+        return app()->getLocale() == 'en' ? $this->party_description_en : $this->party_description_ar;
+    }
+    public function archiveBy()
+    {
+        return $this->belongsTo(Admin::class, 'archived_by_id');
+    }
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+    public function package()
+    {
+        return $this->belongsTo(Package::class, 'package_id');
+    }
+    public function archiveCategory()
+    {
+        return $this->belongsTo(ArchiveCategory::class, 'archive_category_id');
+    }
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class, 'restaurant_id');
+    }
+    public function marketerOperations()
+    {
+        return $this->hasMany(MarketerOperation::class, 'restaurant_id');
+    }
+
+    public function color()
+    {
+        return $this->hasOne(RestaurantColors::class, 'restaurant_id');
+    }
+    public function bio_color()
+    {
+        return $this->hasOne(RestaurantBioColor::class, 'restaurant_id');
+    }
+    public function menu_categories()
+    {
+        return $this->hasMany(MenuCategory::class, 'restaurant_id');
+    }
+    public function restaurantCategories()
+    {
+        return $this->belongsToMany(Category::class, 'restaurant_categories', 'restaurant_id', 'category_id');
+    }
+    public function branches()
+    {
+        return $this->hasMany(Branch::class, 'restaurant_id');
+    }
+    public function tables()
+    {
+        return $this->hasMany(Table::class, 'restaurant_id');
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'restaurant_id');
+    }
+    public function deliveries()
+    {
+        return $this->hasMany(RestaurantDelivery::class, 'restaurant_id');
+    }
+    public function socials()
+    {
+        return $this->hasMany(RestaurantSocial::class, 'restaurant_id');
+    }
+    public function sensitivities()
+    {
+        return $this->hasMany(RestaurantSensitivity::class, 'restaurant_id');
+    }
+    public function offers()
+    {
+        return $this->hasMany(RestaurantOffer::class, 'restaurant_id');
+    }
+    public function sliders()
+    {
+        return $this->hasMany(RestaurantSlider::class, 'restaurant_id');
+    }
+    public function res_branches()
+    {
+        return $this->hasMany(RestaurantBranch::class, 'restaurant_id');
+    }
+    public function notes()
+    {
+        return $this->hasMany(AdminNote::class, 'restaurant_id');
+    }
+
+    public function rateBranches()
+    {
+        return $this->hasMany(RestaurantFeedbackBranch::class, 'restaurant_id');
+    }
+
+
+    public function serviceSubscriptions()
+    {
+        return $this->hasMany(ServiceSubscription::class);
+    }
+    public function banks()
+    {
+        return $this->hasMany(Bank::class, 'restaurant_id');
+    }
+
+    public function reservationBranches()
+    {
+        return $this->hasMany(ReservationBranch::class, 'restaurant_id');
+    }
+
+    public function reservationTables()
+    {
+        return $this->hasMany(ReservationTable::class, 'restaurant_id');
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'restaurant_id');
+    }
+
+    public function posters()
+    {
+        return $this->hasMany(RestaurantPoster::class, 'restaurant_id');
+    }
+    public function answer()
+    {
+        return $this->belongsTo(RegisterAnswers::class, 'answer_id');
+    }
+    public function contactUsItems()
+    {
+        return $this->hasMany(RestaurantContactUs::class, 'restaurant_id');
+    }
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'restaurant_id');
+    }
+    public function theme()
+    {
+        return $this->belongsTo(Theme::class, 'theme_id');
+    }
+    public function controls()
+    {
+        return $this->hasMany(RestaurantControl::class, 'restaurant_id');
+    }
+    public function loyaltyPointPrices()
+    {
+        return $this->hasMany(LoyaltyPointPrice::class, 'restaurant_id');
+    }
+    public function icons()
+    {
+        return $this->hasMany(RestaurantIcon::class, 'restaurant_id');
+    }
+    public function parties()
+    {
+        return $this->hasMany(Party::class, 'restaurant_id');
+    }
+    public function partyBranches()
+    {
+        return $this->hasMany(PartyBranch::class, 'restaurant_id');
+    }
+    public function partyOrder()
+    {
+        return $this->hasMany(PartyOrder::class, 'restaurant_id');
+    }
+    public function waiterItems()
+    {
+        return $this->hasMany(WaiterItem::class, 'restaurant_id');
+    }
+
+    public function waiterOrders()
+    {
+        return $this->hasMany(WaiterOrder::class, 'restaurant_id');
+    }
+    public function waitingOrders()
+    {
+        return $this->hasMany(WaitingOrder::class, 'restaurant_id');
+    }
+
+    public function getRealStatus()
+    {
+        $cNow =  Carbon::now()->addDays(30);
+        $subscription = $this->subscription()->where('package_id', 1)
+            ->where('type', 'restaurant')
+            // ->whereDate('end_at', '>=', Carbon::now()->addDays(30))
+            ->orderBy('created_at', 'desc')->first();
+        if ($this->status == 'active' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'active' and $cNow->lessThanOrEqualTo(Carbon::parse($subscription->end_at))) :
+            $status = 'active';
+        elseif ($this->status == 'tentative' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'tentative_finished') :
+            $status = 'tentative_finished';
+        elseif ($this->status == 'tentative' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'tentative') :
+            $status = 'tentative';
+        elseif ($this->status == 'finished' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'finished') :
+            $status = 'finished';
+
+        elseif ($this->status == 'active' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'active' and $cNow->greaterThanOrEqualTo(Carbon::parse($subscription->end_at))) :
+            $status = 'less_30_day';
+        elseif ($this->status == 'inComplete' and $this->archive == 'false') :
+            $status = 'inComplete';
+        elseif ($this->archive == 'true') :
+            $status = 'archived';
+        elseif ($this->archive == 'false' and $this->status != 'inComplete' and $this->admin_activation == 'false') :
+            $status = 'inActive';
+
+        else :
+            $status = $this->status . ' - ' . $subscription->status . ' - ' . $this->archive . ' - ' . $this->admin_activation;
+        endif;
+        return $status;
+    }
+}
