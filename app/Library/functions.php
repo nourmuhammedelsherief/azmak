@@ -253,57 +253,57 @@ function UploadVideoEdit($file, $old)
         return $filename;
     }
 }
-function UploadImageEdit($inputRequest, $prefix, $folderName, $oldImage, $height = null, $width = 1500)
-{
-    $allowedImages = ['logo.png', 'slider2.png', 'slider1.png', 'fish.png', 'egg.png', 'hop.png', 'aqra.png', 'milk.png', 'kardal.png', 'raky.png', 'butter.png', 'capret.png', 'rfs.png', 'kago.png', 'smsm.png', 'soia.png', 'terms.png'];
+//function UploadImageEdit($inputRequest, $prefix, $folderName, $oldImage, $height = null, $width = 1500)
+//{
+//    $allowedImages = ['logo.png', 'slider2.png', 'slider1.png', 'fish.png', 'egg.png', 'hop.png', 'aqra.png', 'milk.png', 'kardal.png', 'raky.png', 'butter.png', 'capret.png', 'rfs.png', 'kago.png', 'smsm.png', 'soia.png', 'terms.png'];
+//
+//    if (!in_array($oldImage, $allowedImages)) {
+//        Storage::disk('public_storage')->delete($folderName . '/' . $oldImage);
+//    }
+//
+//    $path = public_path($folderName);
+//    if (!file_exists($path)) {
+//        File::makeDirectory($path, 0777, true, true);
+//    }
+//
+//    if ($inputRequest->getClientOriginalExtension() === 'gif') {
+//        return basename(Storage::disk('public_storage')->put($folderName, $inputRequest));
+//    }
+//
+//    $image = uniqid() . '.' . $inputRequest->getClientOriginalExtension();
+//    $destinationPath = public_path($folderName);
+//    $img = Image::make($inputRequest->getRealPath());
+//    $img->resize($height, $width, function ($constraint) {
+//        $constraint->aspectRatio();
+//        // $constraint->upsize();
+//    })->save($destinationPath . '/' . $image);
+//
+//    return $image ? $image : false;
+//}
+ function UploadImageEdit($inputRequest, $prefix, $folderNam, $oldImage, $height = null, $width = 1500)
+ {
+     if ($oldImage != 'logo.png' && $oldImage != 'slider2.png' && $oldImage != 'slider1.png' && $oldImage != 'fish.png' && $oldImage != 'egg.png' && $oldImage != 'hop.png' && $oldImage != 'aqra.png' && $oldImage != 'milk.png' && $oldImage != 'kardal.png' && $oldImage != 'raky.png' && $oldImage != 'butter.png' && $oldImage != 'capret.png' && $oldImage != 'rfs.png' && $oldImage != 'kago.png' && $oldImage != 'smsm.png' && $oldImage != 'soia.png' && $oldImage != 'terms.png' ) {
+         // if(Storage::disk('public_storage')->exists('/' . $folderNam . '/' . $oldImage))
+         @unlink(public_path('/' . $folderNam . '/' . $oldImage));
+     }
+     $path = public_path() . $folderNam;
 
-    if (!in_array($oldImage, $allowedImages)) {
-        Storage::disk('public_storage')->delete($folderName . '/' . $oldImage);
-    }
 
-    $path = public_path($folderName);
-    if (!file_exists($path)) {
-        File::makeDirectory($path, 0777, true, true);
-    }
-
-    if ($inputRequest->getClientOriginalExtension() === 'gif') {
-        return basename(Storage::disk('public_storage')->put($folderName, $inputRequest));
-    }
-
-    $image = uniqid() . '.' . $inputRequest->getClientOriginalExtension();
-    $destinationPath = public_path($folderName);
-    $img = Image::make($inputRequest->getRealPath());
-    $img->resize($height, $width, function ($constraint) {
-        $constraint->aspectRatio();
-        // $constraint->upsize();
-    })->save($destinationPath . '/' . $image);
-
-    return $image ? $image : false;
-}
-// function UploadImageEdit($inputRequest, $prefix, $folderNam, $oldImage, $height = null, $width = 1500)
-// {
-//     if ($oldImage != 'logo.png' && $oldImage != 'slider2.png' && $oldImage != 'slider1.png' && $oldImage != 'fish.png' && $oldImage != 'egg.png' && $oldImage != 'hop.png' && $oldImage != 'aqra.png' && $oldImage != 'milk.png' && $oldImage != 'kardal.png' && $oldImage != 'raky.png' && $oldImage != 'butter.png' && $oldImage != 'capret.png' && $oldImage != 'rfs.png' && $oldImage != 'kago.png' && $oldImage != 'smsm.png' && $oldImage != 'soia.png' && $oldImage != 'terms.png' ) {
-//         // if(Storage::disk('public_storage')->exists('/' . $folderNam . '/' . $oldImage))
-//         @unlink(public_path('/' . $folderNam . '/' . $oldImage));
-//     }
-//     $path = public_path() . $folderNam;
-
-
-//     if (!file_exists($path)) :
-//         File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
-//     endif;
-//     if (in_array($inputRequest->getClientOriginalExtension(), ['gif'])) {
-//         return basename(Storage::disk('public_storage')->put($folderNam, $inputRequest));
-//     }
-//     $image = time() . '' . rand(11111, 99999) . '.' . $inputRequest->getClientOriginalExtension();
-//     $destinationPath = public_path('/' . $folderNam);
-//     $img = Image::make($inputRequest->getRealPath());
-//     $img->resize($height, $width, function ($constraint) {
-//         $constraint->aspectRatio();
-//         // $constraint->upsize();
-//     })->save($destinationPath . '/' . $image);
-//     return $image ? $image : false;
-// }
+     if (!file_exists($path)) :
+         File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
+     endif;
+     if (in_array($inputRequest->getClientOriginalExtension(), ['gif'])) {
+         return basename(Storage::disk('public_storage')->put($folderNam, $inputRequest));
+     }
+     $image = time() . '' . rand(11111, 99999) . '.' . $inputRequest->getClientOriginalExtension();
+     $destinationPath = public_path('/' . $folderNam);
+     $img = Image::make($inputRequest->getRealPath());
+     $img->resize($height, $width, function ($constraint) {
+         $constraint->aspectRatio();
+         // $constraint->upsize();
+     })->save($destinationPath . '/' . $image);
+     return $image ? $image : false;
+ }
 
 
 

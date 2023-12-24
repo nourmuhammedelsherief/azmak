@@ -4,12 +4,9 @@ namespace App\Http\Controllers\RestaurantController;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
-use App\Models\Branch;
-use App\Models\Country;
+use App\Models\Restaurant\Azmak\AZBranch;
 use App\Models\CountryPackage;
-use App\Models\FoodicsDiscount;
 use App\Models\History;
-use App\Models\MarketerOperation;
 use App\Models\MenuCategory;
 use App\Models\MenuCategoryDay;
 use App\Models\Package;
@@ -53,9 +50,7 @@ class BranchController extends Controller
             endif;
             $user = Restaurant::find($user->restaurant_id);
         endif;
-        $branches = Branch::whereRestaurantId($user->id)
-            ->whereIn('status', ['active', 'finished', 'tentative', 'tentative_finished'])
-            ->orderBy('main', 'asc')
+        $branches = AZBranch::whereRestaurantId($user->id)
             ->orderBy('id', 'desc')
             ->paginate(500);
         return view('restaurant.branches.index', compact('branches'));
@@ -71,8 +66,7 @@ class BranchController extends Controller
         if (!auth('restaurant')->check()) :
             return redirect(url('restaurant/login'));
         endif;
-        $countries = Country::where('active', 'true')->get();
-        return view('restaurant.branches.create', compact('countries'));
+        return view('restaurant.branches.create');
     }
 
     /**
@@ -87,11 +81,8 @@ class BranchController extends Controller
             return redirect(url('restaurant/login'));
         endif;
         $this->validate($request, [
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
             'name_ar' => 'nullable|string|max:191',
-            'name_en' => 'nullable|string|max:191|unique:branches',
-            //            'name_barcode' => 'required|string|max:191|unique:branches',
+            'name_en' => 'nullable|string|max:191|unique:a_z_branches',
         ]);
         if ($request->name_ar == null && $request->name_en == null) {
             flash(trans('messages.name_required'))->error();
@@ -106,31 +97,30 @@ class BranchController extends Controller
             $user = Restaurant::find($user->restaurant_id);
         endif;
         $barcode = str_replace(' ', '-', $request->name_en);
-        $package = Package::find(1);
-        $branch = Branch::create([
+        $branch = AZBranch::create([
             'restaurant_id' => $user->id,
-            'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
+//            'country_id' => $request->country_id,
+//            'city_id' => $request->city_id,
             'name_ar' => $request->name_ar,
             'name_en' => $request->name_en,
-            'name_barcode' => $barcode,
-            'status' => 'tentative',
-            'main' => 'false',
-            'description_ar' => $request->description_ar,
-            'description_en' => $request->description_en,
+//            'name_barcode' => $barcode,
+//            'status' => 'tentative',
+//            'main' => 'false',
+//            'description_ar' => $request->description_ar,
+//            'description_en' => $request->description_en,
         ]);
-        $end_at = Carbon::now()->addDays(Setting::first()->branch_service_tentative_period);
-        Subscription::create([
-            'package_id' => $package->id,
-            'restaurant_id' => $user->id,
-            'branch_id' => $branch->id,
-            'price' => 0,
-            'status' => 'tentative',
-            'type' => 'branch',
-            'tax_value' => 0,
-            'discount_value' => 0,
-            'end_at' => $end_at,
-        ]);
+//        $end_at = Carbon::now()->addDays(Setting::first()->branch_service_tentative_period);
+//        Subscription::create([
+//            'package_id' => $package->id,
+//            'restaurant_id' => $user->id,
+//            'branch_id' => $branch->id,
+//            'price' => 0,
+//            'status' => 'tentative',
+//            'type' => 'branch',
+//            'tax_value' => 0,
+//            'discount_value' => 0,
+//            'end_at' => $end_at,
+//        ]);
         flash(trans('messages.created'))->success();
         return redirect()->route('branches.index');
     }
@@ -349,9 +339,8 @@ class BranchController extends Controller
         if (!auth('admin')->check() and !auth('restaurant')->check()) :
             return redirect(url('restaurant/login'));
         endif;
-        $branch = Branch::findOrFail($id);
-        $countries = Country::where('active', 'true')->get();
-        return view('restaurant.branches.edit', compact('countries', 'branch'));
+        $branch = AZBranch::findOrFail($id);
+        return view('restaurant.branches.edit', compact('branch'));
     }
 
     /**
@@ -366,18 +355,18 @@ class BranchController extends Controller
         if (!auth('admin')->check() and !auth('restaurant')->check()) :
             return redirect(url('restaurant/login'));
         endif;
-        $branch = Branch::findOrFail($id);
+        $branch = AZBranch::findOrFail($id);
         $this->validate($request, [
-            'city_id' => 'required|exists:cities,id',
+//            'city_id' => 'required|exists:cities,id',
             'name_ar' => 'nullable|string|max:191',
-            'name_en' => 'nullable|string|max:191|unique:branches,name_barcode,' . $id,
-            'tax' => 'required|in:true,false',
-            'total_tax_price' => 'required|in:true,false',
-            'tax_value' => "required_if:tax,==,ture",
-            'state' => 'required|in:open,closed,busy,unspecified',
-            'tax_number' => 'nullable|max:191',
-            'description_ar' => 'nullable|min:1',
-            'description_en' => 'nullable|min:1',
+            'name_en' => 'nullable|string|max:191|unique:a_z_branches,name_en,' . $id,
+//            'tax' => 'required|in:true,false',
+//            'total_tax_price' => 'required|in:true,false',
+//            'tax_value' => "required_if:tax,==,ture",
+//            'state' => 'required|in:open,closed,busy,unspecified',
+//            'tax_number' => 'nullable|max:191',
+//            'description_ar' => 'nullable|min:1',
+//            'description_en' => 'nullable|min:1',
             //            'name_barcode' => 'required|string|max:191|unique:branches,name_barcode,' . $id,
         ]);
         if ($request->name_ar == null && $request->name_en == null) {
@@ -385,42 +374,11 @@ class BranchController extends Controller
             return redirect()->back();
         }
         //        $barcode = str_replace(' ', '-', $request->name_en);
-        if ($branch->foodics_status == 'true') {
-            $branch->update([
-                'city_id' => $request->city_id,
-                'name_ar' => $request->name_ar,
-                'name_en' => $request->name_en,
-                'total_tax_price' => $request->total_tax_price,
-                'tax_number' => $request->tax_number == null ? null : $request->tax_number,
-                'state' => $request->state,
-                'description_ar' => $request->description_ar,
-                'description_en' => $request->description_en,
-                //            'name_barcode' => $barcode,
-            ]);
-        } else {
-            $branch->update([
-                'city_id' => $request->city_id,
-                'name_ar' => $request->name_ar,
-                'name_en' => $request->name_en,
-                'total_tax_price' => $request->total_tax_price,
-                'tax' => $request->tax,
-                'tax_value' => $request->tax_value,
-                'state' => $request->state,
-                'tax_number' => $request->tax_number == null ? null : $request->tax_number,
-                'description_ar' => $request->description_ar,
-                'description_en' => $request->description_en,
-                //            'name_barcode' => $barcode,
-            ]);
-        }
-        if ($branch->main == 'true') {
-            //            $barcode = str_replace(' ', '-', $request->name_en);
-            $branch->restaurant->update([
-                'city_id' => $request->city_id,
-                //                'name_ar' => $request->name_ar,
-                //                'name_en' => $request->name_en,
-                //                'name_barcode' => $barcode,
-            ]);
-        }
+        $branch->update([
+            'name_ar' => $request->name_ar,
+            'name_en' => $request->name_en,
+            //            'name_barcode' => $barcode,
+        ]);
         flash(trans('messages.updated'))->success();
         return redirect()->route('branches.index');
     }
@@ -436,7 +394,7 @@ class BranchController extends Controller
         if (!auth('admin')->check() and !auth('restaurant')->check()) :
             return redirect(url('restaurant/login'));
         endif;
-        $branch = Branch::findOrFail($id);
+        $branch = AZBranch::findOrFail($id);
         $branch->delete();
         flash(trans('messages.deleted'))->success();
         return redirect()->to(url()->previous());
