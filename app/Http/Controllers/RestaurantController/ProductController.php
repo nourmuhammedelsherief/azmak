@@ -3,11 +3,6 @@
 namespace App\Http\Controllers\RestaurantController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Branch;
-use App\Models\MenuCategory;
-use App\Models\Product;
-use App\Models\ProductDay;
-use App\Models\ProductSensitivity;
 use App\Models\Restaurant;
 use App\Models\RestaurantPoster;
 use App\Models\RestaurantSensitivity;
@@ -21,6 +16,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use App\Models\Restaurant\Azmak\AZMenuCategory;
+use App\Models\Restaurant\Azmak\AZBranch;
+use App\Models\Restaurant\Azmak\AZProduct;
+use App\Models\Restaurant\Azmak\AZProductDay;
+use App\Models\Restaurant\Azmak\AZProductSensitivity;
+use App\Models\Restaurant\Azmak\AZMenuCategoryDay;
+use App\Models\Restaurant\Azmak\AZRestaurantSubCategory;
 
 class ProductController extends Controller
 {
@@ -46,9 +48,8 @@ class ProductController extends Controller
         if ($restaurant->status == 'finished' or $restaurant->subscription->status == 'tentative_finished') {
             return redirect()->route('RestaurantProfile');
         }
-        $products = Product::whereRestaurantId($restaurant->id)->paginate(500);
-        $branches = Branch::whereRestaurantId($restaurant->id)
-            ->whereIn('status', ['active', 'tentative'])
+        $products = AZProduct::whereRestaurantId($restaurant->id)->paginate(500);
+        $branches = AZBranch::whereRestaurantId($restaurant->id)
             ->get();
         $this->deleteTemporaryFiles();
         return view('restaurant.products.index', compact('products', 'branches'));
@@ -62,11 +63,10 @@ class ProductController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $products = Product::whereRestaurantId($restaurant->id)
+        $products = AZProduct::whereRestaurantId($restaurant->id)
             ->where('branch_id', $id)
             ->paginate(500);
-        $branches = Branch::whereRestaurantId($restaurant->id)
-            ->whereIn('status', ['active', 'tentative'])
+        $branches = AZBranch::whereRestaurantId($restaurant->id)
             ->get();
         return view('restaurant.products.index', compact('products', 'branches'));
     }
@@ -85,19 +85,16 @@ class ProductController extends Controller
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
         $restaurant = Restaurant::whereId($restaurant->id)->firstOrFail();
-        $branches = Branch::whereRestaurantId($restaurant->id)
-            ->whereIn('status', ['active', 'tentative'])
-            ->where('foodics_status', 'false')
+        $branches = AZBranch::whereRestaurantId($restaurant->id)
             ->get();
-        //        $categories = MenuCategory::whereRestaurantId(Auth::guard('restaurant')->user()->id)->get();
         $posters = RestaurantPoster::whereRestaurantId($restaurant->id)->get();
         $sensitivities = RestaurantSensitivity::whereRestaurantId($restaurant->id)->get();
         $branchesSubscription = ServiceSubscription::whereRestaurantId(auth('restaurant')->id())->whereHas('service', function ($query) {
             $query->where('id', 11);
         })
             ->whereIn('status', ['active', 'tentative'])->get()->pluck('branch_id')->toArray();
-
-        return view('restaurant.products.create', compact('branches', 'sensitivities', 'restaurant', 'posters', 'branchesSubscription'));
+        $categories = AZMenuCategory::whereRestaurantId($restaurant->id)->get();
+        return view('restaurant.products.create', compact('branches', 'categories','sensitivities', 'restaurant', 'posters', 'branchesSubscription'));
     }
     protected function deleteTemporaryFiles()
     {
@@ -139,11 +136,11 @@ class ProductController extends Controller
             // return redirect()->back();
         }
         $this->validate($request, [
-            'branch_id'         => 'required|exists:branches,id',
+            'branch_id'         => 'required|exists:a_z_branches,id',
             'menu_category_id'  => 'required',
-            'menu_category_id*' => 'exists:menu_categories,id',
+            'menu_category_id*' => 'exists:a_z_menu_categories,id',
             'poster_id'         => 'nullable|exists:restaurant_posters,id',
-            'sub_category_id'   => 'nullable|exists:restaurant_sub_categories,id',
+            'sub_category_id'   => 'nullable|exists:a_z_restaurant_sub_categories,id',
             'name_ar'           => 'nullable|string|max:191',
             'name_en'           => 'nullable|string|max:191',
             'description_ar'    => 'nullable|string',
@@ -152,7 +149,7 @@ class ProductController extends Controller
             'price_before_discount' => 'nullable|numeric',
             'calories'          => 'nullable|numeric',
             'image_name' => 'nullable|min:1|max:190',
-            // 'photo'             => 'nullable|mimes:jpg,jpeg,png,gig,tif,psd,pmp,webp|max:10000',
+            'photo'             => 'nullable|mimes:jpg,jpeg,png,gig,tif,psd,pmp,webp|max:10000',
             'loyalty_points' => 'nullable|integer|min:1',
             'start_at' => 'sometimes',
             'end_at' => 'sometimes',
@@ -176,7 +173,7 @@ class ProductController extends Controller
                 endif;
                 // return $image;
                 // create new product
-                $product = Product::create([
+                $product = AZProduct::create([
                     'restaurant_id'     => $restaurant->id,
                     'branch_id'         => $request->branch_id,
                     'menu_category_id'  => $menu_category_id,
@@ -194,18 +191,17 @@ class ProductController extends Controller
                     'end_at'            => $request->end_at,
                     'loyalty_points' => $request->loyalty_points,
                     'time'              => $request->time == null ? 'false' : $request->time,
-                    'photo'             => $request->video_type == 'gif' ? $image : $request->image_name,
                     'video_type' => $request->video_type,
                     'video_id' => $request->video_type == 'local_video' ? $request->video_path : $request->video_id,
-                    // 'photo'             => $request->file('photo') == null ? 'default.png' : UploadImage($request->file('photo'),'photo' , '/uploads/products')
+                    'photo'             => $request->video_type == 'gif' ? $image : ($request->file('photo') == null ? 'default.png' : UploadImage($request->file('photo'),'photo' , '/uploads/products'))
                 ]);
                 if (isset($tempVideo->id)) {
                     $tempVideo->delete();
                 }
                 if ($request->time == 'true' && $request->day_id != null) {
-                    ProductDay::where('product_id', $product->id)->delete();
+                    AZProductDay::where('product_id', $product->id)->delete();
                     foreach ($request->day_id as $day) {
-                        ProductDay::create([
+                        AZProductDay::create([
                             'product_id' => $product->id,
                             'day_id'           => $day,
                         ]);
@@ -215,7 +211,7 @@ class ProductController extends Controller
                 if ($request->sensitivity_id != null) {
                     foreach ($request->sensitivity_id as $sen_id) {
                         // create product sensitivities
-                        ProductSensitivity::create([
+                        AZProductSensitivity::create([
                             'product_id'     => $product->id,
                             'sensitivity_id' => $sen_id,
                         ]);
@@ -256,15 +252,12 @@ class ProductController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         if ($product->branch->foodics_status == 'true') {
-            $branches = Branch::whereRestaurantId($restaurant->id)
-                ->whereIn('status', ['active', 'tentative'])
+            $branches = AZBranch::whereRestaurantId($restaurant->id)
                 ->get();
         } else {
-            $branches = Branch::whereRestaurantId($restaurant->id)
-                ->whereIn('status', ['active', 'tentative'])
-                ->where('foodics_status', 'false')
+            $branches = AZBranch::whereRestaurantId($restaurant->id)
                 ->get();
         }
         $posters = RestaurantPoster::whereRestaurantId($restaurant->id)->get();
@@ -274,7 +267,8 @@ class ProductController extends Controller
             $query->where('id', 11);
         })
             ->whereIn('status', ['active', 'tentative'])->get()->pluck('branch_id')->toArray();
-        return view('restaurant.products.edit', compact('branches', 'sensitivities', 'product', 'posters', 'branchesSubscription'));
+        $cats = AZMenuCategory::whereBranchId($product->branch->id)->get();
+        return view('restaurant.products.edit', compact('branches', 'cats', 'sensitivities', 'product', 'posters', 'branchesSubscription'));
     }
 
     /**
@@ -293,57 +287,37 @@ class ProductController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         // return $request->all();
         if ($request->video_type == 'local_video' and empty($product->video_id)) {
             flash('يرجي ارفاق الفيديو اولا !!')->error();
             return redirect()->back();
         }
-        if ($product->branch->foodics_status == 'true') {
-            $this->validate($request, [
-                'poster_id'         => 'nullable|integer|exists:restaurant_posters,id',
-                'sub_category_id'   => 'nullable|exists:restaurant_sub_categories,id',
-                'description_ar'    => 'nullable|string',
-                'description_en'    => 'nullable|string',
-                'price_before_discount' => 'nullable|numeric',
-                'calories'          => 'nullable|numeric',
-                //            'active'            => 'required|in:true,false',
-                'photo'             => 'nullable|mimes:jpg,jpeg,png,gig,gif,tif,psd,pmp,webp|max:20000',
-                'start_at' => 'sometimes',
-                'end_at' => 'sometimes',
-                'time' => 'sometimes|in:true,false',
-                'sensitivity_id' => 'nullable',
-                'loyalty_points' => 'nullable|integer|min:1',
-                'video_id' => 'nullable|min:1|max:190',
-                'video_type' => 'nullable|in:local_video,youtube,gif'
-            ]);
-        } else {
-            $this->validate($request, [
-                'branch_id'         => 'required|exists:branches,id',
-                'menu_category_id'  => 'required|exists:menu_categories,id',
-                'poster_id'         => 'nullable|exists:restaurant_posters,id',
-                'sub_category_id'   => 'nullable|exists:restaurant_sub_categories,id',
-                'name_ar'           => 'nullable|string|max:191',
-                'name_en'           => 'nullable|string|max:191',
-                'description_ar'    => 'nullable|string',
-                'description_en'    => 'nullable|string',
-                'loyalty_points' => 'nullable|integer|min:1',
-                'price'             => 'required|numeric',
-                'price_before_discount' => 'nullable|numeric',
-                'calories'          => 'nullable|numeric',
-                //            'active'            => 'required|in:true,false',
-                'photo'             => 'nullable|mimes:jpg,jpeg,png,gig,gif,tif,psd,pmp,webp|max:20000',
-                'start_at' => 'sometimes',
-                'end_at' => 'sometimes',
-                'time' => 'sometimes|in:true,false',
-                'sensitivity_id' => 'nullable',
-                'video_id' => 'nullable|min:1|max:190',
-                'video_type' => 'nullable|in:local_video,youtube,gif'
-            ]);
-            if ($request->name_ar == null && $request->name_en == null) {
-                flash(trans('messages.name_required'))->error();
-                return redirect()->back();
-            }
+        $this->validate($request, [
+            'branch_id'         => 'required|exists:a_z_branches,id',
+            'menu_category_id'  => 'required|exists:a_z_menu_categories,id',
+            'poster_id'         => 'nullable|exists:restaurant_posters,id',
+            'sub_category_id'   => 'nullable|exists:a_z_restaurant_sub_categories,id',
+            'name_ar'           => 'nullable|string|max:191',
+            'name_en'           => 'nullable|string|max:191',
+            'description_ar'    => 'nullable|string',
+            'description_en'    => 'nullable|string',
+            'loyalty_points' => 'nullable|integer|min:1',
+            'price'             => 'required|numeric',
+            'price_before_discount' => 'nullable|numeric',
+            'calories'          => 'nullable|numeric',
+            //            'active'            => 'required|in:true,false',
+            'photo'             => 'nullable|mimes:jpg,jpeg,png,gig,gif,tif,psd,pmp,webp|max:20000',
+            'start_at' => 'sometimes',
+            'end_at' => 'sometimes',
+            'time' => 'sometimes|in:true,false',
+            'sensitivity_id' => 'nullable',
+            'video_id' => 'nullable|min:1|max:190',
+            'video_type' => 'nullable|in:local_video,youtube,gif'
+        ]);
+        if ($request->name_ar == null && $request->name_en == null) {
+            flash(trans('messages.name_required'))->error();
+            return redirect()->back();
         }
         //        if ($request->description_ar == null && $request->description_en == null)
         //        {
@@ -369,52 +343,32 @@ class ProductController extends Controller
             }
 
         endif;
-        //    return $request->all();
-        if ($product->branch->foodics_status == 'true') {
-            $product->update([
-                'poster_id'         => $request->poster_id,
-                'sub_category_id'   => $request->sub_category_id,
-                'description_ar'    => $request->description_ar,
-                'description_en'    => $request->description_en,
-                'price_before_discount' => $request->price_before_discount,
-                'calories'          => $request->calories,
-                //            'active'            => 'true',
-                'photo'             => $photo,
-                'loyalty_points' => $request->loyalty_points,
-                'start_at' => $request->start_at == null ? $product->start_at : $request->start_at,
-                'end_at' => $request->end_at == null ? $product->end_at : $request->end_at,
-                'time' => $request->time == null ? $product->time : $request->time,
-                'video_id' => isset($videoPath) ? $videoPath : $request->video_id,
-                'video_type' => $request->video_type,
-            ]);
-        } else {
-            $product->update([
-                'restaurant_id'     => $restaurant->id,
-                'branch_id'         => $request->branch_id,
-                'menu_category_id'  => $request->menu_category_id,
-                'poster_id'         => $request->poster_id,
-                'sub_category_id'   => $request->sub_category_id,
-                'name_ar'           => $request->name_ar,
-                'loyalty_points' => $request->loyalty_points,
-                'name_en'           => $request->name_en,
-                'description_ar'    => $request->description_ar,
-                'description_en'    => $request->description_en,
-                'price'             => $request->price,
-                'price_before_discount' => $request->price_before_discount,
-                'calories'          => $request->calories,
-                //            'active'            => 'true',
-                'photo'             => $photo,
-                'start_at' => $request->start_at == null ? $product->start_at : $request->start_at,
-                'end_at' => $request->end_at == null ? $product->end_at : $request->end_at,
-                'time' => $request->time == null ? $product->time : $request->time,
-                'video_id' => isset($videoPath) ? $videoPath : $request->video_id,
-                'video_type' => $request->video_type,
-            ]);
-        }
+        $product->update([
+            'restaurant_id'     => $restaurant->id,
+            'branch_id'         => $request->branch_id,
+            'menu_category_id'  => $request->menu_category_id,
+            'poster_id'         => $request->poster_id,
+            'sub_category_id'   => $request->sub_category_id,
+            'name_ar'           => $request->name_ar,
+            'loyalty_points' => $request->loyalty_points,
+            'name_en'           => $request->name_en,
+            'description_ar'    => $request->description_ar,
+            'description_en'    => $request->description_en,
+            'price'             => $request->price,
+            'price_before_discount' => $request->price_before_discount,
+            'calories'          => $request->calories,
+            //            'active'            => 'true',
+            'photo'             => $photo,
+            'start_at' => $request->start_at == null ? $product->start_at : $request->start_at,
+            'end_at' => $request->end_at == null ? $product->end_at : $request->end_at,
+            'time' => $request->time == null ? $product->time : $request->time,
+            'video_id' => isset($videoPath) ? $videoPath : $request->video_id,
+            'video_type' => $request->video_type,
+        ]);
         if ($request->time == 'true' && $request->day_id != null) {
-            ProductDay::where('product_id', $product->id)->delete();
+            AZProductDay::where('product_id', $product->id)->delete();
             foreach ($request->day_id as $day) {
-                ProductDay::create([
+                AZProductDay::create([
                     'product_id' => $product->id,
                     'day_id'           => $day,
                 ]);
@@ -423,19 +377,19 @@ class ProductController extends Controller
         // check if the restaurant store sensitivity
         if ($request->sensitivity_id != null) {
             foreach ($request->sensitivity_id as $sen_id) {
-                $check_sen = ProductSensitivity::whereProductId($product->id)
+                $check_sen = AZProductSensitivity::whereProductId($product->id)
                     ->where('sensitivity_id', $sen_id)
                     ->first();
                 if ($check_sen == null) {
                     // create product sensitivities
-                    ProductSensitivity::create([
+                    AZProductSensitivity::create([
                         'product_id'     => $product->id,
                         'sensitivity_id' => $sen_id,
                     ]);
                 }
             }
         } else {
-            ProductSensitivity::whereProductId($product->id)->delete();
+            AZProductSensitivity::whereProductId($product->id)->delete();
         }
         flash(trans('messages.updated'))->success();
         //        return response()->json(['url' => route('products.index')]);
@@ -504,7 +458,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         if ($product->photo != null) {
             @unlink(public_path('/uploads/products/' . $product->photo));
         }
@@ -515,7 +469,7 @@ class ProductController extends Controller
 
     public function active($id, $active)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         $product->update([
             'active'   => $active,
         ]);
@@ -529,7 +483,7 @@ class ProductController extends Controller
 
     public function available($id, $available)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         $product->update([
             'available'   => $available,
         ]);
@@ -547,10 +501,10 @@ class ProductController extends Controller
             'item_id' => 'required_if:action,edit|integer|exists:products,id',
         ]);
         if ($request->action == 'edit')
-            $product = Product::findOrFail($request->item_id);
+            $product = AZProduct::findOrFail($request->item_id);
 
         if ($request->photo != null) {
-            $photo = UploadImageEdit($request->file('photo'), 'photo', '/uploads/products', (isset($product->photo) ? $product->photo : null));
+            $photo = UploadImageEdit($request->file('photo'), 'photo', '/uploads/products', ($product->photo ?? null));
             if ($request->action == 'create') :
                 TemporaryFile::create([
                     'type' => 'image',
@@ -576,12 +530,12 @@ class ProductController extends Controller
 
     public function arrange($id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         return view('restaurant.products.arrange', compact('product'));
     }
     public function arrange_submit(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         $this->validate($request, [
             'arrange' => 'required'
         ]);
@@ -593,7 +547,7 @@ class ProductController extends Controller
     }
     public function copy_product($id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         $restaurant = auth('restaurant')->user();
         if ($restaurant->type == 'employee') :
             if (check_restaurant_permission($restaurant->id, 4) == false) :
@@ -601,9 +555,7 @@ class ProductController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $branches = Branch::whereRestaurantId($restaurant->id)
-            ->whereIn('status', ['active', 'tentative'])
-            ->where('foodics_status', 'false')
+        $branches = AZBranch::whereRestaurantId($restaurant->id)
             ->get();
         $posters = RestaurantPoster::whereRestaurantId($restaurant->id)->get();
         $sensitivities = RestaurantSensitivity::whereRestaurantId($restaurant->id)->get();
@@ -612,7 +564,7 @@ class ProductController extends Controller
     }
     public function copy_product_submit(Request $request, $id)
     {
-        $old_product = Product::findOrFail($id);
+        $old_product = AZProduct::findOrFail($id);
         $restaurant = auth('restaurant')->user();
         if ($restaurant->type == 'employee') :
             if (check_restaurant_permission($restaurant->id, 4) == false) :
@@ -657,7 +609,7 @@ class ProductController extends Controller
                     $imageName = $request->image_name;
                 endif;
 
-                $product = Product::create([
+                $product = AZProduct::create([
                     'restaurant_id'     => $restaurant->id,
                     'branch_id'         => $request->branch_id,
                     'menu_category_id'  => $menu_category_id,
@@ -680,9 +632,9 @@ class ProductController extends Controller
                     // 'photo'             => $request->file('photo') == null ? 'default.png' : UploadImage($request->file('photo'),'photo' , '/uploads/products')
                 ]);
                 if ($request->time == 'true' && $request->day_id != null) {
-                    ProductDay::where('product_id', $product->id)->delete();
+                    AZProductDay::where('product_id', $product->id)->delete();
                     foreach ($request->day_id as $day) {
-                        ProductDay::create([
+                        AZProductDay::create([
                             'product_id' => $product->id,
                             'day_id'           => $day,
                         ]);
@@ -692,7 +644,7 @@ class ProductController extends Controller
                 if ($request->sensitivity_id != null) {
                     foreach ($request->sensitivity_id as $sen_id) {
                         // create product sensitivities
-                        ProductSensitivity::create([
+                        AZProductSensitivity::create([
                             'product_id'     => $product->id,
                             'sensitivity_id' => $sen_id,
                         ]);
@@ -706,7 +658,7 @@ class ProductController extends Controller
     }
     public function deleteProductPhoto($id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         if ($product->photo != null) {
             @unlink(public_path('/uploads/products/' . $product->photo));
         }
@@ -715,5 +667,16 @@ class ProductController extends Controller
         ]);
         flash(trans('messages.deleted'))->success();
         return redirect()->back();
+    }
+    public function branch_menu_categories($id)
+    {
+        $branch = AZBranch::find($id);
+        $categories = AZMenuCategory::whereBranchId($branch->id)->get();
+        return response()->json($categories);
+    }
+    public function get_menu_sub_categories($id)
+    {
+        $sub_categories = AZRestaurantSubCategory::where('menu_category_id' , $id)->get();
+        return response()->json($sub_categories);
     }
 }

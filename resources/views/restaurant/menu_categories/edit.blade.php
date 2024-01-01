@@ -198,7 +198,7 @@
                                         <?php $days = \App\Models\Day::all(); ?>
                                         @foreach ($days as $day)
                                             <input type="checkbox" name="day_id[]" value="{{ $day->id }}"
-                                                    {{ \App\Models\MenuCategoryDay::whereDayId($day->id)->where('menu_category_id', $category->id)->first() != null? 'checked': '' }}>
+                                                    {{ \App\Models\Restaurant\Azmak\AZMenuCategoryDay::whereDayId($day->id)->where('menu_category_id', $category->id)->first() != null? 'checked': '' }}>
                                             {{ app()->getLocale() == 'ar' ? $day->name_ar : $day->name_en }}
                                         @endforeach
                                         @if ($errors->has('day_id'))
@@ -208,31 +208,37 @@
                                         @endif
                                     </div>
                                 </div>
-
-
-                                {{-- image --}}
-                                <div class="image-editor-preview ">
-                                    <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('messages.photo') }}</span>
-                                        <br>
-                                        <div dir=rtl class="file-loading">
-                                            <input type="file" name="photo" id="normal-image"
-                                                   accept=".png,.jpg,.jpeg" class="file" data-browse-on-zone-click="true">
+                                <div class="form-group ">
+                                    <label class="control-label col-md-3"> @lang('messages.photo') </label>
+                                    <div class="col-md-9">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                 style="width: 200px; height: 150px; border: 1px solid black;">
+                                                @if($category->photo)
+                                                    <img src="{{asset('/uploads/menu_categories/' . $category->photo)}}">
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <span class="btn red btn-outline btn-file">
+                                                    <span
+                                                        class="fileinput-new btn btn-info"> @lang('messages.choose_photo') </span>
+                                                    <span
+                                                        class="fileinput-exists btn btn-primary"> @lang('messages.change') </span>
+                                                    <input type="file" name="photo"> </span>
+                                                <a href="javascript:;" class="btn btn-danger fileinput-exists"
+                                                   data-dismiss="fileinput"> @lang('messages.remove') </a>
+                                            </div>
                                         </div>
+                                        @if ($errors->has('photo'))
+                                            <span class="help-block">
+                                                <strong style="color: red;">{{ $errors->first('photo') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
+
                                 </div>
                             </div>
                             <!-- /.card-body -->
-                            <div class="alert alert-warning" role="alert">
-                                <h4 class="alert-heading">{{ trans('dashboard.explain') }}</h4>
-                                <p>{{ trans('dashboard.image_warning_size', ['size' => 'الطول يساوي العرض ']) }}</p>
-                                <hr>
-                                <p class="mb-0">{!! trans('dashboard.image_resize_hint') !!}
-                                    <a href="https://redketchup.io/image-resizer" target="__blank"
-                                       style="color : #007bff;" title="موقع لتغير حجم الصور"> موقع لتغير حجم الصور</a>
-                                </p>
-                            </div>
-                    </div>
                     <!-- /.card-body -->
                     @method('PUT')
                     <div class="card-footer">
@@ -259,14 +265,7 @@
     <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
 
 
-    <script src="{{ asset('admin') }}/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/purify.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/fileinput.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/themes/fa/theme.js') }}"></script>
 
-    <script src="{{ asset('admin/bootstrap-fileinput/locales/ar.js') }}"></script>
 
     <script type="text/javascript">
         function yesnoCheck() {
@@ -285,7 +284,7 @@
                 // testUrl: "http://localhost/test-upload.php"
             },
             uploadExtraData: {
-                '_token': '{{ csrf_token() }}', // for access control / security 
+                '_token': '{{ csrf_token() }}', // for access control / security
                 'action': 'edit',
                 'item_id': {{ $category->id }}
             },

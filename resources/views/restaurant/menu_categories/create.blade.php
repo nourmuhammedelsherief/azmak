@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ URL::asset('admin/css/select2-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('admin/css/bootstrap-fileinput.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">
-    <link href="{{ asset('admin') }}/bootstrap-fileinput/css/fileinput.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -196,28 +195,34 @@
                                     </div>
                                 </div>
 
-                                {{-- image --}}
-                                <div class="image-editor-preview ">
-                                    <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('messages.photo') }}</span>
-                                        <br>
-                                        <div dir=rtl class="file-loading">
-                                            <input type="file" name="photo" id="normal-image"
-                                                   accept=".png,.jpg,.jpeg" class="file" data-browse-on-zone-click="true">
+                                <div class="form-group ">
+                                    <label class="control-label col-md-3"> @lang('messages.photo') </label>
+                                    <div class="col-md-9">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                 style="width: 200px; height: 150px; border: 1px solid black;">
+                                            </div>
+                                            <div>
+                                                <span class="btn red btn-outline btn-file">
+                                                    <span
+                                                        class="fileinput-new btn btn-info"> @lang('messages.choose_photo') </span>
+                                                    <span
+                                                        class="fileinput-exists btn btn-primary"> @lang('messages.change') </span>
+                                                    <input type="file" name="photo"> </span>
+                                                <a href="javascript:;" class="btn btn-danger fileinput-exists"
+                                                   data-dismiss="fileinput"> @lang('messages.remove') </a>
+                                            </div>
                                         </div>
+                                        @if ($errors->has('photo'))
+                                            <span class="help-block">
+                                                <strong style="color: red;">{{ $errors->first('photo') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
+
                                 </div>
                             </div>
                             <!-- /.card-body -->
-                            <div class="alert alert-warning" role="alert">
-                                <h4 class="alert-heading">{{ trans('dashboard.explain') }}</h4>
-                                <p>{{ trans('dashboard.image_warning_size', ['size' => 'الطول يساوي العرض ']) }}</p>
-                                <hr>
-                                <p class="mb-0">{!! trans('dashboard.image_resize_hint') !!}
-                                    <a href="https://redketchup.io/image-resizer" target="__blank"
-                                       style="color : #007bff;" title="موقع لتغير حجم الصور"> موقع لتغير حجم الصور</a>
-                                </p>
-                            </div>
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">@lang('messages.save')</button>
@@ -231,27 +236,13 @@
 
         </div><!-- /.container-fluid -->
     </section>
-    @php
-        // $itemId = $product->id ;
-        $imageUploaderUrl = route('restaurant.menu_category.update_image');
-    @endphp
-    @include('restaurant.products.product_image_modal')
 @endsection
 @section('scripts')
     <script src="{{ URL::asset('admin/js/select2.full.min.js') }}"></script>
     <script src="{{ URL::asset('admin/js/components-select2.min.js') }}"></script>
     <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
-    <script src="{{ asset('plugins/select2/js/select2.js') }}"></script>
 
 
-    <script src="{{ asset('admin') }}/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/plugins/purify.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/js/fileinput.min.js') }}"></script>
-    <script src="{{ asset('admin/bootstrap-fileinput/themes/fa/theme.js') }}"></script>
-
-    <script src="{{ asset('admin/bootstrap-fileinput/locales/ar.js') }}"></script>
     <script>
         $(function() {
             $('.select2').select2({
@@ -277,7 +268,7 @@
                 // testUrl: "http://localhost/test-upload.php"
             },
             uploadExtraData: {
-                '_token': '{{ csrf_token() }}', // for access control / security 
+                '_token': '{{ csrf_token() }}', // for access control / security
                 'action': 'create',
 
             },

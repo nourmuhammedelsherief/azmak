@@ -62,7 +62,7 @@
                                 <th></th>
                                 <th> @lang('messages.name') </th>
                                 <th> @lang('messages.activity') </th>
-                                <th> @lang('dashboard.entry.sort') </th>
+                                <th> @lang('messages.sort') </th>
                                 <th> {{app()->getLocale() == 'ar' ? 'الاختيار': 'choose'}}</th>
                                 <th> @lang('messages.operations') </th>
                             </tr>

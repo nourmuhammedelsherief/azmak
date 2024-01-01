@@ -72,10 +72,10 @@
                                     </div>
                                 @endif
                                 <div class="form-group">
-                                    <label class="control-label"> @lang('dashboard.entry.sort') </label>
+                                    <label class="control-label"> @lang('messages.sort') </label>
                                     <input name="sort" type="text" class="form-control"
                                            value="{{old('sort') ?? $maxSort}}"
-                                           placeholder="@lang('dashboard.entry.sort')">
+                                           placeholder="@lang('messages.sort')">
                                     @if ($errors->has('sort'))
                                         <span class="help-block">
                                         <strong style="color: red;">{{ $errors->first('sort') }}</strong>
@@ -105,7 +105,7 @@
                                 </div>
 
                                 <div class="form-group custom_num" style="display: none;">
-                                    <label class="control-label"> @lang('dashboard.custom_num') </label>
+                                    <label class="control-label"> @lang('messages.custom_num') </label>
                                     <input name="custom" type="number" value="{{old('custom')}}" class="form-control">
                                     @if ($errors->has('custom'))
                                         <span class="help-block">

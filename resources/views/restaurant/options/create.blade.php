@@ -103,20 +103,20 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('dashboard.option_related_to') </label>
-                                    <select name="related_id" id="related_id" class="form-control select2">
-                                        <option value="" >{{ trans('dashboard.not_found') }}</option>
-                                        @foreach ($relatedOptions as $item)
-                                            <option value="{{$item->id}}" {{$item->id == old('related_id') ? 'selected' : ''}}>{{$item->name}} ( {{$item->modifier->name}} )</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('related_id'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('related_id') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
+{{--                                <div class="form-group">--}}
+{{--                                    <label class="control-label"> @lang('dashboard.option_related_to') </label>--}}
+{{--                                    <select name="related_id" id="related_id" class="form-control select2">--}}
+{{--                                        <option value="" >{{ trans('dashboard.not_found') }}</option>--}}
+{{--                                        @foreach ($relatedOptions as $item)--}}
+{{--                                            <option value="{{$item->id}}" {{$item->id == old('related_id') ? 'selected' : ''}}>{{$item->name}} ( {{$item->modifier->name}} )</option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
+{{--                                    @if ($errors->has('related_id'))--}}
+{{--                                        <span class="help-block">--}}
+{{--                                            <strong style="color: red;">{{ $errors->first('related_id') }}</strong>--}}
+{{--                                        </span>--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
                                 <div class="form-group">
                                     <label class="control-label"> @lang('messages.activity') </label>
                                     <input name="is_active" type="radio"  value="true" > @lang('messages.yes')

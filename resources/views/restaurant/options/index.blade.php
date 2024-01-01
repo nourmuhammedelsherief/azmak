@@ -63,7 +63,7 @@
                                 <th> @lang('messages.name') </th>
                                 <th> @lang('messages.modifier') </th>
                                 <th> @lang('messages.price') </th>
-                                <th> @lang('dashboard.add_to') </th>
+{{--                                <th> @lang('dashboard.add_to') </th>--}}
                                 <th> @lang('messages.activity') </th>
                                 <th> @lang('messages.operations') </th>
                             </tr>
@@ -86,14 +86,14 @@
                                         {{app()->getLocale() == 'ar' ? ($option->modifier->name_ar == null ? $option->modifier->name_en : $option->modifier->name_ar) : ($option->modifier->name_en == null ? $option->modifier->name_ar : $option->modifier->name_en)}}
                                     </td>
                                     <td> {{$option->price}} </td>
-                                    <td>
-                                        @if(!empty($option->related_id))
-                                        <br>
-                                        <span class="badge badge-info">
-                                            {{$option->relatedTo->name}}  ( {{$option->modifier->name}} )
-                                        </span>
-                                    @endif
-                                    </td>
+{{--                                    <td>--}}
+{{--                                        @if(!empty($option->related_id))--}}
+{{--                                        <br>--}}
+{{--                                        <span class="badge badge-info">--}}
+{{--                                            {{$option->relatedTo->name}}  ( {{$option->modifier->name}} )--}}
+{{--                                        </span>--}}
+{{--                                    @endif--}}
+{{--                                    </td>--}}
                                     <td>
 
                                         <span class="custom-switch {{$option->is_active == 'true' ? 'on' : 'off'}}"

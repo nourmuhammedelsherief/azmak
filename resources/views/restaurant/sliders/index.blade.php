@@ -74,13 +74,13 @@
                                     </label>
                                 </th>
                                 <th></th>
-                                <th> @lang('dashboard.entry.type') </th>
+                                <th> @lang('messages.slider_type') </th>
                                 <th> @lang('messages.photo') </th>
                                 @if (in_array(request('type'), ['contact_us']))
                                     <th> @lang('dashboard.entry.description_ar') </th>
                                     <th> @lang('dashboard.entry.description_en') </th>
                                 @endif
-                                <th> @lang('messages.activate') </th>
+                                <th> @lang('messages.activity') </th>
                                 <th> @lang('messages.operations') </th>
                             </tr>
                             </thead>
@@ -95,7 +95,7 @@
                                         </label>
                                     </td>
                                     <td><?php echo ++$i; ?></td>
-                                    <td>{{ trans('dashboard.' . $slider->type) }}</td>
+                                    <td>{{ trans('messages.' . $slider->type) }}</td>
                                     <td>
                                         @if ($slider->type == 'youtube')
                                             <iframe style="width:200px;" class="close-menu"

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\RestaurantController;
 use App\Models\Restaurant;
 use Twilio;
 use App\Http\Controllers\Controller;
-use App\Models\Modifier;
+use App\Models\Restaurant\Azmak\AZModifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +32,7 @@ class ModifierController extends Controller
         {
             return redirect()->route('RestaurantProfile');
         }
-        $modifiers = Modifier::whereRestaurantId($restaurant->id)->paginate(500);
+        $modifiers = AZModifier::whereRestaurantId($restaurant->id)->paginate(500);
         return view('restaurant.modifiers.index' , compact('modifiers'));
     }
 
@@ -46,7 +46,7 @@ class ModifierController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $maxSort = Modifier::where('restaurant_id' , auth('restaurant')->Id())->max('sort') + 1;
+        $maxSort = AZModifier::where('restaurant_id' , auth('restaurant')->Id())->max('sort') + 1;
         return view('restaurant.modifiers.create' , compact('maxSort'));
     }
 
@@ -87,7 +87,7 @@ class ModifierController extends Controller
             return redirect()->back();
         }
         // create new modifier
-        Modifier::create([
+        AZModifier::create([
             'restaurant_id' => $restaurant->id,
             'name_ar'   => $request->name_ar,
             'name_en'   => $request->name_en,
@@ -123,7 +123,7 @@ class ModifierController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $modifier = Modifier::findOrFail($id);
+        $modifier = AZModifier::findOrFail($id);
         return view('restaurant.modifiers.edit' , compact('modifier'));
     }
 
@@ -139,7 +139,7 @@ class ModifierController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $modifier = Modifier::findOrFail($id);
+        $modifier = AZModifier::findOrFail($id);
         $this->validate($request , [
             'name_ar'   => 'nullable|string|max:191',
             'name_en'   => 'nullable|string|max:191',
@@ -181,7 +181,7 @@ class ModifierController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $modifier = Modifier::findOrFail($id);
+        $modifier = AZModifier::findOrFail($id);
         $modifier->delete();
         flash(trans('messages.deleted'))->success();
         return redirect()->route('modifiers.index');
@@ -192,7 +192,7 @@ class ModifierController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $modifier = Modifier::findOrFail($id);
+        $modifier = AZModifier::findOrFail($id);
         $modifier->update([
             'is_ready' => $active
         ]);

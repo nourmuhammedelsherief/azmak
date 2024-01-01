@@ -193,11 +193,11 @@
                                     </td>
                                     <td>
                                         <a class="btn btn-primary" href="{{route('products.edit' , $product->id)}}">
-                                            <i class="fa fa-user-edit"></i> 
+                                            <i class="fa fa-user-edit"></i>
                                         </a>
-                                        <a class="btn btn-secondary" href="{{route('copyProduct' , $product->id)}}">
-                                            <i class="fa fa-file"></i> @lang('messages.copy')
-                                        </a>
+{{--                                        <a class="btn btn-secondary" href="{{route('copyProduct' , $product->id)}}">--}}
+{{--                                            <i class="fa fa-file"></i> @lang('messages.copy')--}}
+{{--                                        </a>--}}
                                         @php
                                             $user = Auth::guard('restaurant')->user();
                                             $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
@@ -207,7 +207,7 @@
                                         @if($user->type == 'restaurant' or $deletePermission)
                                             <a class="delete_data btn btn-danger" data="{{ $product->id }}"
                                                data_name="{{ app()->getLocale() == 'ar' ? ($product->name_ar == null ? $product->name_en : $product->name_ar) : ($product->name_en == null ? $product->name_ar : $product->name_en) }}">
-                                                <i class="fa fa-trash"></i> 
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         @endif
 

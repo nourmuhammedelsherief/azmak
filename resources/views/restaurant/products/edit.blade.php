@@ -7,12 +7,13 @@
 @section('style')
     <link rel="stylesheet" href="{{ URL::asset('admin/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('admin/css/select2-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{asset('plugins/select2/css/select2.css')}}">
 
     <link rel="stylesheet" href="{{ URL::asset('admin/css/bootstrap-fileinput.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('admin/css/cropper.css') }}">
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
-    
+
      --}}
     <link href="{{ asset('admin') }}/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('admin/bootstrap-fileinput/css/fileinput.min.css') }}">
@@ -24,7 +25,9 @@
     <script src="{{ asset('admin/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('admin/js/additional-methods.min.js') }}"></script>
 
-
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
     <style>
         .error {
             color: red;
@@ -73,7 +76,7 @@
                             <h3 class="card-title">@lang('messages.edit') @lang('messages.products') </h3>
                         </div>
                         <!-- /.card-header -->
-                       
+
                         <!-- form start -->
                         <form role="form" id="post-form" action="{{ route('products.update', $product->id) }}"
                             method="post" enctype="multipart/form-data">
@@ -82,8 +85,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label class="control-label"> @lang('messages.branch') </label>
-                                    <select {{ $product->branch->foodics_status == 'true' ? 'disabled' : '' }}
-                                        name="branch_id" class="form-control" required>
+                                    <select name="branch_id" class="form-control" required>
                                         <option disabled selected> @lang('messages.choose_one') </option>
                                         @foreach ($branches as $branch)
                                             <option value="{{ $branch->id }}"
@@ -105,11 +107,9 @@
                                 <div class="form-group">
                                     <label class="control-label"> @lang('messages.menu_category') </label>
                                     <select id="menu_category_id"
-                                        {{ $product->branch->foodics_status == 'true' ? 'disabled' : '' }}
                                         name="menu_category_id" class="form-control" required>
                                         <option disabled selected> @lang('messages.choose_one') </option>
                                         @if ($product->menu_category_id != null)
-                                            <?php $cats = \App\Models\MenuCategory::whereBranchId($product->branch_id)->get(); ?>
                                             @foreach ($cats as $cat)
                                                 <option value="{{ $cat->id }}"
                                                     {{ $product->menu_category_id == $cat->id ? 'selected' : '' }}>
@@ -250,9 +250,8 @@
                                         multiple>
                                         @foreach ($sensitivities as $sensitivity)
                                             <option
-                                                {{ \App\Models\ProductSensitivity::whereProductId($product->id)->where('sensitivity_id', $sensitivity->id)->first() != null? 'selected': '' }}
-                                                value="{{ $sensitivity->id }}"
-                                                {{ old('d') == $sensitivity->id ? 'selected' : '' }}>
+                                                {{ \App\Models\Restaurant\Azmak\AZProductSensitivity::whereProductId($product->id)->where('sensitivity_id', $sensitivity->id)->first() != null? 'selected': '' }}
+                                                value="{{ $sensitivity->id }}">
                                                 {{ app()->getLocale() == 'ar' ? $sensitivity->name_ar : $sensitivity->name_en }}
                                             </option>
                                         @endforeach
@@ -407,7 +406,7 @@
                                         <?php $days = \App\Models\Day::all(); ?>
                                         @foreach ($days as $day)
                                             <input type="checkbox" name="day_id[]" value="{{ $day->id }}"
-                                                {{ \App\Models\ProductDay::whereDayId($day->id)->where('product_id', $product->id)->first() != null? 'checked': '' }}>
+                                                {{ \App\Models\Restaurant\Azmak\AZProductDay::whereDayId($day->id)->where('product_id', $product->id)->first() != null? 'checked': '' }}>
                                             {{ app()->getLocale() == 'ar' ? $day->name_ar : $day->name_en }}
                                         @endforeach
                                         @if ($errors->has('day_id'))
@@ -417,63 +416,35 @@
                                         @endif
                                     </div>
                                 </div>
-                                {{-- image gif --}}
-                                <div class="form-group image-gif display-none" style="margin-top: 2%;">
-                                    <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('messages.photo') }}</span>
-                                        <br>
-                                        <div dir=rtl class="file-loading">
-                                            <input type="file" name="video" accept=".gif" class="file"
-                                                data-browse-on-zone-click="true" id="gif_image">
+                                <div class="form-group ">
+                                    <label class="control-label col-md-3"> @lang('messages.photo') </label>
+                                    <div class="col-md-9">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                 style="width: 200px; height: 150px; border: 1px solid black;">
+                                                @if($product->photo)
+                                                    <img src="{{asset('/uploads/products/' . $product->photo)}}">
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <span class="btn red btn-outline btn-file">
+                                                    <span
+                                                        class="fileinput-new btn btn-info"> @lang('messages.choose_photo') </span>
+                                                    <span
+                                                        class="fileinput-exists btn btn-primary"> @lang('messages.change') </span>
+                                                    <input type="file" name="photo"> </span>
+                                                <a href="javascript:;" class="btn btn-danger fileinput-exists"
+                                                   data-dismiss="fileinput"> @lang('messages.remove') </a>
+                                            </div>
                                         </div>
+                                        @if ($errors->has('image'))
+                                            <span class="help-block">
+                                                <strong style="color: red;">{{ $errors->first('image') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
+
                                 </div>
-
-                                {{-- image --}}
-                                <div class="image-editor-preview display-none">
-                                    <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('messages.photo') }}</span>
-                                        <br>
-                                        <div dir=rtl class="file-loading">
-                                            <input type="file" name="photo" id="normal-image"
-                                                accept=".png,.jpg,.jpeg" class="file" data-browse-on-zone-click="true">
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- <div class="form-group image-editor-preview display-none">
-                                    <label for="">{{ trans('messages.photo') }}</label>
-                                    <label class="custom-label" data-toggle="tooltip"
-                                           title="{{trans('dashboard.change_image')}}">
-                                        <img class="rounded" id="avatar"
-                                             src="{{asset($product->image_path)}}" alt="avatar">
-                                        <input type="file" class="sr-only" id="image-uploader"
-                                               data-product_id="{{$product->id}}" name="image" accept="image/*">
-                                    </label>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                             role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            0%
-                                        </div>
-                                    </div>
-                                    <div class="alert text-center" role="alert"></div>
-                                    @if ($product->photo != null)
-                                        <a href="{{route('deleteProductPhoto' , $product->id)}}" class="btn btn-danger"> {{ trans('dashboard.delete_image') }}</a>
-                                    @endif
-                                </div> --}}
-
-
-
-                            </div>
-                            <div class="alert alert-warning" role="alert">
-                                <h4 class="alert-heading">{{ trans('dashboard.explain') }}</h4>
-    
-                                <p>{{ trans('dashboard.image_warning_size', ['size' => 'الطول يساوي العرض ']) }}</p>
-                                <hr>
-                                <p class="mb-0">{!! trans('dashboard.image_resize_hint') !!}
-                                    <a href="https://redketchup.io/image-resizer" target="__blank" style="color : #007bff;"
-                                        title="موقع لتغير حجم الصور"> موقع لتغير حجم الصور</a>
-                                </p>
-    
                             </div>
                             <!-- /.card-body -->
                             @method('PUT')
@@ -520,7 +491,7 @@
                         // testUrl: "http://localhost/test-upload.php"
                     },
                     uploadExtraData: {
-                        '_token': '{{ csrf_token() }}', // for access control / security 
+                        '_token': '{{ csrf_token() }}', // for access control / security
                         'action': 'edit',
                         'item_id': {{ $product->id }},
                     },
@@ -535,7 +506,7 @@
                     showCancel: true,
                     initialPreview: [
                         @if (!empty($product->photo))
-                            '{{ asset($product->image_path) }}'
+                            '{{ asset('/uploads/products/'.$product->photo) }}'
                         @endif
                     ],
                     maxFilePreviewSize: 50240,
@@ -578,7 +549,7 @@
                         // testUrl: "http://localhost/test-upload.php"
                     },
                     uploadExtraData: {
-                        '_token': '{{ csrf_token() }}', // for access control / security 
+                        '_token': '{{ csrf_token() }}', // for access control / security
 
                         'product_id': {{ $product->id }}
                     },
@@ -628,7 +599,7 @@
                     // enableResumableUpload: true,
                     resumableUploadOptions: {},
                     uploadExtraData: {
-                        '_token': '{{ csrf_token() }}', // for access control / security 
+                        '_token': '{{ csrf_token() }}', // for access control / security
                         'type': 'gif',
                         'product_id': {{ $product->id }}
                     },
@@ -811,32 +782,47 @@
     <script src="{{ URL::asset('admin/js/components-select2.min.js') }}"></script>
     <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
     <script src="{{ URL::asset('admin/js/cropper.js') }}"></script>
+    <script src="{{asset('plugins/select2/js/select2.js')}}"></script>
+$itemId
     <script>
         $(document).ready(function() {
             $('.select2').select2();
             $('#productUploadImage').modal('show');
-            $('select[name="menu_category_id"]').on('change', function() {
+            $('select[name="menu_category_id"]').on('change', function () {
                 var id = $(this).val();
                 $.ajax({
-                    url: '/get/sub_categories/' + id,
+                    url: '/restaurant/get_menu_sub_categories/' + id,
                     type: "GET",
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         console.log(data);
                         $('#sub_category').empty();
-                        // $('select[name="city_id"]').append("<option disabled selected> choose </option>");
-                        // $('select[name="city"]').append('<option value>المدينة</option>');
-                        $('select[name="sub_category_id"]').append(
-                            "<option disabled selected> @lang('messages.choose_one') </option>");
-                        $.each(data, function(index, sub_categories) {
-                            @if (app()->getLocale() == 'ar')
-                                $('select[name="sub_category_id"]').append(
-                                    '<option value="' + sub_categories.id + '">' +
-                                    sub_categories.name_ar + '</option>');
+                        $('select[name="sub_category_id"]').append("<option disabled selected> @lang('messages.choose_one') </option>");
+                        $.each(data, function (index, sub_categories) {
+                            @if(app()->getLocale() == 'ar')
+                            $('select[name="sub_category_id"]').append('<option value="' + sub_categories.id + '">' + sub_categories.name_ar + '</option>');
                             @else
-                                $('select[name="sub_category_id"]').append(
-                                    '<option value="' + sub_categories.id + '">' +
-                                    sub_categories.name_en + '</option>');
+                            $('select[name="sub_category_id"]').append('<option value="' + sub_categories.id + '">' + sub_categories.name_en + '</option>');
+                            @endif
+                        });
+                    }
+                });
+            });
+            $('select[name="branch_id"]').on('change', function () {
+                var id = $(this).val();
+                $.ajax({
+                    url: '/restaurant/get/branch_menu_categories/' + id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $('#menu_category_id').empty();
+                        $('select[name="menu_category_id"]').append("<option disabled > @lang('messages.choose_one') </option>");
+                        $.each(data, function (index, categories) {
+                            @if(app()->getLocale() == 'ar')
+                            $('select[name="menu_category_id"]').append('<option value="' + categories.id + '">' + categories.name_ar + '</option>');
+                            @else
+                            $('select[name="menu_category_id"]').append('<option value="' + categories.id + '">' + categories.name_en + '</option>');
                             @endif
                         });
                     }
@@ -870,33 +856,6 @@
                 }
             });
             $('select[name=video_type]').trigger('change');
-            $('select[name="branch_id"]').on('change', function() {
-                var id = $(this).val();
-                $.ajax({
-                    url: '/get/categories/' + id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        $('#menu_category_id').empty();
-                        // $('select[name="city_id"]').append("<option disabled selected> choose </option>");
-                        // $('select[name="city"]').append('<option value>المدينة</option>');
-                        $('select[name="menu_category_id"]').append(
-                            "<option disabled selected> @lang('messages.choose_one') </option>");
-                        $.each(data, function(index, categories) {
-                            @if (app()->getLocale() == 'ar')
-                                $('select[name="menu_category_id"]').append(
-                                    '<option value="' + categories.id + '">' +
-                                    categories.name_ar + '</option>');
-                            @else
-                                $('select[name="menu_category_id"]').append(
-                                    '<option value="' + categories.id + '">' +
-                                    categories.name_en + '</option>');
-                            @endif
-                        });
-                    }
-                });
-            });
 
         });
     </script>

@@ -4,7 +4,10 @@
     @lang('messages.add') @lang('messages.sub_categories')
 @endsection
 
-@section('styles')
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/select2-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/bootstrap-fileinput.css') }}">
 @endsection
 
 @section('content')
@@ -34,8 +37,8 @@
             <div class="row">
                 <!-- left column -->
                 <div class="col-md-8">
-                    @include('flash::message')
-                    <!-- general form elements -->
+                @include('flash::message')
+                <!-- general form elements -->
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">@lang('messages.add') @lang('messages.sub_categories') </h3>
@@ -43,7 +46,7 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form role="form" action="{{ route('sub_categories.store', $category->id) }}" method="post"
-                            enctype="multipart/form-data">
+                              enctype="multipart/form-data">
                             <input type='hidden' name='_token' value='{{ Session::token() }}'>
                             <input type="hidden" name="image_name">
                             <div class="card-body">
@@ -51,7 +54,7 @@
                                     <div class="form-group">
                                         <label class="control-label"> @lang('messages.name_ar') </label>
                                         <input name="name_ar" type="text" class="form-control"
-                                            value="{{ old('name_ar') }}" placeholder="@lang('messages.name_ar')">
+                                               value="{{ old('name_ar') }}" placeholder="@lang('messages.name_ar')">
                                         @if ($errors->has('name_ar'))
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('name_ar') }}</strong>
@@ -63,7 +66,7 @@
                                     <div class="form-group">
                                         <label class="control-label"> @lang('messages.name_en') </label>
                                         <input name="name_en" type="text" class="form-control"
-                                            value="{{ old('name_en') }}" placeholder="@lang('messages.name_en')">
+                                               value="{{ old('name_en') }}" placeholder="@lang('messages.name_en')">
                                         @if ($errors->has('name_en'))
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('name_en') }}</strong>
@@ -72,25 +75,31 @@
                                     </div>
                                 @endif
                                 {{-- image editor --}}
-                                <div class="form-group image-editor-preview">
-                                    <label for="">{{ trans('messages.photo') }}</label>
-                                    <label class="custom-label" data-toggle="tooltip"
-                                        title="{{ trans('dashboard.change_image') }}">
-                                        <img class="rounded" id="avatar" src="{{ asset($restaurant->image_path) }}"
-                                            alt="avatar">
-                                        <input type="file" class="sr-only" id="image-uploader" data-product_id=""
-                                            name="image" accept="image/*">
-                                    </label>
-
-                                    @error('image_name')
-                                        <p class="text-center text-danger">{{ $message }}</p>
-                                    @enderror
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                            role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%
+                                <div class="form-group ">
+                                    <label class="control-label col-md-3"> @lang('messages.photo') </label>
+                                    <div class="col-md-9">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                                 style="width: 200px; height: 150px; border: 1px solid black;">
+                                            </div>
+                                            <div>
+                                                <span class="btn red btn-outline btn-file">
+                                                    <span
+                                                        class="fileinput-new btn btn-info"> @lang('messages.choose_photo') </span>
+                                                    <span
+                                                        class="fileinput-exists btn btn-primary"> @lang('messages.change') </span>
+                                                    <input type="file" name="photo"> </span>
+                                                <a href="javascript:;" class="btn btn-danger fileinput-exists"
+                                                   data-dismiss="fileinput"> @lang('messages.remove') </a>
+                                            </div>
                                         </div>
+                                        @if ($errors->has('image'))
+                                            <span class="help-block">
+                                                <strong style="color: red;">{{ $errors->first('image') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
-                                    <div class="alert text-center" role="alert"></div>
+
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -107,9 +116,9 @@
 
         </div><!-- /.container-fluid -->
     </section>
-    @php
-        // $itemId = $product->id ;
-        $imageUploaderUrl = route('restaurant.sub_menu_category.update_image');
-    @endphp
-    @include('restaurant.products.product_image_modal')
+@endsection
+@section('scripts')
+    <script src="{{ URL::asset('admin/js/select2.full.min.js') }}"></script>
+    <script src="{{ URL::asset('admin/js/components-select2.min.js') }}"></script>
+    <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
 @endsection

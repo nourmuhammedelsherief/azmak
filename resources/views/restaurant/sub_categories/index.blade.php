@@ -125,11 +125,11 @@
 
                                             <a class="btn btn-info"
                                                 href="{{ route('sub_categories.edit', $sub_category->id) }}">
-                                                <i class="fa fa-user-edit"></i> @lang('messages.edit')
+                                                <i class="fa fa-user-edit"></i>
                                             </a>
                                             <a class="delete_data btn btn-danger" data="{{ $sub_category->id }}"
                                                 data_name="{{ app()->getLocale() == 'ar' ? ($sub_category->name_ar == null ? $sub_category->name_en : $sub_category->name_ar) : ($sub_category->name_en == null ? $sub_category->name_ar : $sub_category->name_en) }}">
-                                                <i class="fa fa-key"></i> @lang('messages.delete')
+                                                <i class="fa fa-key"></i>
                                             </a>
 
                                         </td>

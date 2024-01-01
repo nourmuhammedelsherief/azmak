@@ -55,7 +55,6 @@ class MenuCategoryController extends Controller
             ->where('branch_id' , $id)
             ->paginate(500);
         $branches = AZBranch::whereRestaurantId($restaurant->id)
-            ->whereIn('status' , ['active' , 'tentative'])
             ->get();
         return view('restaurant.menu_categories.index', compact('categories' , 'branches'));
     }
@@ -108,7 +107,7 @@ class MenuCategoryController extends Controller
             'name_en' => 'nullable|string|max:191',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
-            // 'photo' => 'nullable|mimes:jpg,jpeg,png,gif,tif,psd,webp|max:20000',
+            'photo' => 'nullable|mimes:jpg,jpeg,png,gif,tif,psd,webp|max:20000',
             'image_name' =>'nullable|min:1|max:190' ,
             'start_at' => 'sometimes',
             'end_at' => 'sometimes',
@@ -132,7 +131,7 @@ class MenuCategoryController extends Controller
                     'name_en' => $request->name_en,
                     'description_ar' => $request->description_ar,
                     'description_en' => $request->description_en,
-                    'photo' => $request->image_name ,
+                    'photo'             => $request->file('photo') == null ? 'default.png' : UploadImage($request->file('photo'),'photo' , '/uploads/menu_categories'),
                     'active' => 'true',
                     'start_at' => $request->start_at,
                     'end_at' => $request->end_at,

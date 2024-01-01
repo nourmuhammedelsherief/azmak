@@ -19,19 +19,6 @@
                     <h1>@lang('messages.sizes') ({{app()->getLocale() == 'ar' ? $product->name_ar : $product->name_en}}
                         )</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a href="{{url('/restaurant/home')}}">
-                                @lang('messages.control_panel')
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <a href="{{route('productSize' , $product->id)}}">
-                            @lang('messages.sizes')
-                        </li>
-                    </ol>
-                </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
@@ -41,12 +28,10 @@
         <div class="row">
             <div class="col-12">
                 <h3>
-                    @if($product->branch->foodics_status == 'false')
-                        <a href="{{route('createProductSize' , $product->id)}}" class="btn btn-info">
-                            <i class="fa fa-plus"></i>
-                            @lang('messages.add_new')
-                        </a>
-                    @endif
+                    <a href="{{route('createProductSize' , $product->id)}}" class="btn btn-info">
+                        <i class="fa fa-plus"></i>
+                        @lang('messages.add_new')
+                    </a>
                 </h3>
                 <div class="card">
 
@@ -68,10 +53,8 @@
                                 <th> @lang('messages.price') </th>
 
                                 <th> @lang('messages.calories') </th>
-                                <th>{{ trans('dashboard.entry.status') }}</th>
-                                @if($product->branch->foodics_status == 'false')
-                                    <th> @lang('messages.operations') </th>
-                                @endif
+                                <th> @lang('messages.activity') </th>
+                                <th> @lang('messages.operations') </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -95,33 +78,31 @@
                                     <td> {{$size->calories}} </td>
                                     <td>
                                         <span class="custom-switch {{$size->status == 'true' ? 'on' : 'off'}}"
-                                            data-url_on="{{route('productSize.changeStatus' , [$size->id , 'false'])}}"
-                                            data-url_off="{{route('productSize.changeStatus' , [$size->id , 'true'])}}">
+                                              data-url_on="{{route('productSize.changeStatus' , [$size->id , 'false'])}}"
+                                              data-url_off="{{route('productSize.changeStatus' , [$size->id , 'true'])}}">
                                           <span class="text">On</span>
                                           <span class="move"></span>
                                       </span>
                                     </td>
-                                    @if($product->branch->foodics_status == 'false')
-                                        <td>
+                                    <td>
 
-                                            <a class="btn btn-info" href="{{route('editProductSize' , $size->id)}}">
-                                                <i class="fa fa-user-edit"></i> @lang('messages.edit')
+                                        <a class="btn btn-info" href="{{route('editProductSize' , $size->id)}}">
+                                            <i class="fa fa-user-edit"></i>
+                                        </a>
+                                        @php
+                                            $user = Auth::guard('restaurant')->user();
+                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
+                                            ->wherePermissionId(7)
+                                            ->first();
+                                        @endphp
+                                        @if($user->type == 'restaurant' or $deletePermission)
+                                            <a class="delete_data btn btn-danger" data="{{ $size->id }}"
+                                               data_name="{{ app()->getLocale() == 'ar' ? ($size->name_ar == null ? $size->name_en  : $size->name_ar) : ($size->name_en == null ? $size->name_ar : $size->name_en) }}">
+                                                <i class="fa fa-key"></i>
                                             </a>
-                                            @php
-                                                $user = Auth::guard('restaurant')->user();
-                                                $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                                ->wherePermissionId(7)
-                                                ->first();
-                                            @endphp
-                                            @if($user->type == 'restaurant' or $deletePermission)
-                                                <a class="delete_data btn btn-danger" data="{{ $size->id }}"
-                                                   data_name="{{ app()->getLocale() == 'ar' ? ($size->name_ar == null ? $size->name_en  : $size->name_ar) : ($size->name_en == null ? $size->name_ar : $size->name_en) }}">
-                                                    <i class="fa fa-key"></i> @lang('messages.delete')
-                                                </a>
-                                            @endif
+                                        @endif
 
-                                        </td>
-                                    @endif
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

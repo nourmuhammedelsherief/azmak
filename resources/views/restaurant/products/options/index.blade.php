@@ -42,15 +42,14 @@
         <div class="row">
             <div class="col-12">
                 <h3>
-                    @if ($product->branch->foodics_status == 'false')
-                        <a href="{{ route('createProductOption', $product->id) }}" class="btn btn-info">
-                            <i class="fa fa-plus"></i>
-                            @lang('messages.add_new')
-                        </a>
-                    @endif
+                    <a href="{{ route('createProductOption', $product->id) }}" class="btn btn-info">
+                        <i class="fa fa-plus"></i>
+                        @lang('messages.add_new')
+                    </a>
 
                 </h3>
-                <form action="{{ route('deleteAllProductOption' , $product->id) }}" method="post" style="margin-bottom: 20px;" class="form-delete-all">
+                <form action="{{ route('deleteAllProductOption' , $product->id) }}" method="post"
+                      style="margin-bottom: 20px;" class="form-delete-all">
                     @csrf
                     @method('delete')
                     <div class="hidden-input">
@@ -68,85 +67,85 @@
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
-                                <tr>
-                                    <th>
-                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                            <input type="checkbox" class="group-checkable"
-                                                data-set="#sample_1 .checkboxes" />
-                                            <span></span>
-                                        </label>
-                                    </th>
-                                    <th></th>
-                                    <th> @lang('messages.product') </th>
-                                    <th> @lang('messages.option') </th>
-                                    <th> @lang('messages.modifier') </th>
-                                    <th> @lang('messages.min') </th>
-                                    <th> @lang('messages.max') </th>
+                            <tr>
+                                <th>
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="group-checkable"
+                                               data-set="#sample_1 .checkboxes"/>
+                                        <span></span>
+                                    </label>
+                                </th>
+                                <th></th>
+                                <th> @lang('messages.product') </th>
+                                <th> @lang('messages.option') </th>
+                                <th> @lang('messages.modifier') </th>
+                                <th> @lang('messages.min') </th>
+                                <th> @lang('messages.max') </th>
 
-                                    <th> @lang('messages.operations') </th>
+                                <th> @lang('messages.operations') </th>
 
-                                </tr>
+                            </tr>
                             </thead>
                             <tbody>
-                                <?php $i = 0; ?>
-                                @foreach ($options as $option)
-                                    <tr class="odd gradeX">
+                            <?php $i = 0; ?>
+                            @foreach ($options as $option)
+                                <tr class="odd gradeX">
+                                    <td>
+                                        <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                            <input type="checkbox" class="checkboxes" value="{{$option->id}}"/>
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                    <td><?php echo ++$i; ?></td>
+                                    <td>
+                                        {{ app()->getLocale() == 'ar' ? ($product->name_ar == null ? $product->name_en : $product->name_ar) : ($product->name_en == null ? $product->name_ar : $product->name_en) }}
+                                    </td>
+                                    <td>
+                                        {{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}
+                                    </td>
+                                    <td>
+                                        {{ app()->getLocale() == 'ar' ? ($option->option->modifier->name_ar == null ? $option->option->modifier->name_en : $option->option->modifier->name_ar) : ($option->option->modifier->name_en == null ? $option->option->modifier->name_ar : $option->option->modifier->name_en) }}
+                                    </td>
+                                    <td> {{ $option->min }} </td>
+                                    <td> {{ $option->max }} </td>
+                                    @if ($product->branch->foodics_status == 'false')
                                         <td>
-                                            <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                                <input type="checkbox" class="checkboxes" value="{{$option->id}}"  />
-                                                <span></span>
-                                            </label>
-                                        </td>
-                                        <td><?php echo ++$i; ?></td>
-                                        <td>
-                                            {{ app()->getLocale() == 'ar' ? ($product->name_ar == null ? $product->name_en : $product->name_ar) : ($product->name_en == null ? $product->name_ar : $product->name_en) }}
-                                        </td>
-                                        <td>
-                                            {{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}
-                                        </td>
-                                        <td>
-                                            {{ app()->getLocale() == 'ar' ? ($option->option->modifier->name_ar == null ? $option->option->modifier->name_en : $option->option->modifier->name_ar) : ($option->option->modifier->name_en == null ? $option->option->modifier->name_ar : $option->option->modifier->name_en) }}
-                                        </td>
-                                        <td> {{ $option->min }} </td>
-                                        <td> {{ $option->max }} </td>
-                                        @if ($product->branch->foodics_status == 'false')
-                                            <td>
-                                                <a class="btn btn-info"
-                                                    href="{{ route('editProductOption', $option->id) }}">
-                                                    <i class="fa fa-user-edit"></i> @lang('messages.edit')
+                                            <a class="btn btn-info"
+                                               href="{{ route('editProductOption', $option->id) }}">
+                                                <i class="fa fa-user-edit"></i> @lang('messages.edit')
+                                            </a>
+                                            @php
+                                                $user = Auth::guard('restaurant')->user();
+                                                $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
+                                                    ->wherePermissionId(7)
+                                                    ->first();
+                                            @endphp
+                                            @if ($user->type == 'restaurant' or $deletePermission)
+                                                <a class="delete_data btn btn-danger" data="{{ $option->id }}"
+                                                   data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
+                                                    <i class="fa fa-key"></i> @lang('messages.delete')
                                                 </a>
-                                                @php
-                                                    $user = Auth::guard('restaurant')->user();
-                                                    $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                                        ->wherePermissionId(7)
-                                                        ->first();
-                                                @endphp
-                                                @if ($user->type == 'restaurant' or $deletePermission)
-                                                    <a class="delete_data btn btn-danger" data="{{ $option->id }}"
-                                                        data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
-                                                        <i class="fa fa-key"></i> @lang('messages.delete')
-                                                    </a>
-                                                @endif
+                                            @endif
 
-                                            </td>
-                                        @else
-                                            <td>
-                                                @php
-                                                    $user = Auth::guard('restaurant')->user();
-                                                    $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                                        ->wherePermissionId(7)
-                                                        ->first();
-                                                @endphp
-                                                @if ($user->type == 'restaurant' or $deletePermission)
-                                                    <a class="delete_data btn btn-danger" data="{{ $option->id }}"
-                                                        data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        @endif
-                                    </tr>
-                                @endforeach
+                                        </td>
+                                    @else
+                                        <td>
+                                            @php
+                                                $user = Auth::guard('restaurant')->user();
+                                                $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
+                                                    ->wherePermissionId(7)
+                                                    ->first();
+                                            @endphp
+                                            @if ($user->type == 'restaurant' or $deletePermission)
+                                                <a class="delete_data btn btn-danger" data="{{ $option->id }}"
+                                                   data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            @endif
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -166,7 +165,7 @@
     <script src="{{ URL::asset('admin/js/sweetalert.min.js') }}"></script>
     <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
     <script>
-        $(function() {
+        $(function () {
             $("#example1").DataTable({
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -182,22 +181,22 @@
                 "autoWidth": false,
             });
 
-            $('table input[type=checkbox].group-checkable').on('click', function() {
+            $('table input[type=checkbox].group-checkable').on('click', function () {
                 var tag = $(this);
                 var checkboxs = tag.parent().parent().parent().parent().parent().find(
                     'tbody tr td:first-child input.checkboxes');
                 // console.log(checkboxs);
                 console.log(checkboxs.length);
-                $.each(checkboxs, function(k, v) {
+                $.each(checkboxs, function (k, v) {
                     var item = $(v);
                     item.prop('checked', tag.prop('checked'));
                 });
                 var checked = tag.parent().parent().parent().parent().parent().find(
                     'tbody tr td:first-child input.checkboxes:checked');
                 var content = '';
-                $.each(checked , function(k ,v){
+                $.each(checked, function (k, v) {
                     var item = $(v);
-                    content += '<input type="hidden" name="ids[]" value="'+item.val()+'">';
+                    content += '<input type="hidden" name="ids[]" value="' + item.val() + '">';
                 });
                 $('.form-delete-all .hidden-input').html(content);
                 if (checked.length > 0) {
@@ -207,14 +206,14 @@
                     $('.delete-all').fadeOut(300);
                 }
             });
-            $('table').on('click', 'tbody tr td:first-child input.checkboxes', function() {
+            $('table').on('click', 'tbody tr td:first-child input.checkboxes', function () {
                 var tag = $(this);
                 var checked = tag.parent().parent().parent().parent().parent().find(
                     'tbody tr td:first-child input.checkboxes:checked');
-                    var content = '';
-                $.each(checked , function(k ,v){
+                var content = '';
+                $.each(checked, function (k, v) {
                     var item = $(v);
-                    content += '<input type="hidden" name="ids[]" value="'+item.val()+'">';
+                    content += '<input type="hidden" name="ids[]" value="' + item.val() + '">';
                 });
                 $('.form-delete-all .hidden-input').html(content);
                 if (checked.length > 0) {
@@ -227,8 +226,8 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $('body').on('click', '.delete_data', function() {
+        $(document).ready(function () {
+            $('body').on('click', '.delete_data', function () {
                 var id = $(this).attr('data');
                 var swal_text = '{{ trans('messages.delete') }} ' + $(this).attr('data_name');
                 var swal_title = "{{ trans('messages.deleteSure') }}";
@@ -241,7 +240,7 @@
                     confirmButtonClass: "btn-warning",
                     confirmButtonText: "{{ trans('messages.sure') }}",
                     cancelButtonText: "{{ trans('messages.close') }}"
-                }, function() {
+                }, function () {
 
                     window.location.href = "{{ url('/') }}" +
                         "/restaurant/product_options/delete/" + id;

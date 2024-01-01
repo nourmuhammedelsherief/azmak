@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\RestaurantController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\ProductSize;
+use App\Models\Restaurant\Azmak\AZProduct;
+use App\Models\Restaurant\Azmak\AZProductSize;
 use Illuminate\Http\Request;
 
 class ProductSizeController extends Controller
@@ -28,8 +28,8 @@ class ProductSizeController extends Controller
      */
     public function index($id)
     {
-        $product = Product::findOrFail($id);
-        $sizes = ProductSize::whereProductId($id)->get();
+        $product = AZProduct::findOrFail($id);
+        $sizes = AZProductSize::whereProductId($id)->get();
         return view('restaurant.products.sizes.index' , compact('product' , 'sizes'));
     }
 
@@ -40,7 +40,7 @@ class ProductSizeController extends Controller
      */
     public function create($id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         return view('restaurant.products.sizes.create' , compact('product'));
     }
 
@@ -52,7 +52,7 @@ class ProductSizeController extends Controller
      */
     public function store(Request $request , $id)
     {
-        $product = Product::findOrFail($id);
+        $product = AZProduct::findOrFail($id);
         $this->validate($request , [
             'name_ar'   => 'nullable|string|max:191',
             'name_en'   => 'nullable|string|max:191',
@@ -65,7 +65,7 @@ class ProductSizeController extends Controller
             return redirect()->back();
         }
         // create new product size
-        ProductSize::create([
+        AZProductSize::create([
             'name_ar'    => $request->name_ar,
             'name_en'    => $request->name_en,
             'price'      => $request->price,
@@ -95,7 +95,7 @@ class ProductSizeController extends Controller
      */
     public function edit($id)
     {
-        $size = ProductSize::findOrFail($id);
+        $size = AZProductSize::findOrFail($id);
         return view('restaurant.products.sizes.edit' , compact('size'));
     }
 
@@ -108,7 +108,7 @@ class ProductSizeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $size = ProductSize::findOrFail($id);
+        $size = AZProductSize::findOrFail($id);
         $this->validate($request , [
             'name_ar'   => 'nullable|string|max:191',
             'name_en'   => 'nullable|string|max:191',
@@ -138,7 +138,7 @@ class ProductSizeController extends Controller
      */
     public function destroy($id)
     {
-        $size = ProductSize::findOrFail($id);
+        $size = AZProductSize::findOrFail($id);
         $size->delete();
         flash(trans('messages.deleted'))->success();
         return redirect()->route('productSize' , $size->product->id);
@@ -146,7 +146,7 @@ class ProductSizeController extends Controller
 
     public function changeStatus(Request $requet , $id  , $status){
         $restaurant = $this->restaurant;
-        $size = ProductSize::whereHas('product' , function($query)use($restaurant){
+        $size = AZProductSize::whereHas('product' , function($query)use($restaurant){
             $query->where('restaurant_id' ,$restaurant->id);
         })->findOrFail($id);
         if(!in_array($status , ['true' , 'false'])):

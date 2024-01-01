@@ -21,13 +21,13 @@
                 <!--<div class="col-sm-6">-->
                 <!--    <ol class="breadcrumb float-sm-right">-->
                 <!--        <li class="breadcrumb-item">-->
-                <!--            <a href="{{url('/restaurant/home')}}">-->
-                <!--                @lang('messages.control_panel')-->
+            <!--            <a href="{{url('/restaurant/home')}}">-->
+            <!--                @lang('messages.control_panel')-->
                 <!--            </a>-->
                 <!--        </li>-->
                 <!--        <li class="breadcrumb-item active">-->
-                <!--            <a href="{{route('menu_categories.index')}}"></a>-->
-                <!--            @lang('messages.menu_categories')-->
+            <!--            <a href="{{route('menu_categories.index')}}"></a>-->
+            <!--            @lang('messages.menu_categories')-->
                 <!--        </li>-->
                 <!--    </ol>-->
                 <!--</div>-->
@@ -156,27 +156,25 @@
                                         </td>
                                     @endif
                                     <td>
-{{--                                        @if($category->branch->main == 'true')--}}
-{{--                                            <a class="btn btn-secondary" target="_blank"--}}
-{{--                                               href="{{route('sliverHome' , [$category->restaurant->name_barcode , $category->id])}}">--}}
-{{--                                                <i class="fa fa-eye"></i>--}}
-{{--                                                @lang('messages.show')--}}
-{{--                                            </a>--}}
-{{--                                        @else--}}
-{{--                                            <a class="btn btn-secondary" target="_blank"--}}
-{{--                                               href="{{route('sliverHomeBranch' , [$category->restaurant->name_barcode , $category->branch->name_barcode , $category->id])}}">--}}
-{{--                                                <i class="fa fa-eye"></i>--}}
-{{--                                                @lang('messages.show')--}}
-{{--                                            </a>--}}
-{{--                                        @endif--}}
+                                        {{--                                        @if($category->branch->main == 'true')--}}
+                                        {{--                                            <a class="btn btn-secondary" target="_blank"--}}
+                                        {{--                                               href="{{route('sliverHome' , [$category->restaurant->name_barcode , $category->id])}}">--}}
+                                        {{--                                                <i class="fa fa-eye"></i>--}}
+                                        {{--                                                @lang('messages.show')--}}
+                                        {{--                                            </a>--}}
+                                        {{--                                        @else--}}
+                                        {{--                                            <a class="btn btn-secondary" target="_blank"--}}
+                                        {{--                                               href="{{route('sliverHomeBranch' , [$category->restaurant->name_barcode , $category->branch->name_barcode , $category->id])}}">--}}
+                                        {{--                                                <i class="fa fa-eye"></i>--}}
+                                        {{--                                                @lang('messages.show')--}}
+                                        {{--                                            </a>--}}
+                                        {{--                                        @endif--}}
                                     </td>
                                     <td>
-                                        @if($category->branch->foodics_status == 'false')
-                                            <a class="btn btn-primary"
-                                               href="{{route('sub_categories.index' , $category->id)}}">
-                                                {{$category->sub_categories->count()}}
-                                            </a>
-                                        @endif
+                                        <a class="btn btn-primary"
+                                           href="{{route('sub_categories.index' , $category->id)}}">
+                                            {{$category->sub_categories->count()}}
+                                        </a>
                                     </td>
                                     <td>
                                         <span class="custom-switch {{$category->active == 'true' ? 'on' : 'off'}}"
@@ -188,10 +186,10 @@
 
                                     </td>
                                     <td>
-                                        <a class="btn btn-secondary"
-                                           href="{{route('copyMenuCategory' , $category->id)}}">
-                                            <i class="fa fa-file"></i> @lang('messages.copy')
-                                        </a>
+{{--                                        <a class="btn btn-secondary"--}}
+{{--                                           href="{{route('copyMenuCategory' , $category->id)}}">--}}
+{{--                                            <i class="fa fa-file"></i> @lang('messages.copy')--}}
+{{--                                        </a>--}}
                                         <a class="btn btn-primary"
                                            href="{{route('menu_categories.edit' , $category->id)}}">
                                             <i class="fa fa-user-edit"></i>

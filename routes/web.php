@@ -544,6 +544,8 @@ Route::prefix('restaurant')->group(function () {
             // products Routes
             Route::resource('/products', ProductController::class, []);
             Route::get('/branch/products/{id}',  [ProductController::class, 'branch_products'])->name('BranchProducts');
+            Route::get('/get/branch_menu_categories/{id}',  [ProductController::class, 'branch_menu_categories'])->name('branch_menu_categories');
+            Route::get('/get_menu_sub_categories/{id}',  [ProductController::class, 'get_menu_sub_categories'])->name('get_menu_sub_categories');
 
             Route::post('/products/update-image', [ProductController::class, 'updateProductImage'])->name('restaurant.product.update_image');
             Route::get('/products/arrange/{id}', [ProductController::class, 'arrange'])->name('arrangeProduct');

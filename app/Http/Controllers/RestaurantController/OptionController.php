@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\RestaurantController;
 
 use App\Http\Controllers\Controller;
-use App\Models\Modifier;
-use App\Models\Option;
+use App\Models\Restaurant\Azmak\AZOption;
+use App\Models\Restaurant\Azmak\AZModifier;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +34,7 @@ class OptionController extends Controller
         {
             return redirect()->route('RestaurantProfile');
         }
-        $options = Option::whereRestaurantId($restaurant->id)->with('relatedTo.modifier')->paginate(500);
+        $options = AZOption::whereRestaurantId($restaurant->id)->paginate(500);
         return view('restaurant.options.index' , compact('options'));
     }
 
@@ -55,8 +55,8 @@ class OptionController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $modifiers = Modifier::whereRestaurantId($restaurant->id)->get();
-        $relatedOptions = Option::where('restaurant_id' , $restaurant->id)->whereNull('related_id')->with('modifier')->orderBy('modifier_id')->get();
+        $modifiers = AZModifier::whereRestaurantId($restaurant->id)->get();
+        $relatedOptions = AZOption::where('restaurant_id' , $restaurant->id)->with('modifier')->orderBy('modifier_id')->get();
         return view('restaurant.options.create' , compact('modifiers' , 'relatedOptions'));
     }
 
@@ -81,7 +81,7 @@ class OptionController extends Controller
         $this->validate($request , [
             'name_ar'      => 'nullable|string|max:191',
             'name_en'      => 'nullable|string|max:191',
-            'modifier_id'  => 'required|exists:modifiers,id',
+            'modifier_id'  => 'required|exists:a_z_modifiers,id',
             'is_active'    => 'required|in:true,false',
             'price'        => 'required|numeric',
             'calories'     => 'nullable|numeric',
@@ -98,7 +98,7 @@ class OptionController extends Controller
             ]);
         endif;
         // create new option
-        Option::create([
+        AZOption::create([
             'name_ar'       => $request->name_ar,
             'name_en'       => $request->name_en,
             'modifier_id'   => $request->modifier_id,
@@ -141,10 +141,10 @@ class OptionController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $option = Option::findOrFail($id);
-        $modifiers = Modifier::whereRestaurantId($restaurant->id)->get();
+        $option = AZOption::findOrFail($id);
+        $modifiers = AZModifier::whereRestaurantId($restaurant->id)->get();
 
-        $relatedOptions = Option::where('restaurant_id' , $restaurant->id)->where('modifier_id' , '!=' , $option->modifier_id)->whereNull('related_id')->with('modifier')->orderBy('modifier_id')->get();
+        $relatedOptions = AZOption::where('restaurant_id' , $restaurant->id)->where('modifier_id' , '!=' , $option->modifier_id)->with('modifier')->orderBy('modifier_id')->get();
         return view('restaurant.options.edit' , compact('option' , 'modifiers' , 'relatedOptions'));
     }
 
@@ -167,11 +167,11 @@ class OptionController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        $option = Option::findOrFail($id);
+        $option = AZOption::findOrFail($id);
         $this->validate($request , [
             'name_ar'      => 'nullable|string|max:191',
             'name_en'      => 'nullable|string|max:191',
-            'modifier_id'  => 'required|exists:modifiers,id',
+            'modifier_id'  => 'required|exists:a_z_modifiers,id',
             'is_active'    => 'required|in:true,false',
             'price'        => 'required|numeric',
             'calories'     => 'nullable|numeric',
@@ -212,7 +212,7 @@ class OptionController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $option = Option::findOrFail($id);
+        $option = AZOption::findOrFail($id);
         $option->delete();
         flash(trans('messages.deleted'))->success();
         return redirect()->route('additions.index');
@@ -223,7 +223,7 @@ class OptionController extends Controller
         if(!auth('restaurant')->check()):
             return redirect(url('restaurant/login'));
         endif;
-        $option = Option::findOrFail($id);
+        $option = AZOption::findOrFail($id);
         $option->update([
             'is_active'  => $active
         ]);

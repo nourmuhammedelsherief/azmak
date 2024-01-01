@@ -4,6 +4,7 @@ namespace App\Models\Restaurant\Azmak;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \App\Models\Restaurant;
 
 class AZMenuCategory extends Model
 {
@@ -33,5 +34,9 @@ class AZMenuCategory extends Model
     public function branch()
     {
         return $this->belongsTo(AZBranch::class , 'branch_id');
+    }
+    public function sub_categories()
+    {
+        return $this->hasMany(AZRestaurantSubCategory::class , 'menu_category_id');
     }
 }
