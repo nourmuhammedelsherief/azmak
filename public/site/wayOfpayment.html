@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>متابعة الطلب</title>
+    <!-- //font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400&display=swap"
+      rel="stylesheet"
+    />
+    <!-- //bootstrap -->
+    <!-- <link rel="stylesheet" href="css/bootstrap.css" /> -->
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <!-- fontawsome -->
+    <link rel="stylesheet" href="css/all.min.css" />
+    <!-- style sheet -->
+    <link rel="stylesheet" href="css/global.css" />
+  </head>
+  <body>
+    <div class="mycontainer">
+      <div class="header d-flex align-items-center bg-white p-3">
+        <a href="home.html" style="color: black">
+          <i class="fa-solid fa-angle-right"></i>
+        </a>
+        <h5>متابعة الطلب</h5>
+      </div>
+
+      <div
+        class="join_us d-flex flex-column align-items-center px-5 m-5 justify-content-center"
+      >
+        <form id="myform">
+          <h6 class="my-2">اختر طريقة الدفع</h6>
+          <div class="apple_pay bg-white my-2 p-2">
+            <input type="radio" id="apple_pay" name="pay" />
+            <label for="apple_pay"> Apple Pay</label>
+          </div>
+          <div class="Credit_pay bg-white my-2 p-2">
+            <input type="radio" id="Credit_pay" name="pay" />
+            <label for="Credit_pay"> Credit Card</label>
+          </div>
+          <input type="submit" value="الدفع" id="submitbtn" />
+        </form>
+        <div class="overlay" id="overlay"></div>
+        <div
+          class="end_thank bg-white p-5 d-flex flex-column align-items-center"
+          id="end_thank"
+        >
+          <img src="./image/thankyou.jpg" class="d-block m-auto" alt="thank" />
+          <h6>رقم الطلب : 6548-A</h6>
+          <h6>09 September 2023 7:00 PM</h6>
+          <img src="./image/Qr.jpg" class="d-block m-auto" alt="code" />
+          <button><a href="home.html" class="text-white"> إغلاق</a></button>
+        </div>
+      </div>
+      <footer
+        class="px-4 py-3 d-flex align-items-center justify-content-around"
+      >
+        <div class="mainHome d-flex flex-column align-items-center">
+          <a href="home.html"> <i class="fa fa-house"></i></a>
+          <a href="home.html"> الرئيسية</a>
+        </div>
+        <div class="myorder d-flex flex-column align-items-center">
+          <a href="cart.html"> <i class="fa-solid fa-cart-shopping"></i></a>
+          <a href="cart.html"> طلباتي</a>
+        </div>
+        <div class="myAccount d-flex flex-column align-items-center">
+          <a href="myAccount.html"> <i class="fa-solid fa-user"></i></a>
+          <a href="myAccount.html"> حسابي</a>
+        </div>
+      </footer>
+    </div>
+    <script>
+      const form = document.getElementById("myform");
+      const submitBtn = document.getElementById("submitbtn");
+      const endThank = document.getElementById("end_thank");
+      const overlay = document.getElementById("overlay");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        console.log("sdkj");
+        // endThank.classList.add("show");
+        // overlay.classList.add("show");
+      });
+
+      overlay.addEventListener("click", function () {
+        endThank.classList.remove("show");
+        overlay.classList.remove("show");
+      });
+    </script>
+  </body>
+</html>
+<style>
+  .Credit_pay,
+  .apple_pay {
+    border-radius: 10px;
+  }
+  #end_thank {
+    border-radius: 18px;
+    /*  */
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .end_thank button {
+    background: var(--black_color);
+    display: block;
+    width: 150px;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px auto;
+  }
+  #end_thank.show {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: none;
+  }
+
+  .overlay.show {
+    display: block;
+  }
+</style>

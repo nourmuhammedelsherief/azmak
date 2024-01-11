@@ -1,0 +1,39 @@
+@import url("./global.css");
+// global style 
+.joinUs_btn{
+    background: var(--main_color);
+    border: none;
+    border-radius: 8px;
+    a{
+        color: white;
+        text-align: center;
+    }
+}
+header{
+    min-height: 60px;
+}
+.mobile_screen{
+    .container_ifno{
+        width: 100%;
+      .image{
+        width: max-content;
+        margin: auto;
+        margin-top: -80px;
+      }
+        .name{
+            text-align: center;
+            color: var(--main_color);
+            margin-bottom: 30px;
+            font-size:30px ;
+            font-weight: 700;
+        }
+        button{ 
+            margin:  50px auto;
+            width: 120px;
+            display: block; 
+        }
+        ul li {
+            list-style: none;
+        }
+    }
+}

@@ -86,6 +86,10 @@ use App\Http\Controllers\RestaurantController\WhatsappBranchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
+
+////////////////////////////////////////////////////////////    site controllers //////////
+use App\Http\Controllers\WebsiteController\HomeController as AZHome;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,8 +104,6 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 
 
 Route::get('locale/{locale}', function ($locale) {
-
-
     session(['locale' => $locale]);
     App::setLocale($locale);
     // return session()->all();
@@ -116,11 +118,21 @@ Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
 })->name('restaurant.language');
 
 
+/**
+ *  Start @user routes
+ */
+
+Route::get('/restaurants/{res_name}' , [AZHome::class , 'index']);
+Route::match(['get', 'post'],'/restaurants/branch/{branch_name?}' , [AZHome::class , 'home'])->name('homeBranch');
+Route::get('/restaurants/{res}/{branch_name}' , [AZHome::class , 'homeBranch'])->name('homeBranchIndex');
+/**
+ *  End @user routes
+ */
+
 
 /**
  * Start @restaurant Routes
  */
-
 
 Route::match(['get', 'post'], 'restaurants-registration/{code}', [ResHome::class, 'sellerRegisters'])->name('restaurant.seller.register');
 Route::match(['post'], 'restaurants-registration/{code}/verification-code/{id}', [ResHome::class, 'sellerVerificationPhone'])->name('restaurant.seller.register.verification');
@@ -606,67 +618,7 @@ Route::prefix('restaurant')->group(function () {
                 Route::post('/periods/{id}/update', 'update')->name('updateBranchPeriod');
                 Route::get('/periods/delete/{id}', 'destroy')->name('deleteBranchPeriod');
             });
-            // Waiting system
-            Route::group(['prefix' => 'waiting', 'as' => 'restaurant.waiting.'], function () {
-                Route::match(['get', 'post'], 'settings', [WaitingController::class, 'getSettings'])->name('settings');
-                // branch
-                Route::resource('branch', WaitingBranchController::class)->except(['destroy', 'show']);
-                Route::get('branch/delete/{id}', [WaitingBranchController::class, 'delete'])->name('branch.delete');
-                // places
-                Route::resource('place', WaitingPlaceController::class)->except(['destroy', 'show']);
-                Route::get('place/delete/{id}', [WaitingPlaceController::class, 'delete'])->name('place.delete');
-                // employee
-                Route::resource('employee', WaitingEmployeeController::class)->except(['destroy', 'show']);
-                Route::get('employee/delete/{id}', [WaitingEmployeeController::class, 'delete'])->name('employee.delete');
 
-                // orders
-                Route::get('order', [WaitingOrderController::class, 'index'])->name('order.index');
-                Route::get('order/delete/{id}', [WaitingOrderController::class, 'delete'])->name('order.delete');
-                Route::post('order', [WaitingOrderController::class, 'store'])->name('order.store');
-                Route::get('order/complete-order', [WaitingOrderController::class, 'completeOrder'])->name('order.complete');
-                Route::post('order/receive-order', [WaitingOrderController::class, 'receiveOrder'])->name('order.receive');
-            });
-            Route::match( ['get' , 'post'] , 'order/report' , [RestaurantControllerOrderController::class , 'report'])->name('restaurant.order.report');
-
-            Route::group(['prefix' => 'waiter', 'as' => 'restaurant.waiter.'], function () {
-                Route::match(['get', 'post'], 'settings', [WaiterRequestController::class, 'getSettings'])->name('settings');
-
-                Route::get('tables/{id}/barcode', [WaiterTableController::class, 'show_barcode'])->name('tables.barcode');
-                Route::resource('tables', WaiterTableController::class);
-                Route::get('tables/delete/{id}', [WaiterTableController::class, 'destroy'])->name('tables.delete');
-
-                Route::get('employees/delete/{id}', [WaiterEmployeeController::class, 'destroy'])->name('employees.delete');
-                Route::resource('employees', WaiterEmployeeController::class);
-
-                Route::get('items/delete/{id}', [WaiterRequestController::class, 'destroy'])->name('items.delete');
-                Route::resource('items', WaiterRequestController::class);
-
-                Route::get('orders/delete/{id}', [WaiterOrderController::class, 'destroy'])->name('orders.delete');
-                Route::post('orders/change-status', [WaiterOrderController::class, 'changeStatus'])->name('orders.change-status');
-                Route::resource('orders', WaiterOrderController::class)->only(['index']);
-            });
-
-            Route::group(['prefix' => 'loyalty-offer'  , 'as' => 'restaurant.loyalty-offer.']  , function(){
-                Route::match( ['get' , 'post'], 'settings' , [LoyaltyOfferController::class , 'settings'])->name('settings');
-
-                Route::resource('item' , LoyaltyOfferController::class);
-                Route::get('get-products' , [LoyaltyOfferController::class , 'getProducts'])->name('get-products');
-
-                Route::get('request/delete/{id}' , [LoyaltyOfferOrderController::class , 'delete'])->name('request.delete');
-                Route::get('request/search-phone' , [LoyaltyOfferOrderController::class , 'searchPhone'])->name('request.search-phone');
-
-                Route::resource('request' , LoyaltyOfferOrderController::class )->only('index' , 'create' , 'store');
-
-                Route::resource('prize' , LoyaltyOfferPrizeController::class )->only('index' );
-                Route::post('prize/store' , [LoyaltyOfferPrizeController::class , 'confirmPrize'])->name('prize.confirm');
-
-                Route::get('users' , [LoyaltyOfferPrizeController::class , 'usersIndex'])->name('users');
-
-            });
-
-            Route::group(['prefix' => 'report' , 'as' => 'restaurant.report.'] , function (){
-                Route::get('menu' , [RestaurantControllerReportController::class , 'chartIndex'])->name('menu');
-            });
         });
     });
 });

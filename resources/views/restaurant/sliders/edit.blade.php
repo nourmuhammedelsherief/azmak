@@ -48,11 +48,11 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="alert alert-warning" role="alert">
-                            <h4 class="alert-heading">{{ trans('dashboard.explain') }}</h4>
+                            <h4 class="alert-heading">{{ trans('messages.explain') }}</h4>
 
-                            <p>{{ trans('dashboard.image_warning_size', ['size' => 'العرض 600px ,  الطول 300px']) }}</p>
+                            <p>{{ trans('messages.image_warning_size', ['size' => 'العرض 600px ,  الطول 300px']) }}</p>
                             <hr>
-                            <p class="mb-0">{!! trans('dashboard.image_resize_hint') !!}
+                            <p class="mb-0">{!! trans('messages.image_resize_hint') !!}
                                 <a href="https://redketchup.io/image-resizer" target="__blank" style="color : #007bff;"
                                     title="موقع لتغير حجم الصور"> موقع لتغير حجم الصور</a>
                             </p>
@@ -67,8 +67,8 @@
                                 @if ($slider->slider_type == 'contact_us')
                                     {{-- description_ar --}}
                                     <div class="form-group">
-                                        <label class="control-label"> @lang('dashboard.entry.description_ar') </label>
-                                        <textarea name="description_ar" type="text" class="form-control" placeholder="@lang('dashboard.entry.description_ar')">{{ $slider->description_ar }}</textarea>
+                                        <label class="control-label"> @lang('messages.description_ar') </label>
+                                        <textarea name="description_ar" type="text" class="form-control" placeholder="@lang('messages.description_ar')">{{ $slider->description_ar }}</textarea>
                                         @if ($errors->has('description_ar'))
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('description_ar') }}</strong>
@@ -77,8 +77,8 @@
                                     </div>
                                     {{-- description_en --}}
                                     <div class="form-group">
-                                        <label class="control-label"> @lang('dashboard.entry.description_en') </label>
-                                        <textarea name="description_en" type="text" class="form-control" placeholder="@lang('dashboard.entry.description_en')">{{ $slider->description_en }}</textarea>
+                                        <label class="control-label"> @lang('messages.description_en') </label>
+                                        <textarea name="description_en" type="text" class="form-control" placeholder="@lang('messages.description_en')">{{ $slider->description_en }}</textarea>
                                         @if ($errors->has('description_en'))
                                             <span class="help-block">
                                                 <strong style="color: red;">{{ $errors->first('description_en') }}</strong>
@@ -88,18 +88,18 @@
                                 @endif
                                 {{-- type --}}
                                 <div class="form-group ">
-                                    <label class="control-label"> @lang('dashboard.entry.type') </label>
+                                    <label class="control-label"> @lang('messages.type') </label>
                                     <select name="type" id="type" class="form-control select2">
-                                        <option value="image" selected>{{ trans('dashboard.image') }}</option>
+                                        <option value="image" selected>{{ trans('messages.image') }}</option>
                                         @if ($slider->slider_type != 'contact_us_client')
                                             <option value="local_video"
                                                 {{ $slider->type == 'local_video' ? 'selected' : '' }}>
-                                                {{ trans('dashboard.local_video') }}
+                                                {{ trans('messages.local_video') }}
                                             </option>
                                             <option value="youtube" {{ $slider->type == 'youtube' ? 'selected' : '' }}>
-                                                {{ trans('dashboard.youtube') }}</option>
+                                                {{ trans('messages.youtube') }}</option>
                                             <option value="gif" {{ $slider->type == 'gif' ? 'selected' : '' }}>
-                                                {{ trans('dashboard.image_gif') }}</option>
+                                                {{ trans('messages.image_gif') }}</option>
                                         @endif
                                     </select>
                                     @if ($errors->has('type'))
@@ -110,10 +110,10 @@
                                 </div>
                                 {{-- url --}}
                                 <div class="form-group type_youtube display-none">
-                                    <label class="control-label"> @lang('dashboard.youtube') </label>
+                                    <label class="control-label"> @lang('messages.youtube') </label>
                                     <input type="text" name="youtube" class="form-control"
                                         value="{{ $slider->youtube }}" placeholder="مثال : xxxxxxx">
-                                    <p class="text-mute">{{ trans('dashboard.youtube_link_code') }}</p>
+                                    <p class="text-mute">{{ trans('messages.youtube_link_code') }}</p>
                                     @if ($errors->has('youtube'))
                                         <span class="help-block">
                                             <strong style="color: red;">{{ $errors->first('youtube') }}</strong>
@@ -153,7 +153,7 @@
                                 {{-- video --}}
                                 <div class="form-group type_local display-none" style="margin-top: 2%;">
                                     <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('dashboard.local_video') }}</span>
+                                        <span class="fileinput-new"> {{ trans('messages.local_video') }}</span>
                                         <br>
                                         <div dir=rtl class="file-loading">
                                             <input type="file" name="video" accept=".mp4" class="file"
