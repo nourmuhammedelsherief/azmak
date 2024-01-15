@@ -117,30 +117,14 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/restaurant/contact_us/barcode') }}"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/contact_us/barcode') !== false ? 'active' : '' }}">
-                                <i class="nav-icon fa fa-barcode"></i>
-                                <p>
-                                    {{ trans('dashboard.bio_barcode') }}
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/restaurant/urgent-barcode') }}"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/urgent-barcode') !== false ? 'active' : '' }}">
-                                <i class="nav-icon fa fa-barcode"></i>
-                                <p>
-                                    {{ trans('dashboard.urgent_barcode') }}
-                                </p>
-                            </a>
-                        </li>
+
+
                         <li class="nav-item">
                             <a href="{{ route('branches.index') }}"
                                 class="nav-link {{ strpos(URL::current(), '/restaurant/branches') !== false ? 'active' : '' }}">
                                 <i class="nav-icon far fa-flag"></i>
                                 <span class="badge badge-info right">
-                                    {{ \App\Models\Branch::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->whereIn('status', ['active', 'tentative'])->count() }}
+                                    {{ \App\Models\Restaurant\Azmak\AZBranch::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
 
                                 </span>
                                 <p>
@@ -168,7 +152,7 @@
                                 class="nav-link {{ strpos(URL::current(), '/restaurant/menu_categories') !== false ? 'active' : '' }}">
                                 <i class="nav-icon fa fa-bars"></i>
                                 <span class="badge badge-info right">
-                                    {{ \App\Models\MenuCategory::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
+                                    {{ \App\Models\Restaurant\Azmak\AZMenuCategory::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
                                 </span>
                                 <p>
                                     @lang('messages.menu_categories')
@@ -180,7 +164,7 @@
                                 class="nav-link {{ strpos(URL::current(), '/restaurant/modifiers') !== false ? 'active' : '' }}">
                                 <i class="nav-icon fa fa-plus"></i>
                                 <span class="badge badge-info right">
-                                    {{ \App\Models\Modifier::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
+                                    {{ \App\Models\Restaurant\Azmak\AZModifier::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
                                 </span>
                                 <p>
                                     @lang('messages.modifiers')
@@ -192,7 +176,7 @@
                                 class="nav-link {{ strpos(URL::current(), '/restaurant/additions') !== false ? 'active' : '' }}">
                                 <i class="nav-icon fa fa-plus"></i>
                                 <span class="badge badge-info right">
-                                    {{ \App\Models\Option::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
+                                    {{ \App\Models\Restaurant\Azmak\AZOption::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
                                 </span>
                                 <p>
                                     @lang('messages.options')
@@ -216,7 +200,7 @@
                                 class="nav-link {{ strpos(URL::current(), '/restaurant/products') !== false ? 'active' : '' }}">
                                 <i class="nav-icon fa fa-project-diagram"></i>
                                 <span class="badge badge-info right">
-                                    {{ \App\Models\Product::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
+                                    {{ \App\Models\Restaurant\Azmak\AZProduct::whereRestaurantId($user->type == 'employee' ? $user->restaurant_id : $user->id)->count() }}
                                 </span>
                                 <p>
                                     @lang('messages.products')
@@ -234,74 +218,8 @@
                             <i class="nav-icon fa fa-users"></i>
                             <p class="">{{ trans('dashboard.side_4') }}</p>
                         </li>
-                        <!--<li class="nav-item">-->
-                        <!--    <a href="{{ route('my_restaurant_users') }}"-->
-                        <!--       class="nav-link {{ strpos(URL::current(), '/restaurant/my_restaurant_users') !== false ? 'active' : '' }}">-->
-                        <!--        <i class="nav-icon fa fa-users"></i>-->
-                        <!--        <span class="badge badge-info right">-->
-                        <!--        {{ \DB::select('select count(DISTINCT(user_id)) as count from orders where restaurant_id = ' . $user->id)[0]->count }}-->
-                        <!--    </span>-->
-                        <!--        <p>-->
-                        <!--            @lang('messages.my_restaurant_users')-->
-                        <!--        </p>-->
-                        <!--    </a>-->
-                        <!--</li>-->
-                        <li
-                            class="nav-item has-treeview {{ strpos(URL::current(), 'estaurant/online_offer') !== false ? 'menu-open' : '' }}">
-                            <a href="#"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/online_offer') !== false ? 'active' : '' }}">
-                                <i class=" fas fa-bolt"></i>
-                                <p>
-                                    @lang('dashboard.online_offers')
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-
-                                <li class="nav-item">
-                                    <a href="{{ url('restaurant/online_offer/category') }}"
-                                        class="nav-link {{ strpos(URL::current(), '/restaurant/online_offer/category') !== false ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            @lang('dashboard.online_offer_categories')
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('restaurant/online_offer/image') }}"
-                                        class="nav-link {{ strpos(URL::current(), '/restaurant/online_offer/image') !== false ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            @lang('dashboard.online_offer_images')
-                                        </p>
-                                    </a>
-                                </li>
 
 
-
-                            </ul>
-                        </li>
-                        <li
-                            class="nav-item {{ strpos(URL::current(), '/restaurant/ads') !== false ? 'active' : '' }}">
-                            <a href="{{ route('restaurant.ads.index') }}"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/ads') !== false ? 'active' : '' }}">
-                                <i class="fas fa-external-link-alt"></i>
-                                <p>
-                                    @lang('dashboard.ads')
-                                </p>
-                            </a>
-                        </li>
-
-                        <li
-                            class="nav-item {{ strpos(URL::current(), '/restaurant/offers') !== false ? 'active' : '' }}">
-                            <a href="{{ url('/restaurant/offers') }}"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/offers') !== false ? 'active' : '' }}">
-                                <i class="fas fa-gift"></i>
-                                <p>
-                                    @lang('messages.offers')
-                                </p>
-                            </a>
-                        </li>
                         <li
                             class="nav-item {{ strpos(URL::current(), '/restaurant/sliders') !== false ? 'active' : '' }}">
                             <a href="{{ url('/restaurant/sliders') }}?type=home"
@@ -312,52 +230,25 @@
                                 </p>
                             </a>
                         </li>
-
-                        {{-- rate --}}
-
                         <li
-                            class="nav-item has-treeview {{ strpos(URL::current(), '/restaurant/feedback') !== false ? 'menu-open' : '' }}">
-                            <a href="#"
-                                class="nav-link {{ strpos(URL::current(), '/restaurant/feedback') !== false ? 'active' : '' }}">
-                                <i class="fas fa-comment-dots"></i>
+                            class="nav-item {{ strpos(URL::current(), '/restaurant/terms/conditions') !== false ? 'active' : '' }}">
+                            <a href="{{ url('/restaurant/terms/conditions') }}"
+                               class="nav-link {{ (strpos(URL::current(), '/restaurant/terms/conditions')) !== false ? 'active' : '' }}">
+                                <i class="fas fa-file"></i>
                                 <p>
-                                    @lang('dashboard.client_rate')
-                                    <i class="right fas fa-angle-left"></i>
+                                    @lang('messages.terms_conditions')
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview">
-                                {{-- rate --}}
-
-                                <li class="nav-item">
-                                    <a href="{{ route('restaurant.feedback.index') }}"
-                                        class="nav-link {{ strpos(URL::current(), '/restaurant/feedbackx') !== false ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            @lang('dashboard.client_feedback')
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url('restaurant/feedback/branch') }}"
-                                        class="nav-link {{ strpos(URL::current(), '/restaurant/feedback/branchx') !== false ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            @lang('dashboard.branches')
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="{{ url('restaurant/feedback/branch_setting') }}"
-                                        class="nav-link {{ strpos(URL::current(), '/restaurant/feedback/branch_settingx') !== false ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            @lang('dashboard.feedback_setting')
-                                        </p>
-                                    </a>
-                                </li>
-
-                            </ul>
+                        </li>
+                        <li
+                            class="nav-item {{ strpos(URL::current(), '/restaurant/azmak_about') !== false ? 'active' : '' }}">
+                            <a href="{{ url('/restaurant/azmak_about') }}"
+                               class="nav-link {{ (strpos(URL::current(), '/restaurant/azmak_about')) !== false ? 'active' : '' }}">
+                                <i class="fas fa-file"></i>
+                                <p>
+                                    @lang('messages.about_app')
+                                </p>
+                            </a>
                         </li>
 
 

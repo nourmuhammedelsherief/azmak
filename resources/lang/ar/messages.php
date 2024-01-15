@@ -104,4 +104,13 @@ return [
     'image_warning_size' => 'يجب ان تكون حجم الصورة  :size ',
     'image_resize_hint' => 'يمكن تعديل الحجم من الموقع مثل ',
     'change_branch' => 'تغيير',
+    'terms_conditions' => 'الشروط والأحكام',
+    'terms_ar' => 'الشروط والأحكام باللغة العربية',
+    'terms_en' => 'الشروط والأحكام باللغة الإنجليزية',
+    'contact_us' => 'تواصل معنا',
+    'email' => 'البريد الإلكتروني',
+    'message' => 'الرسالة',
+    'send' => 'إرسال',
+    'contactSendSuccessfully' => 'تم إرسال رسالتك الي المطعم بنجاح',
+    'about_app' => 'عن التطبيق',
 ];

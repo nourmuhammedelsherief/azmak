@@ -26,7 +26,7 @@
   <body>
     <div class="mycontainer">
       <header
-        class="bg-white mb-4 p-3 d-flex align-items-center justify-content-between"
+        class="bg-white p-3 d-flex align-items-center justify-content-between"
       >
         <!-- show mobile -->
         <div class="mobile_screen">
@@ -41,7 +41,7 @@
           </button>
 
           <div
-            class="offcanvas offcanvas-end"
+            class="offcanvas offcanvas-end offcanvas_mobile"
             tabindex="-1"
             id="offcanvasRight"
             aria-labelledby="offcanvasRightLabel"
@@ -66,33 +66,33 @@
                     <i class="fa-solid fa-globe mx-2"></i> تغيير اللغة
                   </li>
                   <hr />
-                  <li class="my-2">
+                  <!-- <li class="my-2">
                     <i class="fa-solid fa-gear mx-2"></i> الإعدادت
                   </li>
-                  <hr />
+                  <hr /> -->
                   <li class="my-2">
-                    <a href="Terms&Conditions.html" target="_blank">
+                    <a href="Terms&Conditions.html">
                       <i class="fa-solid fa-file-contract mx-2"></i> الشروط
                       والأحكام</a
                     >
                   </li>
                   <hr />
                   <li class="my-2">
-                    <a href="contactUS.html" target="_blank">
+                    <a href="contactUS.html">
                       <i class="fa-solid fa-envelope mx-2"></i> تواصل معنا</a
                     >
                   </li>
                   <hr />
                   <li class="my-2">
-                    <a href="aboutApp.html" target="_blank">
+                    <a href="aboutApp.html">
                       <i class="fa-solid fa-circle-exclamation mx-2"></i> حول
                       التطبيق</a
                     >
                   </li>
                   <hr />
                 </ul>
-                <button class="joinUs_btn py-3 px-1">
-                  <a href="joinUs.html" target="_blank">
+                <button class="joinUs_btn">
+                  <a href="joinUs.html">
                     <i class="fa-regular fa-star mx-1"></i> انضم إلينا</a
                   >
                 </button>
@@ -100,11 +100,15 @@
             </div>
           </div>
         </div>
+        <img src="./image//3azmkheader.jpg" alt="" />
         <div class="icons">
-          <i class="fa-regular fa-bell mx-3"></i>
+          <a href="notefecation.html">
+            <i class="fa-regular fa-bell mx-3"></i>
+          </a>
         </div>
       </header>
-      <main class="px-3 py-1">
+      <!-- <main class="py-1"> -->
+      <div class="show_main_info px-1 py-3">
         <div class="slider">
           <div
             id="carouselExampleControls"
@@ -147,9 +151,9 @@
         </div>
         <!-- end  main slider  -->
         <div
-          class="location_branch my-4 d-flex align-items-center justify-content-between"
+          class="location_branch bg-white my-4 d-flex align-items-center justify-content-between"
         >
-          <div>فرع الدمام</div>
+          <span class="showBranch px-2">فرع الدمام</span>
 
           <div>
             <button
@@ -159,6 +163,7 @@
               data-bs-target="#offcanvasBottom"
               aria-controls="offcanvasBottom"
             >
+              <i class="fa-solid fa-gear"></i>
               تعديل
             </button>
 
@@ -238,27 +243,15 @@
           </div>
         </div>
         <!-- end location branch -->
-        <section class="splide my-5 story" aria-label="Basic Structure Example">
-          <div class="splide__track">
-            <ul class="splide__list">
-              <li class="splide__slide">
-                <div><img src="./image/bake.jpg" /></div>
-                <h6 class="my-2">عروض الفطور</h6>
-              </li>
-              <li class="splide__slide">
-                <img src="./image/desert.jpg" />
-                <h6 class="my-2">حلويات</h6>
-              </li>
-              <li class="splide__slide">
-                <img src="./image/meal.jpg" />
-                <h6 class="my-2">عروض الغداء</h6>
-              </li>
-            </ul>
-          </div>
-        </section>
-        <!-- end slider story -->
+        <p class="description my-3 p-2">
+          نبذة عن المطعم كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.
+          ومن هنا وجب على المصمم أن يضع نصوصا مؤقتة على التصميم ليظهر للعميل
+          الشكل كاملاً،دور مولد النص العربى أن يوفر على المصمم عناء البحث عن نص
+          بديل لا علاقة له بالموضوع
+        </p>
+
         <section
-          class="splide my-5 main_dish"
+          class="splide my-1 main_dish"
           aria-label="Basic Structure Example"
         >
           <div class="splide__track">
@@ -281,16 +274,29 @@
                 </div>
                 <h6 class="text-center my-2">المخبوزات</h6>
               </li>
+              <li class="splide__slide">
+                <div class="image">
+                  <img src="./image/bake.jpg" />
+                </div>
+                <h6 class="text-center my-2">المخبوزات</h6>
+              </li>
+              <li class="splide__slide">
+                <div class="image">
+                  <img src="./image/bake.jpg" />
+                </div>
+                <h6 class="text-center my-2">المخبوزات</h6>
+              </li>
             </ul>
           </div>
         </section>
-        <!-- end slider show main dishes -->
-        <div
-          class="search_meal my-3 mx-2 bg-white p-2 d-flex align-items-center"
-        >
+      </div>
+
+      <!-- end slider show main dishes -->
+      <div class="show_meals bg-white p-3">
+        <!-- <div class="search_meal my-3 bg-white p-1 d-flex align-items-center">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="search" placeholder="ابحث عن   مطعم أو وجبة" />
-        </div>
+          <input type="search" placeholder="ابحث عن مطعم أو وجبة" />
+        </div> -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button
@@ -342,17 +348,17 @@
             role="tabpanel"
             aria-labelledby="home-tab"
           >
-            <div class="row my-3">
+            <div class="row mt-3">
               <div class="col-6">
-                <div class="list_Galler th_large p-2" id="product1">
+                <div class="list_Galler p-2" id="product1">
                   <div class="image">
                     <a href="productDetails.html">
                       <img src="./image/meal3.jpg" alt="" />
                     </a>
                   </div>
                   <div class="content_list p-2">
-                    <h3>اسم الوجبة</h3>
-                    <p>وصف الوجبة</p>
+                    <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                    <p><a href="productDetails.html"> وصف الوجبة </a></p>
                     <div
                       class="more_details d-flex align-items-center justify-content-between"
                     >
@@ -362,7 +368,9 @@
                           class="cart-btn"
                           data-product-id="product1"
                         >
-                          <i class="fa-solid fa-cart-plus"></i>
+                          <a href="productDetails.html">
+                            <i class="fa-solid fa-cart-plus"></i>
+                          </a>
                         </button>
                         <i class="fa-solid fa-share-nodes"></i>
                       </div>
@@ -382,8 +390,8 @@
                     </a>
                   </div>
                   <div class="content_list p-2">
-                    <h3>اسم الوجبة</h3>
-                    <p>وصف الوجبة</p>
+                    <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                    <p><a href="productDetails.html"> وصف الوجبة </a></p>
                     <div
                       class="more_details d-flex align-items-center justify-content-between"
                     >
@@ -393,7 +401,9 @@
                           class="cart-btn"
                           data-product-id="product2"
                         >
-                          <i class="fa-solid fa-cart-plus"></i>
+                          <a href="productDetails.html">
+                            <i class="fa-solid fa-cart-plus"></i>
+                          </a>
                         </button>
                         <i class="fa-solid fa-share-nodes"></i>
                       </div>
@@ -406,17 +416,17 @@
                 </div>
               </div>
             </div>
-            <div class="row my-3">
+            <div class="row mt-3">
               <div class="col-6">
-                <div class="list_Galler th_large p-2" id="product3">
+                <div class="list_Galler th_large p-2" id="product1">
                   <div class="image">
                     <a href="productDetails.html">
-                      <img src="./image/meal2.jpg" alt="" />
+                      <img src="./image/meal3.jpg" alt="" />
                     </a>
                   </div>
                   <div class="content_list p-2">
-                    <h3>اسم الوجبة</h3>
-                    <p>وصف الوجبة</p>
+                    <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                    <p><a href="productDetails.html"> وصف الوجبة </a></p>
                     <div
                       class="more_details d-flex align-items-center justify-content-between"
                     >
@@ -424,14 +434,16 @@
                         <button
                           id="addToCartBtn"
                           class="cart-btn"
-                          data-product-id="product3"
+                          data-product-id="product1"
                         >
-                          <i class="fa-solid fa-cart-plus"></i>
+                          <a href="productDetails.html">
+                            <i class="fa-solid fa-cart-plus"></i>
+                          </a>
                         </button>
                         <i class="fa-solid fa-share-nodes"></i>
                       </div>
                       <div class="price">
-                        <span>40</span>
+                        <span>50</span>
                         <small> ر.س</small>
                       </div>
                     </div>
@@ -439,15 +451,15 @@
                 </div>
               </div>
               <div class="col-6">
-                <div class="list_Galler th_large p-2" id="product4">
+                <div class="list_Galler th_large p-2" id="product2">
                   <div class="image">
                     <a href="productDetails.html">
-                      <img src="./image/cover1.jpg" alt="" />
+                      <img id="productImage" src="./image/meal.jpg" alt="" />
                     </a>
                   </div>
                   <div class="content_list p-2">
-                    <h3>اسم الوجبة</h3>
-                    <p>وصف الوجبة</p>
+                    <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                    <p><a href="productDetails.html"> وصف الوجبة </a></p>
                     <div
                       class="more_details d-flex align-items-center justify-content-between"
                     >
@@ -455,14 +467,16 @@
                         <button
                           id="addToCartBtn"
                           class="cart-btn"
-                          data-product-id="product4"
+                          data-product-id="product2"
                         >
-                          <i class="fa-solid fa-cart-plus"></i>
+                          <a href="productDetails.html">
+                            <i class="fa-solid fa-cart-plus"></i>
+                          </a>
                         </button>
                         <i class="fa-solid fa-share-nodes"></i>
                       </div>
                       <div class="price">
-                        <span>40</span>
+                        <span>60</span>
                         <small> ر.س</small>
                       </div>
                     </div>
@@ -478,24 +492,22 @@
             role="tabpanel"
             aria-labelledby="profile-tab"
           >
-            <div class="list_Gallery my-3">
+            <div class="list_Gallery mt-3">
               <div class="image">
                 <a href="productDetails.html">
                   <img src="./image/cover1.jpg" alt="" />
                 </a>
               </div>
               <div class="content_list p-2">
-                <h3>اسم الوجبة</h3>
-
-                <p>
-                  وصف قصير عن الوجبة هنا وصف قصير عن الوجبة هناوصف قصير عن
-                  الوجبة هنا وصف قصير عن الوجبة هنا
-                </p>
+                <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                <p><a href="productDetails.html"> وصف الوجبة </a></p>
                 <div
                   class="more_details d-flex align-items-center justify-content-between"
                 >
                   <div class="action">
-                    <i class="fa-solid fa-cart-plus"></i>
+                    <a href="productDetails.html">
+                      <i class="fa-solid fa-cart-plus"></i>
+                    </a>
                     <i class="fa-solid fa-share-nodes"></i>
                   </div>
                   <div class="price">
@@ -513,20 +525,22 @@
             role="tabpanel"
             aria-labelledby="contact-tab"
           >
-            <div class="list my-3 d-flex align-items-center gap-2">
+            <div class="list mt-3 d-flex align-items-center gap-2">
               <div class="image">
                 <a href="productDetails.html">
-                  <img src="./image/cover1.jpg" alt="" />
+                  <img src="./image/drink.jpg" alt="" />
                 </a>
               </div>
               <div class="content_list p-2 w-100">
-                <h3>اسم الوجبة</h3>
-                <p>وصف الوجبة</p>
+                <h3><a href="productDetails.html"> اسم الوجبة</a></h3>
+                <p><a href="productDetails.html"> وصف الوجبة </a></p>
                 <div
                   class="more_details d-flex align-items-center justify-content-between"
                 >
                   <div class="action">
-                    <i class="fa-solid fa-cart-plus"></i>
+                    <a href="productDetails.html">
+                      <i class="fa-solid fa-cart-plus"></i>
+                    </a>
                     <i class="fa-solid fa-share-nodes"></i>
                   </div>
                   <div class="price">
@@ -538,63 +552,75 @@
             </div>
           </div>
         </div>
-      </main>
+      </div>
+      <!-- </main> -->
       <footer
-        class="mt-5 px-4 py-3 d-flex align-items-center justify-content-around"
+        class="px-4 py-3 d-flex align-items-center justify-content-around"
       >
         <div class="mainHome d-flex flex-column align-items-center">
-          <a href="home.html"> <i class="fa fa-house"></i></a>
-          <a href="home.html" > الرئيسية</a>
+          <a href="home.html">
+            <i class="fa fa-house"></i>
+          </a>
+          <a href="home.html"> <span>الرئيسية</span> </a>
         </div>
         <div class="myorder d-flex flex-column align-items-center">
-          <a href="cart.html" >
-            <i class="fa-solid fa-cart-shopping"></i
-          ></a>
-          <a href="cart.html" > طلباتي</a>
+          <a href="cart.html"> <i class="fa-solid fa-cart-shopping"></i></a>
+          <a href="cart.html"> طلباتي</a>
         </div>
         <div class="myAccount d-flex flex-column align-items-center">
-          <a href="myAccount.html">
-            <i class="fa-solid fa-user"></i
-          ></a>
-          <a href="myAccount.html" > حسابي</a>
+          <a href="myAccount.html"> <i class="fa-solid fa-user"></i></a>
+          <a href="myAccount.html"> حسابي</a>
         </div>
       </footer>
     </div>
 
     <script src="js/bootstrap.bundle.js"></script>
     <script>
-      // new Splide(".splide", {
-      //   // type: "loop",
-      //   perPage: 4,
-      //   rewind: true,
-      //   breakpoints: {
-      //     640: {
-      //       perPage: 2,
-      //     },
-      //   },
-      // }).mount();
-      var elms = document.getElementsByClassName("splide");
+      // new Splide(".splide").mount();
+      new Splide(".splide", {
+        rewind: true,
+        rewind: true,
+        loop: true,
+        pauseOnFocus: true,
+        breakpoints: {
+          640: {
+            perPage: 1,
+          },
+        },
+      }).mount();
 
-      for (var i = 0; i < elms.length; i++) {
-        new Splide(elms[0], {
-          perPage: 4,
-          rewind: true,
-          breakpoints: {
-            640: {
-              perPage: 2,
-            },
-          },
-        }).mount();
-        new Splide(elms[1], {
-          perPage: 4,
-          rewind: true,
-          breakpoints: {
-            640: {
-              perPage: 2,
-            },
-          },
-        }).mount();
-      }
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   new Splide("#card-carousel", {
+      //     perPage: 2,
+      //     breakpoints: {
+      //       640: {
+      //         perPage: 1,
+      //       },
+      //     },
+      //   }).mount();
+      // });
+      // var elms = document.getElementsByClassName("splide");
+
+      // for (var i = 0; i < elms.length; i++) {
+      //   new Splide(elms[0], {
+      //     perPage: 4,
+      //     rewind: true,
+      //     breakpoints: {
+      //       640: {
+      //         perPage: 2,
+      //       },
+      //     },
+      //   }).mount();
+      //   new Splide(elms[1], {
+      //     perPage: 4,
+      //     rewind: true,
+      //     breakpoints: {
+      //       640: {
+      //         perPage: 2,
+      //       },
+      //     },
+      //   }).mount();
+      // }
     </script>
     <script src="js/cart.js"></script>
   </body>

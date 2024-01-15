@@ -105,4 +105,13 @@ return [
     'image_warning_size' => 'photo size must be  :size ',
     'image_resize_hint' => 'You can edit size from site ex ',
     'change_branch' => 'change branch',
+    'terms_conditions' => 'Terms And Conditions',
+    'terms_ar' => 'Terms And Conditions In Arabic',
+    'terms_en' => 'Terms And Conditions In English',
+    'contact_us' => 'Contact Us',
+    'email' => 'Email',
+    'message' => 'Message',
+    'send' => 'Send',
+    'contactSendSuccessfully' => 'Your Message Send To Restaurant Successfully',
+    'about_app' => 'About App',
 ];

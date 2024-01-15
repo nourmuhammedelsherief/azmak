@@ -40,7 +40,7 @@
           </button>
 
           <div
-            class="offcanvas offcanvas-end"
+            class="offcanvas offcanvas-end offcanvas_mobile"
             tabindex="-1"
             id="offcanvasRight"
             aria-labelledby="offcanvasRightLabel"
@@ -65,33 +65,33 @@
                     <i class="fa-solid fa-globe mx-2"></i> تغيير اللغة
                   </li>
                   <hr />
-                  <li class="my-2">
+                  <!-- <li class="my-2">
                     <i class="fa-solid fa-gear mx-2"></i> الإعدادت
                   </li>
-                  <hr />
+                  <hr /> -->
                   <li class="my-2">
-                    <a href="Terms&Conditions.html" target="_blank">
+                    <a href="Terms&Conditions.html">
                       <i class="fa-solid fa-file-contract mx-2"></i> الشروط
                       والأحكام</a
                     >
                   </li>
                   <hr />
                   <li class="my-2">
-                    <a href="contactUS.html" target="_blank">
+                    <a href="contactUS.html">
                       <i class="fa-solid fa-envelope mx-2"></i> تواصل معنا</a
                     >
                   </li>
                   <hr />
                   <li class="my-2">
-                    <a href="aboutApp.html" target="_blank">
+                    <a href="aboutApp.html">
                       <i class="fa-solid fa-circle-exclamation mx-2"></i> حول
                       التطبيق</a
                     >
                   </li>
                   <hr />
                 </ul>
-                <button class="joinUs_btn py-3 px-1">
-                  <a href="joinUs.html" target="_blank">
+                <button class="joinUs_btn">
+                  <a href="joinUs.html">
                     <i class="fa-regular fa-star mx-1"></i> انضم إلينا</a
                   >
                 </button>
@@ -99,6 +99,7 @@
             </div>
           </div>
         </div>
+        <h5>حسابي</h5>
         <div class="icons">
           <i class="fa-regular fa-bell mx-3"></i>
         </div>
@@ -120,13 +121,13 @@
         </div>
       </div>
       <!-- end info page -->
-      <div class="edit_myAccount bg-white p-3">
+      <div class="edit_myAccount bg-white">
         <a href="edit_myAccount.html">
           <i class="fa-solid fa-pen"></i>
           <span> تعديل معلومات الحساب</span>
         </a>
       </div>
-      <div class="changePassword bg-white p-3">
+      <div class="changePassword bg-white">
         <a href="changePassword.html">
           <i class="fa-solid fa-lock"></i>
           <span> تغيير كلمة المرور</span>
@@ -157,7 +158,9 @@
   .changePassword {
     width: max-content;
     margin: 10px auto;
-    border-radius: 15px;
+    border-radius: 8px;
+    padding: 6px 16px 6px 16px;
+    font-size: 14px;
   }
   .edit_myAccount i,
   .changePassword i {
@@ -165,20 +168,33 @@
     margin: 0 7px;
   }
   .myinfo {
-    width: 70%;
-    margin: 20px auto;
-    border-radius: 15px;
+    margin-top: 80px;
+    margin-left: 30px;
+    margin-right: 30px;
+    border-radius: 8px;
   }
   .myinfo i {
     color: var(--main_color);
     margin: 0 7px;
+    font-size: 16px;
   }
   .myinfo div {
     margin: 10px 0;
   }
+  footer {
+    margin-top: 100px;
+  }
   @media (max-width: 768px) {
     .myinfo img {
       width: 100%;
+    }
+    .edit_myAccount a span,
+    .changePassword span,
+    .email span,
+    .mynumber span,
+    .mylocation span {
+      font-size: 14px;
+      font-weight: 400;
     }
   }
 </style>

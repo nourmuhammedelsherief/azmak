@@ -21,95 +21,97 @@
     <link rel="stylesheet" href="css/home.css" />
   </head>
   <body>
-    <div class="main_open">
-      <div class="image">
-        <img src="./image/3azmak2.png" alt="3azmak_title" />
-      </div>
-      <div>
-        <p>أهلاً بكم في تطبيق عازمك!</p>
-        <!-- start choose city -->
+    <div class="mycontainer">
+      <div class="main_open">
+        <div class="image">
+          <img src="./image/3azmak2.png" alt="3azmak_title" />
+        </div>
         <div>
-          <button
-            class="btn btn_custom"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasBottom"
-            aria-controls="offcanvasBottom"
-          >
-            <i class="fa-solid fa-angle-right"></i>
-            <span> متابعة </span>
-          </button>
+          <p>أهلاً بكم في تطبيق عازمك!</p>
+          <!-- start choose city -->
+          <div class="btn_home">
+            <button
+              class="btn btn_custom"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasBottom"
+              aria-controls="offcanvasBottom"
+            >
+              <i class="fa-solid fa-angle-right"></i>
+              <span> متابعة </span>
+            </button>
 
-          <div
-            class="offcanvas offcanvas-bottom"
-            tabindex="-1"
-            id="offcanvasBottom"
-            aria-labelledby="offcanvasBottomLabel"
-          >
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasBottomLabel">
-                اختر الفرع
-              </h5>
-              <button
-                type="button"
-                class="btn-close text-reset"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="offcanvas-body small">
-              <form id="cityForm">
-                <div>
-                  <input
-                    type="radio"
-                    id="city1"
-                    name="options"
-                    value="option1"
-                  />
-                  <label for="city1">الدمام</label>
-                </div>
-                <hr />
-                <div>
-                  <input
-                    type="radio"
-                    id="city2"
-                    name="options"
-                    value="option2"
-                  />
-                  <label for="city2">الرياض</label>
-                </div>
-                <hr />
-                <div>
-                  <input
-                    type="radio"
-                    id="city3"
-                    name="options"
-                    value="option2"
-                  />
-                  <label for="city3">مكة المكرمة</label>
-                </div>
-                <hr />
-                <div>
-                  <input
-                    type="radio"
-                    id="city4"
-                    name="options"
-                    value="option2"
-                  />
-                  <label for="city4"> اسم المدينة</label>
-                </div>
-                <hr />
-                <div>
-                  <input
-                    type="radio"
-                    id="city5"
-                    name="options"
-                    value="option2"
-                  />
-                  <label for="city5"> اسم المدينة</label>
-                </div>
-                <input type="submit" value="حفظ" />
-              </form>
+            <div
+              class="offcanvas offcanvas-bottom"
+              tabindex="-1"
+              id="offcanvasBottom"
+              aria-labelledby="offcanvasBottomLabel"
+            >
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasBottomLabel">
+                  اختر الفرع
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close text-reset"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="offcanvas-body small">
+                <form id="cityForm">
+                  <div>
+                    <input
+                      type="radio"
+                      id="city1"
+                      name="options"
+                      value="option1"
+                    />
+                    <label for="city1">الدمام</label>
+                  </div>
+                  <hr />
+                  <div>
+                    <input
+                      type="radio"
+                      id="city2"
+                      name="options"
+                      value="option2"
+                    />
+                    <label for="city2">الرياض</label>
+                  </div>
+                  <hr />
+                  <div>
+                    <input
+                      type="radio"
+                      id="city3"
+                      name="options"
+                      value="option2"
+                    />
+                    <label for="city3">مكة المكرمة</label>
+                  </div>
+                  <hr />
+                  <div>
+                    <input
+                      type="radio"
+                      id="city4"
+                      name="options"
+                      value="option2"
+                    />
+                    <label for="city4"> اسم المدينة</label>
+                  </div>
+                  <hr />
+                  <div>
+                    <input
+                      type="radio"
+                      id="city5"
+                      name="options"
+                      value="option2"
+                    />
+                    <label for="city5"> اسم المدينة</label>
+                  </div>
+                  <input type="submit" value="حفظ" />
+                </form>
+              </div>
             </div>
           </div>
         </div>

@@ -44,51 +44,20 @@ use App\Http\Controllers\RestaurantController\RestaurantOrderSettingRangeControl
 use App\Http\Controllers\RestaurantController\AdsController;
 use App\Http\Controllers\RestaurantController\BackupController;
 use App\Http\Controllers\RestaurantController\BankController as RestaurantControllerBankController;
-use App\Http\Controllers\RestaurantController\FeedbackBranchController;
-use App\Http\Controllers\RestaurantController\FeedbackController;
-use App\Http\Controllers\RestaurantController\HeaderFooterController;
-use App\Http\Controllers\RestaurantController\IconController;
-use App\Http\Controllers\RestaurantController\LayoltyPointController;
-use App\Http\Controllers\RestaurantController\LoyaltyOffer\LoyaltyOfferController;
-use App\Http\Controllers\RestaurantController\LoyaltyOffer\LoyaltyOfferOrderController;
-use App\Http\Controllers\RestaurantController\LoyaltyOffer\LoyaltyOfferPrizeController;
-use App\Http\Controllers\RestaurantController\LoyaltyOffer\LoyaltyOfferRequestController;
-use App\Http\Controllers\RestaurantController\Lucky_Wheel\LuckyWheelItemController;
-use App\Http\Controllers\RestaurantController\Lucky_Wheel\LuckyWheelOrderController;
-use App\Http\Controllers\RestaurantController\OnlineOffer\OnlineOfferCategoryController;
-use App\Http\Controllers\RestaurantController\OnlineOffer\OnlineOfferImageController;
-use App\Http\Controllers\RestaurantController\OrderController as RestaurantControllerOrderController;
-use App\Http\Controllers\RestaurantController\Party\PartyBranchController;
-use App\Http\Controllers\RestaurantController\Party\PartyController;
-use App\Http\Controllers\RestaurantController\Party\PartyOrderController;
-use App\Http\Controllers\RestaurantController\ReportController as RestaurantControllerReportController;
-use App\Http\Controllers\RestaurantController\Waiting\WaitingController;
-use App\Http\Controllers\RestaurantController\Reservation\ReservationBranchController;
-use App\Http\Controllers\RestaurantController\Reservation\ReservationController as ReservationReservationController;
-use App\Http\Controllers\RestaurantController\Reservation\ReservationPlaceController;
-use App\Http\Controllers\RestaurantController\Reservation\ReservationTableController;
 use App\Http\Controllers\RestaurantController\RestaurantContactUsController;
 use App\Http\Controllers\RestaurantController\RestaurantContactUsLinkController;
 use App\Http\Controllers\RestaurantController\RestaurantOrderSellerCodeWhatsappController;
 use App\Http\Controllers\RestaurantController\ServiceProviderController as RestaurantControllerServiceProviderController;
 use App\Http\Controllers\RestaurantController\ServiceStoreController;
 use App\Http\Controllers\RestaurantController\SmsController;
-use App\Http\Controllers\RestaurantController\Waiter\EmployeeController as WaiterEmployeeController;
-use App\Http\Controllers\RestaurantController\Waiter\ItemController;
-use App\Http\Controllers\RestaurantController\Waiter\WaiterOrderController;
-use App\Http\Controllers\RestaurantController\Waiter\WaiterRequestController;
-use App\Http\Controllers\RestaurantController\Waiter\WaiterTableController;
-use App\Http\Controllers\RestaurantController\Waiting\WaitingBranchController;
-use App\Http\Controllers\RestaurantController\Waiting\WaitingEmployeeController;
-use App\Http\Controllers\RestaurantController\Waiting\WaitingOrderController;
-use App\Http\Controllers\RestaurantController\Waiting\WaitingPlaceController;
-use App\Http\Controllers\RestaurantController\WhatsappBranchController;
+use App\Http\Controllers\RestaurantController\TermsConditionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
 
 ////////////////////////////////////////////////////////////    site controllers //////////
 use App\Http\Controllers\WebsiteController\HomeController as AZHome;
+use App\Http\Controllers\WebsiteController\ContactUsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,7 +93,13 @@ Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
 
 Route::get('/restaurants/{res_name}' , [AZHome::class , 'index']);
 Route::match(['get', 'post'],'/restaurants/branch/{branch_name?}' , [AZHome::class , 'home'])->name('homeBranch');
-Route::get('/restaurants/{res}/{branch_name}' , [AZHome::class , 'homeBranch'])->name('homeBranchIndex');
+Route::get('/restaurants/{res}/{branch_name}/{cat?}' , [AZHome::class , 'homeBranch'])->name('homeBranchIndex');
+Route::get('/restaurant/{res_name}/terms&conditions' , [AZHome::class , 'terms'])->name('restaurantTerms');
+Route::get('/restaurant/{res_name}/about_us' , [AZHome::class , 'about'])->name('restaurantAboutAzmak');
+Route::get('/restaurant_contact_us/{res_name}' , [ContactUsController::class , 'index'])->name('restaurantVisitorContactUs');
+Route::post('/restaurant_contact_us/{res_name}/send' , [ContactUsController::class , 'contact_us'])->name('restaurantVisitorContactUsSend');
+
+
 /**
  *  End @user routes
  */
@@ -169,40 +144,8 @@ Route::prefix('restaurant')->group(function () {
     Route::post('not_allowed_ads', [AdsController::class, 'notWatchAgain'])->name('ads.not_allowed');
     Route::group(['middleware' => 'auth:restaurant'], function () {
         Route::get('/home', [ResHome::class, 'index'])->name('restaurant.home');
-        // feedback
-        Route::resource('feedback', FeedbackController::class, ['as' => 'restaurant'])->only(['index']);
-
-        Route::resource('feedback/branch', FeedbackBranchController::class, ['as' => 'restaurant.feedback'])->except(['show', 'destroy']);
-        Route::get('feedback/branch/delete/{id}', [FeedbackBranchController::class, 'delete'])->name('restaurant.feedback.branch.delete');
-        Route::match(['get', 'post'], 'feedback/branch_setting', [FeedbackBranchController::class, 'enableFeedback'])->name('restaurant.feedback.branch.setting');
-
-        // loyalty_point
-        Route::resource('loyalty_point_price', LayoltyPointController::class, ['as' => 'restaurant'])->except(['show', 'destroy']);
-        Route::get('loyalty_point_price/delete/{id}', [LayoltyPointController::class, 'delete'])->name('restaurant.loyalty_point.delete');
-        Route::match(['get', 'post'], 'loyalty_point/settings', [LayoltyPointController::class, 'settings'])->name('restaurant.loyalty_point.setting');
 
 
-        // start online offers
-        Route::group(['prefix' => 'online_offer', 'as' => 'restaurant.online_offer.'], function () {
-
-            Route::resource('category', OnlineOfferCategoryController::class)->except(['show', 'destroy']);
-            Route::get('category/delete/{id}', [OnlineOfferCategoryController::class, 'delete'])->name('category.delete');
-
-            Route::resource('image', OnlineOfferImageController::class)->except(['show', 'destroy']);
-            Route::get('image/delete/{id}', [OnlineOfferImageController::class, 'delete'])->name('image.delete');
-        });
-        // end online offers
-
-        Route::group(['prefix' => 'lucky_wheel', 'as' => 'restaurant.lucky.'], function () {
-            // lucky items
-            Route::resource('item', LuckyWheelItemController::class)->except(['show', 'destroy']);
-            Route::get('item/delete/{id}', [LuckyWheelItemController::class, 'delete'])->name('item.delete');
-            // lucky orders
-            Route::get('order/{status?}', [LuckyWheelOrderController::class, 'index'])->name('order.index');
-            Route::resource('order', LuckyWheelOrderController::class)->except(['show', 'destroy', 'index']);
-            Route::get('order/delete/{id}', [LuckyWheelOrderController::class, 'delete'])->name('order.delete');
-            Route::get('order/change-status/{id}/{status}', [LuckyWheelOrderController::class, 'changeStatus'])->name('order.status');
-        });
 
         // whatsapp_branches
         Route::resource('/whatsapp_branches', WhatsappBranchController::class, []);
@@ -258,63 +201,7 @@ Route::prefix('restaurant')->group(function () {
         Route::match(['get', 'post'], 'contact_us/settings', [RestaurantContactUsController::class, 'setting'])->name('restaurant.contact_us.setting');
         Route::match(['get', 'post'], 'contact_us/barcode', [RestaurantContactUsController::class, 'setting'])->name('restaurant.contact_us.barcode');
 
-        Route::resource('reservation/branch', ReservationBranchController::class, ['names' => [
-            'index' => 'restaurant.reservation.branch.index',
-            'create' => 'restaurant.reservation.branch.create',
-            'store' => 'restaurant.reservation.branch.store',
-            'edit' => 'restaurant.reservation.branch.edit',
-            'update' => 'restaurant.reservation.branch.update',
-        ]])->except(['destroy', 'show']);
-        Route::get('reservation/branch/delete/{id}', [ReservationBranchController::class, 'delete'])->name('restaurant.reservation.branch.delete');
 
-
-        Route::resource('reservation/place', ReservationPlaceController::class, ['as' => 'restaurant.reservation'])->except(['destroy', 'show']);
-        Route::get('reservation/place/delete/{id}', [ReservationPlaceController::class, 'delete']);
-
-        Route::resource('reservation/tables', ReservationTableController::class, ['as' => 'restaurant.reservation'])->only(['index', 'create', 'store', 'show']);
-
-        Route::get('reservation/orders/confirm/{id}/{code}', [ReservationTableController::class, 'confirmReservation']);
-
-        Route::get('reservation/tables/delete/{id}', [ReservationTableController::class, 'destroy']);
-
-        Route::get('reservation/tables/{table}/delete-image/{id}', [ReservationTableController::class, 'deleteImage']);
-
-        Route::get('reservation/tables/{table}/change-status', [ReservationTableController::class, 'changeStatus'])->name('restaurant.reservation.tables.changeStatus');
-
-
-        Route::get('reservation/tables-expire', [ReservationTableController::class, 'expireIndex']);
-        Route::resource('reservation/tables', ReservationTableController::class, ['as' => 'restaurant.reservation']);
-        Route::get('reservation/tables/delete/{id}', [ReservationTableController::class, 'destroy']);
-
-        Route::match(['get', 'post'], 'reservation/settings', [ReservationReservationController::class, 'getSettings'])->name('reservation.settings');
-
-
-        Route::resource('reservation/order', ReservationReservationController::class, ['names' => [
-            'index' => 'restaurant.reservation.index',
-            'create' => 'restaurant.reservation.create',
-            'store' => 'restaurant.reservation.store',
-            'edit' => 'restaurant.reservation.edit',
-            'update' => 'restaurant.reservation.update',
-            'show' => 'restaurant.reservation.show',
-        ]])->except(['destroy']);
-        Route::get('reservation/services', [ReservationReservationController::class, 'servicesIndex'])->name('resetaurant.reservation.services');
-        Route::match(['get', 'post'], 'reservation/cash-settings', [ReservationReservationController::class, 'cashSettings'])->name('resetaurant.reservation.cash-settings');
-        Route::match(['get', 'post'], 'reservation/order/{order}/confirm', [ReservationReservationController::class, 'confirmBankOrder'])->name('resetaurant.reservation.confirm');
-        Route::get('reservation/orders/finished', [ReservationReservationController::class, 'finished'])->name('resetaurant.reservation.finished');
-        Route::get('reservation/orders/canceled', [ReservationReservationController::class, 'canceled'])->name('resetaurant.reservation.canceled');
-        Route::get('reservation/orders/confirmed', [ReservationReservationController::class, 'completed'])->name('resetaurant.reservation.confirmed');
-        Route::match(['get', 'post'], 'reservation/service_setting', [ReservationReservationController::class, 'service_setting'])->name('restaurant.reservation.service.setting');
-
-        Route::match(['get', 'post'], 'reservation/description', [ReservationReservationController::class, 'reservationDescription'])->name('restaurant.reservation.description.edit');
-
-
-        Route::resource('services_store', ServiceStoreController::class, ['as' => 'restaurant'])->only(['index']);
-        Route::get('services_store/{service}/pay', [ServiceStoreController::class, 'getNewSubscription'])->name('restaurant.services_store.subscription');
-        Route::post('services_store/{service}/pay', [ServiceStoreController::class, 'storeNewSubscription'])->name('restaurant.services_store.subscription');
-        Route::post('services_store/{service}/pay/bank', [ServiceStoreController::class, 'storeNewSubscriptionBank'])->name('restaurant.services_store.subscription_bank');
-
-        Route::get('service-provider', [RestaurantControllerServiceProviderController::class, 'index'])->name('restaurant.service-provider.index');
-        Route::get('service-provider/{category}', [RestaurantControllerServiceProviderController::class, 'showCategory'])->name('restaurant.service-provider.show-category');
     });
 
     Route::group(['middleware' => ['web']], function () {
@@ -594,20 +481,18 @@ Route::prefix('restaurant')->group(function () {
                 Route::get('/product_sizes/delete/{id}', 'destroy')->name('deleteProductSize');
             });
 
-            Route::controller(IntegrationController::class)->group(function () {
-                Route::get('/integrations', 'index')->name('RestaurantIntegration');
-                Route::get('/tentative_services', 'tentative_services')->name('tentative_services');
-                Route::get('/foodics_subscription/{id}', 'foodics_subscription')->name('foodics_subscription');
-                Route::post('/foodics_subscription/{id}', 'foodics_subscription_submit')->name('foodics_subscription_submit');
-                Route::get('/check-foodics-status/{id1?}/{id2?}', 'check_status')->name('checkRestaurantFoodicsStatus');
-
-                Route::get('/print_service_invoice/{id}', 'print_service_invoice')->name('print_service_invoice');
-
-                Route::get('/foodics_integration', 'foodics_integration')->name('foodics_integration');
-            });
 
 
             Route::get('/history/{id}', [SettingController::class, 'show_restaurant_history'])->name('show_restaurant_history');
+
+            // terms and conditions routes
+            Route::get('/terms/conditions', [TermsConditionController::class, 'index'])->name('restaurant.terms_conditions.index');
+            Route::post('/terms/conditions/{id}', [TermsConditionController::class, 'update'])->name('restaurant.terms_conditions.update');
+
+            // about azmak routes
+            Route::get('/azmak_about', [TermsConditionController::class, 'azmak_about'])->name('restaurant.azmak_about.index');
+            Route::post('/azmak_about/{id}', [TermsConditionController::class, 'azmak_about_update'])->name('restaurant.azmak_about.update');
+
 
             // restaurant period Routes
             Route::controller(PeriodController::class)->group(function () {

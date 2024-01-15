@@ -33,10 +33,12 @@
         <i class="fa-regular fa-bell"></i>
       </header>
 
-      <div class="join_us px-5 my-5 mx-2">
-        <p>حتى تتمكن من إرسال عزيمة، يرجى إدخال المعلومات التالية:</p>
+      <main class="px-1">
+        <p class="my-2 px-1">
+          حتى تتمكن من إرسال عزيمة، يرجى إدخال المعلومات التالية:
+        </p>
         <form>
-          <div class="inner_wrap bg-white p-4 my-2">
+          <div class="inner_wrap bg-white p-2 my-2">
             <div class="name">
               <label for="name">الاسم :</label>
               <div class="container_input">
@@ -79,12 +81,10 @@
           </div>
           <input type="submit" id="submitButton" value="إرسال رمز التحقيق " />
           <button class="global_btn m-auto" id="global_btn">
-            <a href="wayOfpayment.html" target="_blank" class="text-white">
-              متابعة الدفع
-            </a>
+            <a href="cart.html" class="text-white"> الدخول إلي سلة الشراء </a>
           </button>
         </form>
-      </div>
+      </main>
       <footer
         class="px-4 py-3 d-flex align-items-center justify-content-around"
       >
@@ -138,27 +138,32 @@
 <style>
   .notes {
     background: #f79b361a;
-    border-radius: 7px;
+    border-radius: 4px;
   }
-  @media (max-width: 768px) {
-    p,
-    label {
-      font-size: 12px;
-      font-weight: 400;
-    }
-    .notes ul li {
-      font-size: 10px;
-      font-weight: 400;
-    }
+  .notes ul li {
+    font-size: 10px;
+    font-weight: 400;
+  }
+  p,
+  label {
+    font-size: 12px !important;
+    font-weight: 400;
   }
   .inner_wrap {
-    border-radius: 10px;
+    border-radius: 8px;
   }
   #submitButton {
     display: block;
   }
+  #submitButton {
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 100px;
+  }
   #global_btn {
     display: none;
+    font-size: 14px !important;
+    margin-top: 100px !important;
   }
   #loadingContainer {
     justify-content: center;

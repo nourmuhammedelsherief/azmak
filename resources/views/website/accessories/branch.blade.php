@@ -36,6 +36,7 @@
                             id="city{{$zbranch->id}}"
                             name="branch"
                             value="{{$zbranch->id}}"
+                            {{$zbranch->id == $branch->id ? 'checked' : ''}}
                         />
                         <label for="city{{$zbranch->id}}">
                             {{app()->getLocale() == 'ar' ? $zbranch->name_ar : $zbranch->name_en}}

@@ -29,7 +29,7 @@
         </a>
         <h5>تفاصيل الطلب</h5>
       </div>
-      <div class="orderId bg-white mx-2 my-4 p-3">
+      <div class="orderId bg-white p-3">
         <div class="details_order">
           <h6 class="numberOrder">الطلب رقم 6546-A</h6>
           <h6 class="date my-2">
@@ -102,20 +102,16 @@
         class="mt-5 px-4 py-3 d-flex align-items-center justify-content-around"
       >
         <div class="mainHome d-flex flex-column align-items-center">
-          <a href="home.html" target="_blank"> <i class="fa fa-house"></i></a>
-          <a href="home.html" target="_blank"> الرئيسية</a>
+          <a href="home.html"> <i class="fa fa-house"></i></a>
+          <a href="home.html"> الرئيسية</a>
         </div>
         <div class="myorder d-flex flex-column align-items-center">
-          <a href="cart.html" target="_blank">
-            <i class="fa-solid fa-cart-shopping"></i
-          ></a>
-          <a href="cart.html" target="_blank"> طلباتي</a>
+          <a href="cart.html"> <i class="fa-solid fa-cart-shopping"></i></a>
+          <a href="cart.html"> طلباتي</a>
         </div>
         <div class="myAccount d-flex flex-column align-items-center">
-          <a href="myAccount.html" target="_blank">
-            <i class="fa-solid fa-user"></i
-          ></a>
-          <a href="myAccount.html" target="_blank"> حسابي</a>
+          <a href="myAccount.html"> <i class="fa-solid fa-user"></i></a>
+          <a href="myAccount.html"> حسابي</a>
         </div>
       </footer>
     </div>
@@ -124,7 +120,9 @@
 <style>
   .orderId {
     border-radius: 10px;
+    margin: 20px 60px;
   }
+
   .orderId .time,
   .orderId .time i {
     color: var(--second_color);
@@ -161,6 +159,9 @@
   @media (max-width: 768px) {
     img {
       width: 100%;
+    }
+    .orderId {
+      margin: 20px 10px;
     }
   }
 </style>
