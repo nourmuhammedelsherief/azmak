@@ -37,7 +37,7 @@
 .show_main_info .splide__list {
   justify-content: center;
 }
-.show_main_info .main_dish .splide__slide.is-active.is-visible img {
+.show_main_info .main_dish .splide__slide.is-active img {
   border: 4px solid var(--main_color);
 }
 

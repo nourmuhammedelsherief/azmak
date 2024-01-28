@@ -4,6 +4,7 @@ namespace App\Models\Restaurant\Azmak;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \App\Models\Restaurant;
 
 class AZProduct extends Model
 {
@@ -52,6 +53,10 @@ class AZProduct extends Model
     public function poster()
     {
         return $this->belongsTo(RestaurantPoster::class , 'poster_id');
+    }
+    public function modifiers()
+    {
+        return $this->hasMany(AZProductModifier::class , 'product_id');
     }
     public function options()
     {

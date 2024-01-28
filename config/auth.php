@@ -77,7 +77,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Restaurant\Azmak\AZUser::class,
         ],
         'admins' => [
             'driver' => 'eloquent',
@@ -115,7 +115,7 @@ return [
 
     'passwords' => [
         'users' => [
-            'provider' => 'users',
+            'provider' => 'a_z_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

@@ -8,7 +8,7 @@
         <li class="welcome_res">
             <span> مرحبا ,</span>
             <span>
-                         @if(app()->getLocale() == 'ar')
+                @if(app()->getLocale() == 'ar')
                     <?php if (Auth::guard('restaurant')->check()) {
                         echo Auth::guard('restaurant')->user()->name_ar;
                     } ?>
@@ -82,7 +82,7 @@
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
 
-                
+
                 <a onclick="document.getElementById('logout_form').submit()" class="dropdown-item">
                     <i class="fas fa-key"></i>
                     @lang('messages.logout')

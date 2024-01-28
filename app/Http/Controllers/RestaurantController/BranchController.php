@@ -430,7 +430,7 @@ class BranchController extends Controller
         if (!auth('admin')->check() and !auth('restaurant')->check()) :
             return redirect(url('restaurant/login'));
         endif;
-        $model = Branch::findOrFail($id);
+        $model = AZBranch::findOrFail($id);
         if ($model->main == 'true') {
             $model = Auth::guard('restaurant')->user();
             if ($model->type == 'employee') :
@@ -444,56 +444,6 @@ class BranchController extends Controller
             return view('restaurant.branches.barcode', compact('model'));
         }
     }
-
-    public function foodics_branches()
-    {
-        if (!auth('restaurant')->check()) :
-            return redirect(url('restaurant/login'));
-        endif;
-        $restaurant = auth('restaurant')->user();
-        if ($restaurant->type == 'employee') :
-            if (check_restaurant_permission($restaurant->id, 3) == false) :
-                abort(404);
-            endif;
-            $restaurant = Restaurant::find($restaurant->restaurant_id);
-        endif;
-        $branches = RestaurantFoodicsBranch::whereRestaurantId($restaurant->id)->get();
-        return view('restaurant.branches.foodics_branches', compact('branches'));
-    }
-    public function foodicsBranchEdit(Request $request, $id)
-    {
-
-        $branch = RestaurantFoodicsBranch::findOrFail($id);
-
-        if ($request->method() == 'POST') :
-            $request->validate([
-                'name_ar' => 'required|min:1|max:190' ,
-                'name_en' => 'required|min:1|max:190' ,
-                'latitude' => 'nullable|numeric' ,
-                'longitude' => 'nullable|numeric' ,
-            ]);
-            $branch->update([
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'name_ar' => $request->name_ar ,
-                'name_en' => $request->name_en ,
-            ]);
-            flash(trans('messages.updated'))->success();
-            return redirect(route('foodics_branches'));
-        endif;
-
-        return view('restaurant.branches.foodics_branch_edit', compact('branch'));
-    }
-    public function active_foodics_branch($id, $active)
-    {
-        $branch = RestaurantFoodicsBranch::findOrFail($id);
-        $branch->update([
-            'active' => $active,
-        ]);
-        flash(trans('messages.updated'))->success();
-        return redirect()->back();
-    }
-
     public function showBranchCart($id, $state)
     {
         if (!auth('admin')->check() and !auth('restaurant')->check()) :

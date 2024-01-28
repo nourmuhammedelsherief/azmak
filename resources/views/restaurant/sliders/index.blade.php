@@ -119,7 +119,7 @@
                                                     <div class="modal-content bg-info">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">
-                                                                @lang('messages.icon')
+                                                                @lang('messages.photo')
                                                             </h4>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                     aria-label="Close">

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-//use \App\Http\Controllers\UserController;
 use \Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
 
@@ -58,6 +57,7 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 ////////////////////////////////////////////////////////////    site controllers //////////
 use App\Http\Controllers\WebsiteController\HomeController as AZHome;
 use App\Http\Controllers\WebsiteController\ContactUsController;
+use App\Http\Controllers\WebsiteController\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,17 +72,14 @@ use App\Http\Controllers\WebsiteController\ContactUsController;
 
 
 
-Route::get('locale/{locale}', function ($locale) {
-    session(['locale' => $locale]);
+Route::get('locale/{locale}', function (Request $request , $locale) {
+    session()->put('locale', $locale);
     App::setLocale($locale);
-    // return session()->all();
-    $path = \Illuminate\Support\Facades\URL::previous();
     return redirect()->back();
 })->name('language');
 Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
     session()->put('lang_restaurant', $locale);
     App::setLocale($locale);
-    $path = \Illuminate\Support\Facades\URL::previous();
     return redirect()->back();
 })->name('restaurant.language');
 
@@ -94,11 +91,26 @@ Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
 Route::get('/restaurants/{res_name}' , [AZHome::class , 'index']);
 Route::match(['get', 'post'],'/restaurants/branch/{branch_name?}' , [AZHome::class , 'home'])->name('homeBranch');
 Route::get('/restaurants/{res}/{branch_name}/{cat?}' , [AZHome::class , 'homeBranch'])->name('homeBranchIndex');
-Route::get('/restaurant/{res_name}/terms&conditions' , [AZHome::class , 'terms'])->name('restaurantTerms');
-Route::get('/restaurant/{res_name}/about_us' , [AZHome::class , 'about'])->name('restaurantAboutAzmak');
-Route::get('/restaurant_contact_us/{res_name}' , [ContactUsController::class , 'index'])->name('restaurantVisitorContactUs');
+Route::get('/restaurantAZ/{res_name}/terms&conditions/{branch?}' , [AZHome::class , 'terms'])->name('restaurantTerms');
+Route::get('/restaurantAZ/{res_name}/about_us/{branch?}' , [AZHome::class , 'about'])->name('restaurantAboutAzmak');
+Route::get('/restaurant_contact_us/{res_name}/{branch?}' , [ContactUsController::class , 'index'])->name('restaurantVisitorContactUs');
 Route::post('/restaurant_contact_us/{res_name}/send' , [ContactUsController::class , 'contact_us'])->name('restaurantVisitorContactUsSend');
+Route::get('/restaurantsAZ/products/{id}' , [AZHome::class , 'product_details'])->name('product_details');
+Route::get('/share/restaurantsAZ/products/{id}' , [AZHome::class , 'share_product'])->name('product_details_share');
 
+// user routes
+Route::get('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'join_us'])->name('AZUserRegister');
+Route::post('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'register'])->name('AZUserRegisterSubmit');
+
+Route::get('user/restaurants/{res}/login/{branch?}' , [UserController::class , 'show_login'])->name('AZUserLogin');
+Route::post('user/restaurants/{res}/login/{branch?}' , [UserController::class , 'login'])->name('AZUserLoginSubmit');
+
+Route::group(['middleware' => 'auth:web'], function () {
+    Route::post('logout', [UserController::class, 'logout'])->name('azUser.logout');
+    Route::get('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'profile'])->name('AZUserProfile');
+    Route::post('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'edit_profile'])->name('AZUserProfileUpdate');
+
+});
 
 /**
  *  End @user routes
@@ -356,61 +368,6 @@ Route::prefix('restaurant')->group(function () {
                 Route::get('/sub_categories/delete/{id}', [SubCategoryController::class, 'destroy']);
             });
 
-            // setting Routes
-            Route::controller(RestaurantSettingController::class)->group(function () {
-                Route::get('/restaurant_setting', 'index')->name('restaurant_setting.index');
-                Route::get('/restaurant_setting/create', 'create')->name('restaurant_setting.create');
-                Route::post('/restaurant_setting/store', 'store')->name('restaurant_setting.store');
-                Route::get('/restaurant_setting/edit/{id}', 'edit')->name('restaurant_setting.edit');
-                Route::post('/restaurant_setting/update/{id}', 'update')->name('restaurant_setting.update');
-                Route::get('/restaurant_setting/delete/{id}', 'destroy');
-                Route::get('/foodics/restaurant_setting/{id}', 'foodics_settings')->name('FoodicsOrderSetting');
-                Route::post('/foodics/restaurant_setting/{id}', 'foodics_settings_update')->name('updateFoodicsOrderSetting');
-            });
-            // setting ranges Routes
-            Route::controller(RestaurantOrderSettingRangeController::class)->group(function () {
-                Route::get('/restaurant_setting_range/{id}', 'index')->name('restaurant_setting_range.index');
-                Route::get('/restaurant_setting_range/{id}/create', 'create')->name('restaurant_setting_range.create');
-                Route::post('/restaurant_setting_range/{id}/store', 'store')->name('restaurant_setting_range.store');
-                Route::get('/restaurant_setting_range/edit/{id}', 'edit')->name('restaurant_setting_range.edit');
-                Route::post('/restaurant_setting_range/update/{id}', 'update')->name('restaurant_setting_range.update');
-                Route::get('/restaurant_setting_range/delete/{id}', 'destroy');
-            });
-
-            // order setting days Routes
-            Route::controller(OrderSettingDaysController::class)->group(function () {
-                Route::get('/order_setting_days/{id}', 'index')->name('order_setting_days.index');
-                Route::get('/order_setting_days/{id}/create', 'create')->name('order_setting_days.create');
-                Route::post('/order_setting_days/{id}/store', 'store')->name('order_setting_days.store');
-                Route::get('/order_setting_days/edit/{id}', 'edit')->name('order_setting_days.edit');
-                Route::post('/order_setting_days/update/{id}', 'update')->name('order_setting_days.update');
-                Route::get('/order_setting_days/delete/{id}', 'destroy');
-
-                Route::get('/order_previous_days/{branch_id}/{setting_id?}', 'previous_index')->name('order_previous_days.index');
-                Route::get('/order_previous_days/{id}/create/{setting_id?}', 'previous_create')->name('order_previous_days.create');
-                Route::post('/order_previous_days/{id}/store', 'previous_store')->name('order_previous_days.store');
-                Route::get('/edit_order_previous_days/{id}', 'previous_edit')->name('order_previous_days.edit');
-                Route::post('/order_previous_days/update/{id}', 'previous_update')->name('order_previous_days.update');
-                Route::get('/delete_order_previous_days/delete/{id}', 'previous_destroy');
-            });
-
-            // order setting days Routes
-            Route::controller(OrderFoodicsDaysController::class)->group(function () {
-                Route::get('/order_foodics_days/{id}', 'index')->name('order_foodics_days.index');
-                Route::get('/order_foodics_days/{id}/create', 'create')->name('order_foodics_days.create');
-                Route::post('/order_foodics_days/{id}/store', 'store')->name('order_foodics_days.store');
-                Route::get('/order_foodics_days/edit/{id}', 'edit')->name('order_foodics_days.edit');
-                Route::post('/order_foodics_days/update/{id}', 'update')->name('order_foodics_days.update');
-                Route::get('/order_foodics_days/delete/{id}', 'destroy');
-
-                Route::get('/menu_foodics_days/{id}', 'foodics_index')->name('menu_foodics_days.index');
-                Route::get('/menu_foodics_days/{id}/create', 'foodics_create')->name('menu_foodics_days.create');
-                Route::post('/menu_foodics_days/{id}/store', 'foodics_store')->name('menu_foodics_days.store');
-                Route::get('/menu_foodics_days/edit/{id}', 'foodics_edit')->name('menu_foodics_days.edit');
-                Route::post('/menu_foodics_days/update/{id}', 'foodics_update')->name('menu_foodics_days.update');
-                Route::get('/menu_foodics_days/delete/{id}', 'foodics_destroy');
-            });
-
             // home_icons
 
             Route::resource('home_icons', IconController::class, ['as' => 'restaurant']);
@@ -492,6 +449,10 @@ Route::prefix('restaurant')->group(function () {
             // about azmak routes
             Route::get('/azmak_about', [TermsConditionController::class, 'azmak_about'])->name('restaurant.azmak_about.index');
             Route::post('/azmak_about/{id}', [TermsConditionController::class, 'azmak_about_update'])->name('restaurant.azmak_about.update');
+
+            // about azmak routes
+            Route::get('/az_contacts', [TermsConditionController::class, 'az_contacts'])->name('restaurant.az_contacts.index');
+            Route::get('/az_contacts/delete/{id}', [TermsConditionController::class, 'delete_az_contact'])->name('restaurant.delete_az_contact');
 
 
             // restaurant period Routes

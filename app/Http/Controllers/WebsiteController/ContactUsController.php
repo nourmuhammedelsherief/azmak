@@ -6,15 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
 use App\Models\Restaurant\Azmak\AZContactUs;
+use App\Models\Restaurant\Azmak\AZBranch;
 
 class ContactUsController extends Controller
 {
-    public function index($res)
+    public function index($res , $branch)
     {
         $restaurant  = Restaurant::whereNameBarcode($res)->firstOrFail();
-        return view('website.pages.contactUs' , compact('restaurant'));
+        $branch = AZBranch::whereNameEn($branch)->first();
+        return view('website.pages.contactUs' , compact('restaurant' , 'branch'));
     }
-
     public function contact_us(Request $request , $res)
     {
         $restaurant  = Restaurant::whereNameBarcode($res)->firstOrFail();

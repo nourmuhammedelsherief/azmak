@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\RestaurantTermsCondition;
 use App\Models\RestaurantAboutAzmak;
+use App\Models\Restaurant\Azmak\AZContactUs;
 
 class TermsConditionController extends Controller
 {
@@ -35,6 +36,18 @@ class TermsConditionController extends Controller
         return view('restaurant.terms.about' , compact('about'));
     }
 
+    public function az_contacts()
+    {
+        $contacts = AZContactUs::whereRestaurantId(auth()->guard('restaurant')->user()->id)->get();
+        return view('restaurant.terms.contacts' , compact('contacts'));
+    }
+    public function delete_az_contact($id)
+    {
+        $contact = AZContactUs::findOrFail($id);
+        $contact->delete();
+        flash(trans('messages.deleted'))->success();
+        return redirect()->back();
+    }
     /**
      * Update the specified resource in storage.
      */

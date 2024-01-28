@@ -83,11 +83,10 @@ increaseBtn1.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent form submission
   countOne++; // Increase the count value by 1
   countElement1.textContent = countOne; // Update the count element with the new value
-  var choose_add = document.getElementById("choose_add");
-  var choose_addValue = document.getElementById("choose_addValue");
-  var totalPrice = parseInt(choose_add.textContent);
-  price = totalPrice * countOne;
-  choose_addValue.textContent = price;
+  var mainValue = document.getElementById("choose_add");
+  var choose_add = parseInt(mainValue.textContent);
+  price = choose_add * countOne;
+  mainValue.textContent = price;
   // if (addCheckbox.checked) {
   //   updateTotalPrice(price); // Call the updateTotalPrice function with the new price
   // }
@@ -103,8 +102,8 @@ increaseBtn3.addEventListener("click", function (event) {
   countElement3.textContent = count; // Update the count element with the new value
 });
 
-// Event listener for form submission
-form.addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent default form submission
-  // You can perform additional actions here if needed
-});
+// // Event listener for form submission
+// form.addEventListener("submit", function (event) {
+//   event.preventDefault(); // Prevent default form submission
+//   // You can perform additional actions here if needed
+// });

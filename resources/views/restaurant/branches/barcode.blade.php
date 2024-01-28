@@ -36,41 +36,35 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                    <?php $name = $model->main == 'true' ? $model->restaurant->name_barcode : ($model->name_barcode == null ? $model->name_en : $model->name_barcode) ?>
                     <div class="portlet light bordered">
                         <div class="portlet-body">
                             <div class="form-group">
-                                <?php $name = $model->main == 'true' ? $model->restaurant->name_barcode : ($model->name_barcode == null ? $model->name_en : $model->name_barcode) ?>
                                 <h3 class="text-center">
                                     <a href="#" id="printPage" class="printPage btn btn-info">@lang('messages.downloadQr')</a>
-                                    <a href="{{url('/restaurnt/'.$model->restaurant->name_barcode.'/' . $name)}}" id="" class=" btn btn-primary" target="__blank">@lang('messages.view_barcode')</a>
+                                    <a href="{{route('homeBranchIndex' , [$model->restaurant->name_barcode , $model->name_en])}}" id="" class=" btn btn-primary" target="__blank">@lang('messages.view_barcode')</a>
                                     {{--                            <a class="btn btn-primary" href="{{ URL::to('/hotel/create_pdf') }}"> @lang('messages.saveAsPdf')</a>--}}
                                 </h3>
                                 <div class="card">
                                     <div class="card-header">
                                         <h2>
-                                            @if($model->main == 'true')
-                                                {{$model->restaurant->name_barcode}}
+                                            @if(app()->getLocale() == 'ar')
+                                                {{$model->name_barcode == null ? $model->name_ar : $model->name_barcode}}
                                             @else
-                                                @if(app()->getLocale() == 'ar')
-                                                    {{$model->name_barcode == null ? $model->name_ar : $model->name_barcode}}
-                                                @else
-                                                    {{$model->name_barcode == null ? $model->name_en : $model->name_barcode}}
-                                                @endif
+                                                {{$model->name_barcode == null ? $model->name_en : $model->name_barcode}}
                                             @endif
-                                            <br>
-                                            {{$model->name_ar}}
                                         </h2>
                                     </div>
                                     <div class="card-body" id="barcode-svg">
                                         {{--                                        {!! QrCode::size(200)->generate('https://easymenu.site/restaurants/' . $model->name_barcode) !!}--}}
 
-                                        {!! QrCode::size(200)->generate(url('/restaurnt/'.$model->restaurant->name_barcode.'/' . $name)) !!}
+                                        {!! QrCode::size(200)->generate(route('homeBranchIndex' , [$model->restaurant->name_barcode , $model->name_en])) !!}
                                         <div  class="description" style="margin-top:10px;">
-                                            <img width="20px" height="20px" src="{{asset('uploads/img/logo.png')}}" >
+                                            <img width="20px" height="20px" src="{{asset('/uploads/restaurants/logo/' . $model->restaurant->logo)}}" >
 
                                             <p class="footer-copyright pb-3 mb-1 pt-0 mt-0 font-13 font-600" style="    text-align: center;font-size:12px;display:inline; margin-right:5px;">
                                                 {{trans('messages.made_love')}}
-                                               
+
                                             </p>
                                         </div>
 

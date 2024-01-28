@@ -36,7 +36,7 @@
 <div class="mycontainer">
     <header
         class="d-flex align-items-center justify-content-between bg-white p-3">
-        <a href="{{url()->previous()}}" style='color: black'>
+        <a href="{{route('homeBranchIndex' , [$restaurant->name_barcode , $branch->name_en])}}" style='color: black'>
             <i class="fa-solid fa-angle-right"></i>
         </a>
         <h5>@lang('messages.about_app')</h5>
@@ -44,17 +44,19 @@
     </header>
     <div
         class="about_us d-flex flex-column align-items-center justify-content-center">
+        <br>
+        <br>
+        <br>
         <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}" width="80" height="80" alt="logo"/>
+        <br>
+        <br>
         <br>
         <p class="bg-white p-4">
             @if($about)
-                @if(app()->getLocale() == 'ar')
-                    {!! $about->about_ar !!}
-                @else
-                    {!! $about->about_ar !!}
-                @endif
+                {{app()->getLocale() == 'ar' ? strip_tags(str_replace('&nbsp;', ' ', $about->about_ar)) : strip_tags(str_replace('&nbsp;', ' ', $about->about_en))}}
             @endif
         </p>
+
     </div>
     @include('website.layout.footer')
 </div>
