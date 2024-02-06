@@ -58,6 +58,7 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 use App\Http\Controllers\WebsiteController\HomeController as AZHome;
 use App\Http\Controllers\WebsiteController\ContactUsController;
 use App\Http\Controllers\WebsiteController\UserController;
+use App\Http\Controllers\WebsiteController\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +110,7 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::post('logout', [UserController::class, 'logout'])->name('azUser.logout');
     Route::get('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'profile'])->name('AZUserProfile');
     Route::post('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'edit_profile'])->name('AZUserProfileUpdate');
+    Route::post('user/restaurants/add_to_cart' , [CartController::class , 'add_to_cart'])->name('addToAZCart');
 
 });
 

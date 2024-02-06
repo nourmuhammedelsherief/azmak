@@ -231,7 +231,7 @@
                     </span>
                 </div>
                 <hr width="95%" class="m-auto my-3"/>
-                <form id="myForm" width="100%" method="post" action="#">
+                <form id="myForm" width="100%" method="post" action="{{route('addToAZCart')}}">
                     @csrf
                     <div class="px-4">
                         @if($product->sizes->count() > 0)
@@ -239,7 +239,7 @@
                             @foreach($product->sizes as $size)
                                 @if($size->status == 'true')
                                     <div class="my-3 d-flex">
-                                        <input type="radio" id="size-{{$size->id}}" class="size_class" name="sizes" data="{{$size->price}}" value="{{$size->id}}"/>
+                                        <input type="radio" id="size-{{$size->id}}" class="size_class" name="size_id" data="{{$size->price}}" value="{{$size->id}}"/>
                                         <label for="size-{{$size->id}}">
                                             {{app()->getLocale() == 'ar' ? $size->name_ar : $size->name_en}}
                                         </label>
@@ -299,7 +299,7 @@
                                                     <button class="border-0 p-1 optionIncrease" data="{{$option->id}}"
                                                             id="optionIncrease-{{$option->id}}">+
                                                     </button>
-                                                    <input name="option_count" type="text"
+                                                    <input name="option_count-{{$option->option->id}}" type="text"
                                                            id="option_count-{{$option->id}}" class="optionCount"
                                                            value="1">
                                                     <button class="border-0 p-1 optionDecrease" data="{{$option->id}}"

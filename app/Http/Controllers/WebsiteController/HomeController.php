@@ -54,6 +54,7 @@ class HomeController extends Controller
                 ->where('branch_id', $branch->id)
                 ->where('menu_category_id', $category_id)
                 ->where('active', 'true')
+                ->where('available', 'true')
                 ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
                 ->paginate(100);
         }else{
@@ -67,6 +68,7 @@ class HomeController extends Controller
                     ->where('branch_id', $branch->id)
                     ->where('menu_category_id', $menu_category->id)
                     ->where('active', 'true')
+                    ->where('available', 'true')
                     ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
                     ->paginate(100);
                 $category_id = $menu_category->id;
@@ -74,6 +76,7 @@ class HomeController extends Controller
                 $products = AZProduct::whereRestaurantId($restaurant->id)
                     ->where('branch_id', $branch->id)
                     ->where('active', 'true')
+                    ->where('available', 'true')
                     ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
                     ->paginate(100);
             }

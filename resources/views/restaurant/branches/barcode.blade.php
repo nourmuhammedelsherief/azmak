@@ -70,22 +70,6 @@
 
                                     </div>
                                 </div>
-
-                                {{--                                <div class="card">--}}
-                                {{--                                    <div class="card-header">--}}
-                                {{--                                        <h2>--}}
-                                {{--                                            @if(app()->getLocale() == 'ar')--}}
-                                {{--                                                {{$model->name}}--}}
-                                {{--                                            @else--}}
-                                {{--                                                {{$model->en_name}}--}}
-                                {{--                                            @endif--}}
-                                {{--                                        </h2>--}}
-                                {{--                                    </div>--}}
-                                {{--                                    <div class="card-body">--}}
-                                {{--                                        {!! QrCode::size(200)->backgroundColor(255,90,0)->generate(url('/' . $model->name_en)) !!}--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                {{--                                <div> <img width="50px" height="50px" src="{{asset('uploads/logo/'.\App\Setting::find(1)->logo)}}" ></div>--}}
                             </div>
 
                         </div>
