@@ -59,6 +59,7 @@ use App\Http\Controllers\WebsiteController\HomeController as AZHome;
 use App\Http\Controllers\WebsiteController\ContactUsController;
 use App\Http\Controllers\WebsiteController\UserController;
 use App\Http\Controllers\WebsiteController\CartController;
+use App\Http\Controllers\WebsiteController\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,15 +104,25 @@ Route::get('/share/restaurantsAZ/products/{id}' , [AZHome::class , 'share_produc
 Route::get('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'join_us'])->name('AZUserRegister');
 Route::post('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'register'])->name('AZUserRegisterSubmit');
 
-Route::get('user/restaurants/{res}/login/{branch?}' , [UserController::class , 'show_login'])->name('AZUserLogin');
+Route::get('user/login/{res?}/{branch?}' , [UserController::class , 'show_login'])->name('AZUserLogin');
 Route::post('user/restaurants/{res}/login/{branch?}' , [UserController::class , 'login'])->name('AZUserLoginSubmit');
+Route::post('user/restaurants/add_to_cart' , [CartController::class , 'add_to_cart'])->name('addToAZCart');
 
 Route::group(['middleware' => 'auth:web'], function () {
-    Route::post('logout', [UserController::class, 'logout'])->name('azUser.logout');
-    Route::get('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'profile'])->name('AZUserProfile');
-    Route::post('user/restaurants/{res}/profile/{branch?}' , [UserController::class , 'edit_profile'])->name('AZUserProfileUpdate');
-    Route::post('user/restaurants/add_to_cart' , [CartController::class , 'add_to_cart'])->name('addToAZCart');
-
+    Route::controller(UserController::class)->group(function () {
+        Route::post('logout', 'logout')->name('azUser.logout');
+        Route::get('user/restaurants/{res}/profile/{branch?}' ,'profile')->name('AZUserProfile');
+        Route::post('user/restaurants/{res}/profile/{branch?}' , 'edit_profile')->name('AZUserProfileUpdate');
+    });
+    Route::controller(CartController::class)->group(function () {
+        Route::get('user/restaurants/cart/{branch?}' , 'cart_details')->name('AZUserCart');
+        Route::get('user/delete/cart/{order_id}' , 'emptyCart')->name('emptyCart');
+        Route::get('user/delete/cart/items/{item_id}' , 'deleteCartItem')->name('deleteCartItem');
+    });
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('user/cart/orders/{order_id}' , 'order_info')->name('AZOrderInfo');
+        Route::post('user/cart/orders/{order_id}' , 'submit_order_info')->name('AZOrderInfoSubmit');
+    });
 });
 
 /**
@@ -168,23 +179,6 @@ Route::prefix('restaurant')->group(function () {
         Route::match(['get', 'post'], '/banks-settings', [RestaurantControllerBankController::class, 'settings'])->name('restaurant.banks.setting');
         Route::resource('/banks', RestaurantControllerBankController::class, ['as' => 'restaurant']);
         Route::get('/banks/delete/{id}', [RestaurantControllerBankController::class, 'destroy']);
-
-        // party-branches
-
-        Route::resource('/party-branch', PartyBranchController::class, ['as' => 'restaurant']);
-        Route::get('/party-branch/delete/{id}', [PartyBranchController::class, 'destroy']);
-        // party
-        Route::match(['get', 'post'], '/party/payment-settings', [PartyController::class, 'servicesIndex'])->name('restaurant.party.setting.payment');
-        Route::match(['get', 'post'], '/party/payment-cash', [PartyController::class, 'cashSettings'])->name('restaurant.party.setting.cash');
-        Route::match(['get', 'post'], '/party/settings', [PartyController::class, 'getSettings'])->name('restaurant.party.settings');
-        Route::resource('/party', PartyController::class, ['as' => 'restaurant']);
-        Route::get('/party/delete/{id}', [PartyController::class, 'destroy']);
-
-        Route::get('party-order/confirm/{id}/{code}', [PartyController::class, 'confirmOrder']);
-        Route::get('party-order/{order}/bank-confirm', [PartyOrderController::class, 'acceptBankOrder'])->name('restaurant.party.bank-confirm');
-        Route::post('party-order/cancel/{id}', [PartyController::class, 'cancelOrder'])->name('restaurant.party.cancel');
-        Route::resource('/party-order', PartyOrderController::class, ['as' => 'restaurant'])->only(['index']);
-
 
         // rate us routes
         Route::resource('restaurant_rate_us' , RestaurantRateUsController::class , []);

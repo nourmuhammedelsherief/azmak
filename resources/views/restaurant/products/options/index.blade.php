@@ -130,18 +130,11 @@
                                         </td>
                                     @else
                                         <td>
-                                            @php
-                                                $user = Auth::guard('restaurant')->user();
-                                                $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                                    ->wherePermissionId(7)
-                                                    ->first();
-                                            @endphp
-                                            @if ($user->type == 'restaurant' or $deletePermission)
-                                                <a class="delete_data btn btn-danger" data="{{ $option->id }}"
-                                                   data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            @endif
+
+                                            <a class="delete_data btn btn-danger" data="{{ $option->id }}"
+                                               data_name="{{ app()->getLocale() == 'ar' ? ($option->option->name_ar == null ? $option->option->name_en : $option->option->name_ar) : ($option->option->name_en == null ? $option->option->name_ar : $option->option->name_en) }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         </td>
                                     @endif
                                 </tr>

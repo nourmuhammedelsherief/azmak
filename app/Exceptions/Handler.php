@@ -79,20 +79,14 @@ class Handler extends ExceptionHandler
             case 'restaurant':
                 $login = 'restaurant.login';
                 break;
-            case 'marketer':
-                $login = 'marketer.login';
-                break;
-            case 'employee':
-                $login = 'employee.login';
-                break;
             case 'web':
-                $login = 'showUserLogin';
+                $login = 'AZUserLogin';
                 break;
 //            case 'provider':
 //                $login = 'provider.login';
 //                break;
             default:
-                $login = 'showUserLogin';
+                $login = 'AZUserLogin';
         }
         // dd(Route::current()->getName());
         // dd($guard);

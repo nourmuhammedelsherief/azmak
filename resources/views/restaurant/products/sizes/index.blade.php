@@ -89,18 +89,10 @@
                                         <a class="btn btn-info" href="{{route('editProductSize' , $size->id)}}">
                                             <i class="fa fa-user-edit"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                            ->wherePermissionId(7)
-                                            ->first();
-                                        @endphp
-                                        @if($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $size->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($size->name_ar == null ? $size->name_en  : $size->name_ar) : ($size->name_en == null ? $size->name_ar : $size->name_en) }}">
-                                                <i class="fa fa-key"></i>
-                                            </a>
-                                        @endif
+                                        <a class="delete_data btn btn-danger" data="{{ $size->id }}"
+                                           data_name="{{ app()->getLocale() == 'ar' ? ($size->name_ar == null ? $size->name_en  : $size->name_ar) : ($size->name_en == null ? $size->name_ar : $size->name_en) }}">
+                                            <i class="fa fa-key"></i>
+                                        </a>
 
                                     </td>
                                 </tr>

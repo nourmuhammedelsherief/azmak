@@ -45,13 +45,10 @@ class ProductController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        if ($restaurant->status == 'finished' or $restaurant->subscription->status == 'tentative_finished') {
-            return redirect()->route('RestaurantProfile');
-        }
+
         $products = AZProduct::whereRestaurantId($restaurant->id)->paginate(500);
         $branches = AZBranch::whereRestaurantId($restaurant->id)
             ->get();
-        $this->deleteTemporaryFiles();
         return view('restaurant.products.index', compact('products', 'branches'));
     }
     public function branch_products($id)
@@ -89,25 +86,10 @@ class ProductController extends Controller
             ->get();
         $posters = RestaurantPoster::whereRestaurantId($restaurant->id)->get();
         $sensitivities = RestaurantSensitivity::whereRestaurantId($restaurant->id)->get();
-        $branchesSubscription = ServiceSubscription::whereRestaurantId(auth('restaurant')->id())->whereHas('service', function ($query) {
-            $query->where('id', 11);
-        })
-            ->whereIn('status', ['active', 'tentative'])->get()->pluck('branch_id')->toArray();
         $categories = AZMenuCategory::whereRestaurantId($restaurant->id)->get();
-        return view('restaurant.products.create', compact('branches', 'categories','sensitivities', 'restaurant', 'posters', 'branchesSubscription'));
+        return view('restaurant.products.create', compact('branches', 'categories','sensitivities', 'restaurant', 'posters'));
     }
-    protected function deleteTemporaryFiles()
-    {
-        $currentDate = Carbon::now()->subDay();
-        $items = TemporaryFile::where('created_at', '<=', $currentDate->format('Y-m-d H:i:s'))->get();
-        foreach ($items as $item) :
-            if (Storage::disk('public_storage')->exists($item->path)) :
-                Storage::disk('public_storage')->delete($item->path);
-            endif;
-            $item->delete();
-        endforeach;
-        return $items;
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -262,13 +244,8 @@ class ProductController extends Controller
         }
         $posters = RestaurantPoster::whereRestaurantId($restaurant->id)->get();
         $sensitivities = RestaurantSensitivity::whereRestaurantId($restaurant->id)->get();
-        //        $categories = MenuCategory::whereRestaurantId(Auth::guard('restaurant')->user()->id)->get();
-        $branchesSubscription = ServiceSubscription::whereRestaurantId(auth('restaurant')->id())->whereHas('service', function ($query) {
-            $query->where('id', 11);
-        })
-            ->whereIn('status', ['active', 'tentative'])->get()->pluck('branch_id')->toArray();
         $cats = AZMenuCategory::whereBranchId($product->branch->id)->get();
-        return view('restaurant.products.edit', compact('branches', 'cats', 'sensitivities', 'product', 'posters', 'branchesSubscription'));
+        return view('restaurant.products.edit', compact('branches', 'cats', 'sensitivities', 'product', 'posters'));
     }
 
     /**

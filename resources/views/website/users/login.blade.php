@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{asset('site/css/all.min.css')}}" />
     <!-- style sheet -->
     <link rel="stylesheet" href="{{asset('site/css/global.css')}}" />
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     <style>
         .join_us {
             border-radius: 10px;
@@ -42,6 +43,7 @@
 
 </head>
 <body>
+
 <div class="mycontainer">
     <header
         class="d-flex align-items-center justify-content-between bg-white p-3"
@@ -78,7 +80,25 @@
             <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}" width="75" height="75" alt="logo" />
             <br><br><br>
             <form method="post" action="{{route('AZUserLoginSubmit' , [$restaurant->name_barcode , $branch->name_en])}}">
-                @csrf
+                <input type = 'hidden' name = '_token' value = '{{Session::token()}}'>
+                <div class="m-2 px-1 container_form">
+                    <div class="phone_number">
+                        <label for="type_company"> @lang('messages.country')</label>
+                        <select name="country_id" class="form-control" required>
+                            <option disabled  selected> @lang('messages.choose_one') </option>
+                            @foreach($countries as $country)
+                                <option value="{{$country->id}}">
+                                    {{$country->name_ar}}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('country_id'))
+                            <span class="help-block">
+                                <strong style="color: red;">{{ $errors->first('country_id') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
                 <div class="m-2 px-1 container_form">
                     <div class="phone_number">
                         <label for="type_company"> @lang('messages.phone_number') :</label>
@@ -91,28 +111,12 @@
                                 name="phone_number"
                                 value="{{old('phone_number')}}"
                                 placeholder="@lang('messages.phone_number')"
+                                required
                             />
                         </div>
                         @if ($errors->has('phone_number'))
                             <span class="help-block">
                                 <strong style="color: red;">{{ $errors->first('phone_number') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                    <div class="password">
-                        <label for="name">@lang('messages.password') :</label>
-                        <div class="container_input">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="@lang('messages.password')"
-                            />
-                        </div>
-                        @if ($errors->has('password'))
-                            <span class="help-block">
-                                <strong style="color: red;">{{ $errors->first('password') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -124,5 +128,9 @@
 
     @include('website.layout.footer')
 </div>
+
+<script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+{!! Toastr::message() !!}
 </body>
 </html>

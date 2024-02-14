@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="{{asset('site/css/home.css')}}"/>
     <script src="{{asset('site/splide/dist/js/splide.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
-
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
     <style>
         .active_categery {
             border: 3px solid var(--main_color);
@@ -45,6 +45,7 @@
 <body>
 <div class="mycontainer">
 @include('website.layout.header')
+
 <!-- <main class="py-1"> -->
     <div class="show_main_info px-1 py-3">
     @include('website.accessories.slider')
@@ -76,6 +77,9 @@
 <!-- </main> -->
     @include('website.layout.footer')
 </div>
+<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
+{!! Toastr::message() !!}
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

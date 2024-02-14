@@ -26,6 +26,7 @@ class ComposerStaticInit9f8cccb2295edcd17e3e992452f46b0e
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
+        'caf23243e9cb3afd48d0414815ebf07e' => __DIR__ . '/..' . '/brian2694/laravel-toastr/src/helper.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         'e23faeee409e941dc9b4c80386209c39' => __DIR__ . '/..' . '/laracasts/flash/src/Laracasts/Flash/functions.php',
         '265b4faa2b3a9766332744949e83bf97' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections/helpers.php',
@@ -173,6 +174,7 @@ class ComposerStaticInit9f8cccb2295edcd17e3e992452f46b0e
         'B' => 
         array (
             'Brick\\Math\\' => 11,
+            'Brian2694\\Toastr\\' => 17,
             'BaconQrCode\\' => 12,
         ),
         'A' => 
@@ -519,6 +521,10 @@ class ComposerStaticInit9f8cccb2295edcd17e3e992452f46b0e
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
+        'Brian2694\\Toastr\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brian2694/laravel-toastr/src',
+        ),
         'BaconQrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
@@ -609,6 +615,7 @@ class ComposerStaticInit9f8cccb2295edcd17e3e992452f46b0e
         'App\\Http\\Controllers\\RestaurantController\\TableController' => __DIR__ . '/../..' . '/app/Http/Controllers/RestaurantController/TableController.php',
         'App\\Http\\Controllers\\RestaurantController\\TermsConditionController' => __DIR__ . '/../..' . '/app/Http/Controllers/RestaurantController/TermsConditionController.php',
         'App\\Http\\Controllers\\RestaurantController\\WhatsappBranchController' => __DIR__ . '/../..' . '/app/Http/Controllers/RestaurantController/WhatsappBranchController.php',
+        'App\\Http\\Controllers\\WebsiteController\\CartController' => __DIR__ . '/../..' . '/app/Http/Controllers/WebsiteController/CartController.php',
         'App\\Http\\Controllers\\WebsiteController\\ContactUsController' => __DIR__ . '/../..' . '/app/Http/Controllers/WebsiteController/ContactUsController.php',
         'App\\Http\\Controllers\\WebsiteController\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/WebsiteController/HomeController.php',
         'App\\Http\\Controllers\\WebsiteController\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/WebsiteController/UserController.php',
@@ -842,6 +849,9 @@ class ComposerStaticInit9f8cccb2295edcd17e3e992452f46b0e
         'BaconQrCode\\Renderer\\RendererStyle\\GradientType' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Renderer/RendererStyle/GradientType.php',
         'BaconQrCode\\Renderer\\RendererStyle\\RendererStyle' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Renderer/RendererStyle/RendererStyle.php',
         'BaconQrCode\\Writer' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Writer.php',
+        'Brian2694\\Toastr\\Facades\\Toastr' => __DIR__ . '/..' . '/brian2694/laravel-toastr/src/Facades/Toastr.php',
+        'Brian2694\\Toastr\\Toastr' => __DIR__ . '/..' . '/brian2694/laravel-toastr/src/Toastr.php',
+        'Brian2694\\Toastr\\ToastrServiceProvider' => __DIR__ . '/..' . '/brian2694/laravel-toastr/src/ToastrServiceProvider.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
         'Brick\\Math\\BigNumber' => __DIR__ . '/..' . '/brick/math/src/BigNumber.php',

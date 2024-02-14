@@ -151,26 +151,6 @@
                                         @endif
                                     </div>
                                 @endif
-                                @php
-                                    $loyaltySubscription =   \App\Models\ServiceSubscription::whereRestaurantId(auth('restaurant')->id())->whereHas('service' , function($query){
-                                            $query->where('id' , 11);
-                                        })
-                                            ->whereIn('status' , ['active' , 'tentative'])
-                                            ->first()
-                                @endphp
-                                @if(isset($loyaltySubscription->id))
-                                    <div class="form-group loyalty-points">
-                                        <label class="control-label"> @lang('dashboard.entry.loyalty_points') </label>
-                                        <input name="loyalty_points" type="number" class="form-control"
-                                               value="{{old('loyalty_points')}}"
-                                               placeholder="@lang('dashboard.entry.loyalty_points')">
-                                        @if ($errors->has('loyalty_points'))
-                                            <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('loyalty_points') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                @endif
                                 <div class="form-group">
                                     <label class="control-label"> @lang('messages.price') </label>
                                     <input name="price" step="0.1" type="number" class="form-control"
@@ -270,15 +250,15 @@
                                 </div>
                                 {{-- video_type --}}
                                 <div class="form-group ">
-                                    <label class="control-label"> @lang('dashboard.entry.video_type') </label>
+                                    <label class="control-label"> @lang('messages.video_type') </label>
                                     <select name="video_type" id="video_type" class="form-control select2">
-                                        <option value="" selected>{{ trans('dashboard.image') }}</option>
+                                        <option value="" selected>{{ trans('messages.image') }}</option>
                                         <option
-                                            value="local_video" {{old('video_type') == 'local_video' ? 'selected' : ''}}>{{ trans('dashboard.local_video') }}</option>
+                                            value="local_video" {{old('video_type') == 'local_video' ? 'selected' : ''}}>{{ trans('messages.local_video') }}</option>
                                         <option
-                                            value="youtube" {{old('video_type') == 'youtube' ? 'selected' : ''}}>{{ trans('dashboard.youtube') }}</option>
+                                            value="youtube" {{old('video_type') == 'youtube' ? 'selected' : ''}}>{{ trans('messages.youtube') }}</option>
                                         <option
-                                            value="gif" {{old('video_type') == 'gif' ? 'selected' : ''}}>{{ trans('dashboard.image_gif') }}</option>
+                                            value="gif" {{old('video_type') == 'gif' ? 'selected' : ''}}>{{ trans('messages.image_gif') }}</option>
                                     </select>
                                     @if ($errors->has('video_type'))
                                         <span class="help-block">
@@ -288,11 +268,11 @@
                                 </div>
                                 {{-- video_link --}}
                                 <div class="form-group content-link video_type_youtube display-none">
-                                    <label class="control-label"> @lang('dashboard.youtube') </label>
+                                    <label class="control-label"> @lang('messages.youtube') </label>
                                     <input type="text" name="video_id" class="form-control"
                                            value="{{old('video_type')== 'youtube' ? old('video_id') : ''}}"
                                            placeholder="مثال : xxxxxxx">
-                                    <p class="text-mute">{{ trans('dashboard.youtube_link_code') }}</p>
+                                    <p class="text-mute">{{ trans('messages.youtube_link_code') }}</p>
                                     @if ($errors->has('video_id'))
                                         <span class="help-block">
                                         <strong style="color: red;">{{ $errors->first('video_id') }}</strong>
@@ -302,7 +282,7 @@
                                 {{-- video --}}
                                 <div class="form-group video_type_local display-none" style="margin-top: 2%;">
                                     <div class="col-md-12">
-                                        <span class="fileinput-new"> {{ trans('dashboard.local_video') }}</span>
+                                        <span class="fileinput-new"> {{ trans('messages.local_video') }}</span>
                                         <br>
                                         <div dir=rtl class="file-loading">
                                             <input type="file" name="video" accept=".mp4" class="file"
@@ -416,19 +396,6 @@
             <script src="{{ asset('admin/bootstrap-fileinput/locales/ar.js') }}"></script>
             <script src="https://use.fontawesome.com/52e183519a.js"></script>
             <script>
-                var xbranches = {!! json_encode($branchesSubscription) !!};
-                $(function () {
-                    $('select[name=branch_id]').on('change', function () {
-                        var tag = $(this);
-                        $('.loyalty-points').fadeOut(2);
-                        $.each(xbranches, function (k, v) {
-                            if (v == tag.val()) {
-                                $('.loyalty-points').fadeIn(300);
-                            }
-                        });
-                    });
-                    $('select[name=branch_id]').trigger('change');
-                });
 
                 $("#local-video").fileinput({
                     uploadUrl: "{{route('products.uploadVideo')}}",

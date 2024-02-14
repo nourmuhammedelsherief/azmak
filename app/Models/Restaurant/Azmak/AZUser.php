@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Country;
 
 class AZUser extends Authenticatable
 {
@@ -30,5 +31,11 @@ class AZUser extends Authenticatable
         'phone_number',
         'verification_code',
         'remember_token',
+        'country_id',
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class , 'country_id');
+    }
 }

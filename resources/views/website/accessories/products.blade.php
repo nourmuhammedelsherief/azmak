@@ -129,7 +129,9 @@
                                         </div>
                                         <div class="price">
                                             <span style="font-size: 13px">{{$product->price}} </span>
-                                            <small>@lang('messages.SR')</small>
+                                            <small>
+                                                {{app()->getLocale() == 'ar' ? $product->restaurant->country->currency_ar : $product->restaurant->country->currency_en}}
+                                            </small>
                                         </div>
                                     </div>
                                     <div style="display: none" class="shareBtn" id="shareDiv-{{$product->id}}">

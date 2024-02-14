@@ -32,24 +32,12 @@ class SliderController extends Controller
             ->orderBy('id' , 'desc')
             ->where('slider_type' , $type)
             ->paginate(100);
-        $this->deleteTemporaryFiles();
         return view('restaurant.sliders.index' , compact('sliders' , 'restaurant'));
-    }
-    protected function deleteTemporaryFiles(){
-        $currentDate = Carbon::now()->subDay();
-        $items = TemporaryFile::where('created_at' , '<=' , $currentDate->format('Y-m-d H:i:s'))->get();
-        foreach($items as $item):
-            if(Storage::disk('public_storage')->exists($item->path)):
-                Storage::disk('public_storage')->delete($item->path);
-            endif;
-            $item->delete();
-        endforeach;
-        return $items;
     }
 
     public function storeSliderTitle(Request $request ){
         $data = $request->validate([
-            'slider_down_contact_us_title' =>'required|min:1|max:190' 
+            'slider_down_contact_us_title' =>'required|min:1|max:190'
         ]);
         $restaurant = auth('restaurant')->user();
         $restaurant->update($data);
@@ -82,17 +70,17 @@ class SliderController extends Controller
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
         $data = $request->validate( [
-            'type' => 'required|in:image,youtube,local_video,gif' , 
-            'youtube' => 'nullable|required_if:type,youtube|min:1' , 
-            'photo' => 'nullable|required_if:type,image|mimes:jpg,jpeg,png,gif,tif,psd,pmp,webp|max:20000' , 
-            'video_path' => 'required_if:type,local_video|nullable|min:10' , 
+            'type' => 'required|in:image,youtube,local_video,gif' ,
+            'youtube' => 'nullable|required_if:type,youtube|min:1' ,
+            'photo' => 'nullable|required_if:type,image|mimes:jpg,jpeg,png,gif,tif,psd,pmp,webp|max:20000' ,
+            'video_path' => 'required_if:type,local_video|nullable|min:10' ,
             'description_en'  => 'nullable|min:1' ,
             'description_ar'  => 'nullable|min:1' ,
             'slider_type' => 'required|in:contact_us,home,contact_us_client'
         ]);
-        
+
         $image = ($request->hasFile('photo') and $request->type == 'image') ? UploadImage($request->file('photo')  , 'photo' , '/uploads/sliders') : null;
-        
+
         if($request->type == 'local_video' and !$temp = TemporaryFile::where('path' , $request->video_path)->first()):
             flash('يرجي ارفاق الفيديو اولا !!')->error();
             return redirect()->back();
@@ -108,61 +96,61 @@ class SliderController extends Controller
         // create new slider
         $item = RestaurantSlider::create([
             'restaurant_id'  => $restaurant->id,
-            'photo'  => $image  , 
-            'type' => $request->type , 
-            'youtube' => $request->youtube , 
-            'description_ar' => $request->description_ar , 
-            'description_en' => $request->description_en , 
-            'slider_type' => $request->slider_type , 
+            'photo'  => $image  ,
+            'type' => $request->type ,
+            'youtube' => $request->youtube ,
+            'description_ar' => $request->description_ar ,
+            'description_en' => $request->description_en ,
+            'slider_type' => $request->slider_type ,
         ]);
         flash(trans('messages.created'))->success();
         return redirect(route('sliders.index') . '?type=' . $item->slider_type);
     }
 
-    
+
     public function uploadVideo(Request $request){
         $request->validate([
-            'id' => 'nullable|integer' , 
-            'video' => 'required|mimes:mp4,gif' , 
+            'id' => 'nullable|integer' ,
+            'video' => 'required|mimes:mp4,gif' ,
             'type' => 'required|in:local_video,gif'
         ]);
         if($request->type == 'gif'){
             $request->validate([
-                'video' => 'required|mimes:gif' , 
+                'video' => 'required|mimes:gif' ,
             ]);
         }
         if(!empty($request->id) and !$slider = RestaurantSlider::find($request->id)):
             return trans('dashboard.errors.slider_not_found');
         endif;
-        
+
         if(isset($slider->id) and $slider->type == 'local_video' and !empty($slider->photo) and Storage::disk('public_storage')->exists($slider->photo)):
             Storage::disk('public_storage')->delete($slider->photo);
-        
+
         elseif(isset($slider->id) and $slider->type == 'gif' and !empty($slider->photo) and Storage::disk('public_storage')->exists( 'uploads/sliders/' . $slider->photo)):
             Storage::disk('public_storage')->delete( 'uploads/sliders/' . $slider->photo);
         endif;
         $videoPath = Storage::disk('public_storage')->put('uploads/sliders' ,$request->file('video'));
         if(isset($slider->id) and $request->type == 'local_video'){
             $slider->update([
-                'type' => 'local_video' , 
+                'type' => 'local_video' ,
                 'photo' => $videoPath,
             ]);
         }elseif(isset($slider->id) and $request->type == 'gif'){
             $slider->update([
-                'type' => 'gif' , 
+                'type' => 'gif' ,
                 'photo' => basename($videoPath),
             ]);
         }else{
             $temp = TemporaryFile::create([
-                'type' => 'slider' , 
+                'type' => 'slider' ,
                 'path' => $videoPath
             ]);
         }
-       
+
         return response([
-            'status' => 1 , 
-            'video_path' => $videoPath , 
-            'temp_id' => isset($temp->id) ? $temp->id : null  , 
+            'status' => 1 ,
+            'video_path' => $videoPath ,
+            'temp_id' => isset($temp->id) ? $temp->id : null  ,
         ]);
     }
 
@@ -199,11 +187,11 @@ class SliderController extends Controller
     public function update(Request $request, $id)
     {
         $slider = RestaurantSlider::findOrFail($id);
-        
+
         $data = $request->validate( [
-            'type' => 'required|in:image,youtube,local_video,gif' , 
-            'youtube' => 'nullable|required_if:type,youtube|min:1' , 
-            'photo' => 'nullable|mimes:jpg,jpeg,png,gif,tif,psd,pmp,webp|max:20000' , 
+            'type' => 'required|in:image,youtube,local_video,gif' ,
+            'youtube' => 'nullable|required_if:type,youtube|min:1' ,
+            'photo' => 'nullable|mimes:jpg,jpeg,png,gif,tif,psd,pmp,webp|max:20000' ,
             'description_en'  => 'nullable|min:1' ,
             'description_ar'  => 'nullable|min:1' ,
         ]);
@@ -214,15 +202,15 @@ class SliderController extends Controller
         elseif($request->type == 'local_video'):
             $image = $slider->photo;
         endif;
-        
+
         // return UploadImageEdit($request->file('photo')  , 'photo' , '/uploads/sliders' , $slider->photo);
-        
+
         $slider->update([
-            'photo'  => $image , 
-            'type' => $request->type , 
-            'youtube' => $request->youtube , 
-            'description_ar' => $request->description_ar , 
-            'description_en' => $request->description_en , 
+            'photo'  => $image ,
+            'type' => $request->type ,
+            'youtube' => $request->youtube ,
+            'description_ar' => $request->description_ar ,
+            'description_en' => $request->description_en ,
         ]);
         flash(trans('messages.updated'))->success();
         return redirect(route('sliders.index') . '?type=' . $slider->slider_type);

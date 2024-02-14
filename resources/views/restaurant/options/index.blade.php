@@ -21,13 +21,13 @@
                 <!--<div class="col-sm-6">-->
                 <!--    <ol class="breadcrumb float-sm-right">-->
                 <!--        <li class="breadcrumb-item">-->
-                <!--            <a href="{{url('/restaurant/home')}}">-->
-                <!--                @lang('messages.control_panel')-->
+            <!--            <a href="{{url('/restaurant/home')}}">-->
+            <!--                @lang('messages.control_panel')-->
                 <!--            </a>-->
                 <!--        </li>-->
                 <!--        <li class="breadcrumb-item active">-->
-                <!--            <a href="{{route('additions.index')}}"></a>-->
-                <!--            @lang('messages.options')-->
+            <!--            <a href="{{route('additions.index')}}"></a>-->
+            <!--            @lang('messages.options')-->
                 <!--        </li>-->
                 <!--    </ol>-->
                 <!--</div>-->
@@ -63,7 +63,7 @@
                                 <th> @lang('messages.name') </th>
                                 <th> @lang('messages.modifier') </th>
                                 <th> @lang('messages.price') </th>
-{{--                                <th> @lang('dashboard.add_to') </th>--}}
+                                {{--                                <th> @lang('dashboard.add_to') </th>--}}
                                 <th> @lang('messages.activity') </th>
                                 <th> @lang('messages.operations') </th>
                             </tr>
@@ -86,14 +86,14 @@
                                         {{app()->getLocale() == 'ar' ? ($option->modifier->name_ar == null ? $option->modifier->name_en : $option->modifier->name_ar) : ($option->modifier->name_en == null ? $option->modifier->name_ar : $option->modifier->name_en)}}
                                     </td>
                                     <td> {{$option->price}} </td>
-{{--                                    <td>--}}
-{{--                                        @if(!empty($option->related_id))--}}
-{{--                                        <br>--}}
-{{--                                        <span class="badge badge-info">--}}
-{{--                                            {{$option->relatedTo->name}}  ( {{$option->modifier->name}} )--}}
-{{--                                        </span>--}}
-{{--                                    @endif--}}
-{{--                                    </td>--}}
+                                    {{--                                    <td>--}}
+                                    {{--                                        @if(!empty($option->related_id))--}}
+                                    {{--                                        <br>--}}
+                                    {{--                                        <span class="badge badge-info">--}}
+                                    {{--                                            {{$option->relatedTo->name}}  ( {{$option->modifier->name}} )--}}
+                                    {{--                                        </span>--}}
+                                    {{--                                    @endif--}}
+                                    {{--                                    </td>--}}
                                     <td>
 
                                         <span class="custom-switch {{$option->is_active == 'true' ? 'on' : 'off'}}"
@@ -110,18 +110,10 @@
                                         <a class="btn btn-primary" href="{{route('additions.edit' , $option->id)}}">
                                             <i class="fa fa-user-edit"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                            ->wherePermissionId(7)
-                                            ->first();
-                                        @endphp
-                                        @if($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $option->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($option->name_ar == null ? $option->name_en : $option->name_ar) : ($option->name_en == null ? $option->name_ar : $option->name_en) }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
+                                        <a class="delete_data btn btn-danger" data="{{ $option->id }}"
+                                           data_name="{{ app()->getLocale() == 'ar' ? ($option->name_ar == null ? $option->name_en : $option->name_ar) : ($option->name_en == null ? $option->name_ar : $option->name_en) }}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
 
                                     </td>
                                 </tr>

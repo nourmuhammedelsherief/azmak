@@ -32,9 +32,7 @@ class MenuCategoryController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        if ($restaurant->status == 'finished' or $restaurant->subscription->status == 'tentative_finished') {
-            return redirect()->route('RestaurantProfile');
-        }
+
         $branches = AZBranch::whereRestaurantId($restaurant->id)->get();
         $categories = AZMenuCategory::whereRestaurantId($restaurant->id)->paginate(500);
         return view('restaurant.menu_categories.index', compact('categories' , 'branches'));

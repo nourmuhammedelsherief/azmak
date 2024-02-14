@@ -55,10 +55,12 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="">{{ trans('dashboard.slider_down_client_title') }}</label>
-                                        <input type="text"  class="form-control" name="slider_down_contact_us_title" value="{{$restaurant->slider_down_contact_us_title}}">
+                                        <input type="text" class="form-control" name="slider_down_contact_us_title"
+                                               value="{{$restaurant->slider_down_contact_us_title}}">
                                     </div>
                                     <div class="col-md-4">
-                                        <button class="btn btn-primary" style="margin-top:30px;">{{ trans('dashboard.save') }}</button>
+                                        <button class="btn btn-primary"
+                                                style="margin-top:30px;">{{ trans('dashboard.save') }}</button>
                                     </div>
                                 </div>
                             </form>
@@ -69,7 +71,7 @@
                                 <th>
                                     <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
                                         <input type="checkbox" class="group-checkable"
-                                               data-set="#sample_1 .checkboxes" />
+                                               data-set="#sample_1 .checkboxes"/>
                                         <span></span>
                                     </label>
                                 </th>
@@ -90,7 +92,7 @@
                                 <tr class="odd gradeX">
                                     <td>
                                         <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
-                                            <input type="checkbox" class="checkboxes" value="1" />
+                                            <input type="checkbox" class="checkboxes" value="1"/>
                                             <span></span>
                                         </label>
                                     </td>
@@ -157,22 +159,15 @@
                                     </td>
                                     <td>
 
-                                        <a class="btn btn-primary" href="{{ route('sliders.edit', $slider->id) }}?type={{request('type')}}">
+                                        <a class="btn btn-primary"
+                                           href="{{ route('sliders.edit', $slider->id) }}?type={{request('type')}}">
                                             <i class="fa fa-user-edit"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                                ->wherePermissionId(7)
-                                                ->first();
-                                        @endphp
-                                        @if ($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $slider->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($slider->name_ar == null ? $slider->name_en : $slider->name_ar) : ($slider->name_en == null ? $slider->name_ar : $slider->name_en) }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
 
+                                        <a class="delete_data btn btn-danger" data="{{ $slider->id }}"
+                                           data_name="{{ app()->getLocale() == 'ar' ? ($slider->name_ar == null ? $slider->name_en : $slider->name_ar) : ($slider->name_en == null ? $slider->name_ar : $slider->name_en) }}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -196,7 +191,7 @@
     <script src="{{ URL::asset('admin/js/sweetalert.min.js') }}"></script>
     <script src="{{ URL::asset('admin/js/ui-sweetalert.min.js') }}"></script>
     <script>
-        $(function() {
+        $(function () {
             $("#example1").DataTable({
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
@@ -214,8 +209,8 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $('body').on('click', '.delete_data', function() {
+        $(document).ready(function () {
+            $('body').on('click', '.delete_data', function () {
                 var id = $(this).attr('data');
                 var swal_text = '{{ trans('messages.delete') }} ' + $(this).attr('data_name');
                 var swal_title = "{{ trans('messages.deleteSure') }}";
@@ -228,7 +223,7 @@
                     confirmButtonClass: "btn-warning",
                     confirmButtonText: "{{ trans('messages.sure') }}",
                     cancelButtonText: "{{ trans('messages.close') }}"
-                }, function() {
+                }, function () {
 
                     window.location.href = "{{ url('/') }}" + "/restaurant/sliders/delete/" +
                         id;

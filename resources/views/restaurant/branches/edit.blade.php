@@ -66,6 +66,15 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label"> @lang('messages.branch_location') </label>
+                                    <h4 style="text-align: right">  @lang('messages.selectPosition')  </h4>
+                                    <input type="text" id="lat" name="latitude" value="{{$branch->latitude}}" readonly="yes" required/>
+                                    <input type="text" id="lng" name="longitude" value="{{$branch->longitude}}" readonly="yes" required/>
+                                    <a class="btn btn-info" onclick="getLocation()"> @lang('messages.MyPosition') </a>
+                                    <hr>
+                                    <div id="map" style="position: relative; height: 600px; width: 600px; "></div>
+                                </div>
                                 <!-- /.card-body -->
                                 @method('PUT')
                                 <div class="card-footer">
@@ -135,4 +144,150 @@
             return clsAlphaNoOnly (this.event); // window.event
         }
     </script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+
+            document.getElementById('lat').value = lat; //latitude
+            document.getElementById('lng').value = lon; //longitude
+            latlon = new google.maps.LatLng(lat, lon)
+            mapholder = document.getElementById('mapholder')
+            //mapholder.style.height='250px';
+            //mapholder.style.width='100%';
+
+            var myOptions = {
+                center: latlon,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                }
+            };
+            var map = new google.maps.Map(document.getElementById("map"), myOptions);
+            var marker = new google.maps.Marker({
+                position: latlon,
+                map: map,
+                title: "You are here!"
+            });
+            //Listen for any clicks on the map.
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Get the location that the user clicked.
+                var clickedLocation = event.latLng;
+                //If the marker hasn't been added.
+                if (marker === false) {
+                    //Create the marker.
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                        draggable: true //make it draggable
+                    });
+                    //Listen for drag events!
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        markerLocation();
+                    });
+                } else {
+                    //Marker has already been added, so just change its location.
+                    marker.setPosition(clickedLocation);
+                }
+                //Get the marker's location.
+                markerLocation();
+            });
+
+
+            function markerLocation() {
+                //Get location.
+                var currentLocation = marker.getPosition();
+                //Add lat and lng values to a field that we can save.
+                document.getElementById('lat').value = currentLocation.lat(); //latitude
+                document.getElementById('lng').value = currentLocation.lng(); //longitude
+            }
+        }
+
+        function previousYesNoCheck() {
+            if (document.getElementById('previousYes').checked) {
+                document.getElementById('previous_periods').style.display = 'block';
+            } else {
+                document.getElementById('previous_periods').style.display = 'none';
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        var map;
+
+        function initMap() {
+
+            var latitude = {{$branch->latitude}}; // YOUR LATITUDE VALUE
+            var longitude = {{$branch->longitude}}; // YOUR LONGITUDE VALUE
+
+            var myLatLng = {
+                lat: latitude,
+                lng: longitude
+            };
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 14,
+                gestureHandling: 'true',
+                zoomControl: false // disable the default map zoom on double click
+            });
+
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                //title: 'Hello World'
+                // setting latitude & longitude as title of the marker
+                // title is shown when you hover over the marker
+                title: latitude + ', ' + longitude
+            });
+
+
+            //         //Listen for any clicks on the map.
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Get the location that the user clicked.
+                var clickedLocation = event.latLng;
+                //If the marker hasn't been added.
+                if (marker === false) {
+                    //Create the marker.
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                        draggable: true //make it draggable
+                    });
+                    //Listen for drag events!
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        markerLocation();
+                    });
+                } else {
+                    //Marker has already been added, so just change its location.
+                    marker.setPosition(clickedLocation);
+                }
+                //Get the marker's location.
+                markerLocation();
+            });
+
+
+            function markerLocation() {
+                //Get location.
+                var currentLocation = marker.getPosition();
+                //Add lat and lng values to a field that we can save.
+                document.getElementById('lat').value = currentLocation.lat(); //latitude
+                document.getElementById('lng').value = currentLocation.lng(); //longitude
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFUMq5htfgLMNYvN4cuHvfGmhe8AwBeKU&callback=initMap"
+            async
+            defer></script>
 @endsection

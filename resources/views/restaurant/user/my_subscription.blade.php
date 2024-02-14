@@ -128,24 +128,6 @@
                                     </form>
                                 </div>
 
-                                @php
-                                    $user = Auth::guard('restaurant')->user();
-                                    if ($user->type == 'employee'):
-                                        $user = \App\Models\Restaurant::find($user->restaurant_id);
-                                    endif;
-                                    $check_price = \App\Models\CountryPackage::whereCountry_id($user->country_id)
-                                        ->wherePackageId($user->subscription->package_id)
-                                        ->first();
-                                    if ($check_price == null) {
-                                        $package_price = \App\Models\Package::find($user->subscription->package_id)->price;
-                                    } else {
-                                        $package_price = $check_price->price;
-                                    }
-                                    $tax = \App\Models\Setting::find(1)->tax;
-                                    $subscription_price = $user->subscription->price;
-                                    $tax_value_package = ($package_price * $tax) / 100;
-                                    $package_price = $package_price + $tax_value_package;
-                                @endphp
                                 <div class="active tab-pane" id="subscription">
                                     <!-- The timeline -->
                                     <div class="timeline timeline-inverse">
@@ -170,79 +152,17 @@
                                                 <h3 class="timeline-header border-0">
                                                     @lang('messages.package_price')
                                                     <a href="#">
-                                                        {{ number_format((float) $package_price, 2, '.', '') }}
                                                     </a>
-                                                    {{ app()->getLocale() == 'ar' ? $user->country->currency_ar : $user->country->currency_en }}
                                                     @lang('messages.including_tax')
                                                 </h3>
                                             </div>
                                         </div>
-                                        @if ($user->subscription->seller_code_id != null)
-                                            <div>
-                                                <i class="far fa-money-bill-alt bg-gray"></i>
-                                                <div class="timeline-item">
-                                                    <h3 class="timeline-header border-0">
-                                                        @lang('messages.package_price_discount')
-                                                        @if ($user->subscription->seller_code_id != null)
-                                                            <a href="#">
-                                                                {{ number_format((float) $subscription_price, 2, '.', '') }}
-                                                            </a>
-                                                        @else
-                                                            <a href="#">
-                                                                {{ number_format((float) $package_price, 2, '.', '') }}
-                                                            </a>
-                                                        @endif
-                                                        {{ app()->getLocale() == 'ar' ? $user->country->currency_ar : $user->country->currency_en }}
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <i class="far fa-money-bill-alt bg-gray"></i>
-                                                <div class="timeline-item">
-                                                    <h3 class="timeline-header border-0">
-
-                                                        @if ($user->subscription->seller_code_id != null)
-                                                            @if ($user->subscription->seller_code->used_type == 'code')
-                                                                @lang('messages.seller_code')
-                                                                <a
-                                                                    href="#">{{ $user->subscription->seller_code->seller_name }}</a>
-                                                            @else
-                                                                @lang('messages.seller_code_url')
-                                                                <a href="#">{{ $user->subscription->seller_code->custom_url }}
-                                                                </a>
-                                                            @endif
-                                                        @else
-                                                            <a href="#">
-                                                                @lang('messages.notFound')
-                                                            </a>
-                                                        @endif
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                        @endif
                                         <div>
                                             <i class="far fa-money-bill-alt bg-gray"></i>
                                             <div class="timeline-item">
                                                 <h3 class="timeline-header border-0">
                                                     @lang('messages.next_subscription_price')
-                                                    @if ($user->subscription->seller_code_id != null)
-                                                        @if ($user->subscription->seller_code->permanent == 'true')
-                                                            <a href="#">
-                                                                {{ number_format((float) $subscription_price, 2, '.', '') }}
-                                                                {{ app()->getLocale() == 'ar' ? $user->country->currency_ar : $user->country->currency_en }}
-                                                            </a>
-                                                        @else
-                                                            <a href="#">
-                                                                {{ number_format((float) $package_price, 2, '.', '') }}
-                                                                {{ app()->getLocale() == 'ar' ? $user->country->currency_ar : $user->country->currency_en }}
-                                                            </a>
-                                                        @endif
-                                                    @else
-                                                        <a href="#">
-                                                            {{ number_format((float) $package_price, 2, '.', '') }}
-                                                            {{ app()->getLocale() == 'ar' ? $user->country->currency_ar : $user->country->currency_en }}
-                                                        </a>
-                                                    @endif
+
                                                     @lang('messages.including_tax')
                                                 </h3>
                                             </div>
@@ -252,62 +172,12 @@
                                             <div class="timeline-item">
                                                 <h3 class="timeline-header border-0">
                                                     @lang('messages.state')
-                                                    @if ($user->subscription->status == 'active')
-                                                        <a href="#" class="btn btn-success">
-                                                            @lang('messages.active')
-                                                        </a>
-                                                    @elseif($user->subscription->status == 'tentative')
-                                                        <a href="#" class="btn btn-info">
-                                                            @lang('messages.free_tentative_period')
-                                                        </a>
-                                                    @elseif($user->subscription->status == 'finished')
-                                                        <a href="#" class="btn btn-danger">
-                                                            @lang('messages.finished')
-                                                        </a>
-                                                    @elseif($user->subscription->status == 'tentative_finished')
-                                                        <a href="#" class="btn btn-danger">
-                                                            @lang('messages.tentative_finished')
-                                                        </a>
-                                                    @endif
+
 
                                                 </h3>
                                             </div>
                                         </div>
 
-                                        @if ($user->subscription->end_at > Carbon\Carbon::now())
-                                            <div>
-                                                <i class="far fa-clock bg-gray"></i>
-                                                <div class="timeline-item">
-                                                    <h3 class="timeline-header border-0">
-                                                        {{ app()->getLocale() == 'ar' ? 'باقي علي أنتهاء الأشتراك الخاص بكم' : 'The rest of your subscription has expired' }}
-                                                        <a href="#">
-                                                            <?php
-                                                            $ticketTime = strtotime($user->subscription->end_at);
-
-                                                            // This difference is in seconds.
-                                                            $difference = $ticketTime - time();
-                                                            ?>
-                                                            {{ round($difference / 86400) }}
-                                                        </a>
-                                                        {{ app()->getLocale() == 'ar' ? 'يوم' : 'Day' }}
-                                                    </h3>
-                                                    @if ($user->subscription->end_at < \Carbon\Carbon::now()->addMonth() and $user->subscription->status == 'active')
-                                                        <p>
-                                                            <a class="btn btn-info"
-                                                                href="{{ route('renewSubscription', $user->id) }}">
-                                                                {{ app()->getLocale() == 'ar' ? 'تجديد الأشتراك' : 'Renew Subscription' }}
-                                                            </a>
-                                                        </p>
-                                                    @endif
-                                                    @if ($user->subscription->status == 'tentative')
-                                                        <a class="btn btn-success"
-                                                            href="{{ route('renewSubscription', $user->id) }}">
-                                                            {{ app()->getLocale() == 'ar' ? 'تفعيل الأشتراك' : 'Active Subscription' }}
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endif
 
                                         <div>
                                             <i class="far fa-clock bg-gray"></i>
@@ -315,17 +185,7 @@
                                                 <h3 class="timeline-header border-0">
                                                     @lang('messages.subscribe_end_at')
                                                     <a href="#">
-                                                        {{ $user->subscription->end_at->format('Y-m-d') }}
                                                     </a>
-                                                    @if ($user->subscription->status == 'finished' or $user->subscription->status == 'tentative_finished')
-                                                        <a class="btn btn-danger" href="#">
-                                                            @lang('messages.finished')
-                                                        </a>
-                                                        <hr>
-                                                        <a class="btn btn-success"
-                                                            href="{{ route('renewSubscription', $user->id) }}">
-                                                            @lang('messages.renewSubscription') </a>
-                                                    @endif
                                                 </h3>
                                             </div>
                                         </div>
@@ -346,14 +206,6 @@
                                                 <h3 class="timeline-header border-0">
                                                     {{ app()->getLocale() == 'ar' ? 'الزيارات اليومية' : 'Daily Views' }}
                                                     <a href="#">
-                                                        <?php $daily_views = \App\Models\RestaurantView::whereRestaurantId($user->id)
-                                                            ->orderBy('id', 'desc')
-                                                            ->first(); ?>
-                                                        @if ($daily_views != null)
-                                                            {{ $daily_views->views }}
-                                                        @else
-                                                            0
-                                                        @endif
 
                                                     </a>
                                                 </h3>

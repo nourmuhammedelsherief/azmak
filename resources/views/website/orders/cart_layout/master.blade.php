@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@lang('messages.cart')</title>
+    <!-- //font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400&display=swap"
+        rel="stylesheet"
+    />
+    <!-- //bootstrap -->
+    <link rel="stylesheet" href="{{asset('site/css/bootstrap-grid.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('site/css/bootstrap.css')}}"/>
+    <!-- fontawsome -->
+    <link rel="stylesheet" href="{{asset('site/css/all.min.css')}}"/>
+    <!-- style sheet -->
+    <link rel="stylesheet" href="{{asset('site/css/header.css')}}"/>
+    <link rel="stylesheet" href="{{asset('site/css/global.css')}}"/>
+    <link rel="stylesheet" href="{{asset('site/css/home.css')}}"/>
+    <link rel="stylesheet" href="{{asset('site/css/cart.css')}}"/>
+</head>
+<body>
+<div class="mycontainer">
+    @include('website.layout.header')
+    <br>
+    <!-- <img src="./image//cartempty.jpg" -->
+    @yield('content')
+
+    <footer
+        class="px-4 py-3 d-flex align-items-center justify-content-around"
+    >
+        <div class="mainHome d-flex flex-column align-items-center">
+            <a href='/home'> <i class="fa fa-house"></i></a>
+            <a href='/home'> الرئيسية</a>
+        </div>
+        <div class="myorder d-flex flex-column align-items-center">
+            <a href='/cart'> <i class="fa-solid fa-cart-shopping"></i></a>
+            <a href='/cart'> طلباتي</a>
+        </div>
+        <div class="myAccount d-flex flex-column align-items-center">
+            <a href='/myaccount'> <i class="fa-solid fa-user"></i></a>
+            <a href='/myaccount'> حسابي</a>
+        </div>
+    </footer>
+</div>
+<script src="{{asset('site/js/GetProductToCart.js')}}"></script>
+<script src="{{asset('site/js/bootstrap.bundle.js')}}"></script>
+</body>
+</html>

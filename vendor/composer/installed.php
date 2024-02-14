@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '529945e427959eff5757514b515a595b0f158b5d',
+        'reference' => '870d508df6c98fcbcdea0c6d11efc1c7b3e9c97f',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -17,6 +17,15 @@
             'install_path' => __DIR__ . '/../bacon/bacon-qr-code',
             'aliases' => array(),
             'reference' => '8674e51bb65af933a5ffaf1c308a660387c35c22',
+            'dev_requirement' => false,
+        ),
+        'brian2694/laravel-toastr' => array(
+            'pretty_version' => '5.59',
+            'version' => '5.59.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../brian2694/laravel-toastr',
+            'aliases' => array(),
+            'reference' => '60f90a7b25973549c3992b3dc5965d4f0e27838c',
             'dev_requirement' => false,
         ),
         'brick/math' => array(
@@ -423,7 +432,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '529945e427959eff5757514b515a595b0f158b5d',
+            'reference' => '870d508df6c98fcbcdea0c6d11efc1c7b3e9c97f',
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(

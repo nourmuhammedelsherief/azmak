@@ -165,6 +165,10 @@ return [
         'description_ar'        => 'Description In Arabic',
         'description_en'        => 'Description In English',
         'sliders'               => 'Sliders',
+        'latitude'              => 'Position',
+        'person_name'           => 'Person Name',
+        'person_phone'          => 'Person Phone',
+        'occasion'              => 'Occasion',
     ],
 
 ];

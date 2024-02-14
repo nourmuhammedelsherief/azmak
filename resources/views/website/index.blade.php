@@ -95,7 +95,7 @@
                                             value="{{$branch->id}}"
                                         />
                                         <label for="city{{$branch->id}}">
-                                            {{$branch->name_ar}}
+                                            {{app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en}} ({{app()->getLocale() == 'ar' ? $branch->city->name_ar : $branch->city->name_en}})
                                         </label>
                                     </div>
                                     <hr/>

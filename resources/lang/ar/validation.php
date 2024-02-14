@@ -162,5 +162,9 @@ return [
         'description_ar'        => 'الوصف بالعربي',
         'description_en'        => 'الوصف بالانجليزي',
         'sliders'               => 'السلايدر',
+        'latitude'              => 'الخريطة',
+        'person_name'           => 'اسم الشخص',
+        'person_phone'          => 'هاتف الشخص',
+        'occasion'              => 'المناسبة',
     ],
 ];

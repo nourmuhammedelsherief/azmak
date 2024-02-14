@@ -28,10 +28,7 @@ class ModifierController extends Controller
             endif;
             $restaurant = Restaurant::find($restaurant->restaurant_id);
         endif;
-        if ($restaurant->status == 'finished' or $restaurant->subscription->status == 'tentative_finished')
-        {
-            return redirect()->route('RestaurantProfile');
-        }
+
         $modifiers = AZModifier::whereRestaurantId($restaurant->id)->paginate(500);
         return view('restaurant.modifiers.index' , compact('modifiers'));
     }

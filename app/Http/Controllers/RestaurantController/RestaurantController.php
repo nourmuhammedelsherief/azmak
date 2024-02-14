@@ -19,10 +19,6 @@ use App\Models\RestaurantPermission;
 use App\Models\RestaurantUser;
 use App\Models\SellerCode;
 use App\Models\ServiceSubscription;
-use App\Models\Setting;
-use App\Models\Subscription;
-use App\Models\Theme;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,8 +44,7 @@ class RestaurantController extends Controller
             $user = Restaurant::find($user->restaurant_id);
         endif;
         $cities = City::whereCountryId($user->country_id)->get();
-        $themes = Theme::all();
-        return view('restaurant.user.my_subscription', compact('user','themes', 'cities'));
+        return view('restaurant.user.my_subscription', compact('user', 'cities'));
     }
     public function my_restaurant_users()
     {
@@ -212,15 +207,6 @@ class RestaurantController extends Controller
             // 'logo' => $request->file('logo') == null ? $user->logo : UploadImageEdit($request->file('logo'), 'logo', '/uploads/restaurants/logo', $user->logo),
         ]);
 
-        if($user->id == 1145):
-
-            $request->validate([
-                'theme_id' => 'required|exists:themes,id',
-            ]);
-            $user->update([
-                'theme_id' => $request->theme_id,
-            ]);
-        endif;
         // here the main branch should be edited with his restaurant
         $branch = Branch::whereRestaurantId($user->id)
             ->where('main', 'true')

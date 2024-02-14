@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WebsiteController;
 
 use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\Models\Restaurant\Azmak\AZBranch;
 use App\Models\Restaurant\Azmak\AZMenuCategory;

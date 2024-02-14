@@ -21,13 +21,13 @@
                 <!--<div class="col-sm-6">-->
                 <!--    <ol class="breadcrumb float-sm-right">-->
                 <!--        <li class="breadcrumb-item">-->
-                <!--            <a href="{{url('/restaurant/home')}}">-->
-                <!--                @lang('messages.control_panel')-->
+            <!--            <a href="{{url('/restaurant/home')}}">-->
+            <!--                @lang('messages.control_panel')-->
                 <!--            </a>-->
                 <!--        </li>-->
                 <!--        <li class="breadcrumb-item active">-->
-                <!--            <a href="{{route('modifiers.index')}}"></a>-->
-                <!--            @lang('messages.modifiers')-->
+            <!--            <a href="{{route('modifiers.index')}}"></a>-->
+            <!--            @lang('messages.modifiers')-->
                 <!--        </li>-->
                 <!--    </ol>-->
                 <!--</div>-->
@@ -95,7 +95,7 @@
                                     <td>
                                         @if($modifier->choose == 'one')
                                             {{app()->getLocale() == 'ar' ? 'واحد': 'One'}}
-                                            @elseif($modifier->choose == 'custom')
+                                        @elseif($modifier->choose == 'custom')
                                             {{app()->getLocale() == 'ar' ? 'محدد': 'Custom'}}
                                         @else
                                             {{app()->getLocale() == 'ar' ? 'متعدد': 'Multiple'}}
@@ -106,18 +106,10 @@
                                         <a class="btn btn-primary" href="{{route('modifiers.edit' , $modifier->id)}}">
                                             <i class="fa fa-user-edit"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                            ->wherePermissionId(7)
-                                            ->first();
-                                        @endphp
-                                        @if($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $modifier->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($modifier->name_ar == null ? $modifier->name_en : $modifier->name_ar) : ($modifier->name_en == null ? $modifier->name_ar : $modifier->name_en) }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
+                                        <a class="delete_data btn btn-danger" data="{{ $modifier->id }}"
+                                           data_name="{{ app()->getLocale() == 'ar' ? ($modifier->name_ar == null ? $modifier->name_en : $modifier->name_ar) : ($modifier->name_en == null ? $modifier->name_ar : $modifier->name_en) }}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
 
                                     </td>
                                 </tr>

@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{{asset('site/css/home.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/"css/global.css')}}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
     <style>
         .name_meal {
             font-size: 18px;
@@ -176,6 +178,7 @@
         @endif
     </header>
     <!-- end header -->
+    {!! Toastr::message() !!}
     <main>
         <div class="slider mb-3">
             <div
@@ -233,6 +236,7 @@
                 <hr width="95%" class="m-auto my-3"/>
                 <form id="myForm" width="100%" method="post" action="{{route('addToAZCart')}}">
                     @csrf
+                    <input type="hidden" name="product_id" value="{{$product->id}}">
                     <div class="px-4">
                         @if($product->sizes->count() > 0)
                             <p> @lang('messages.sizes') </p>
@@ -350,7 +354,6 @@
 </div>
 
 <script src="{{asset('site/js/bootstrap.bundle.js')}}"></script>
-
 <script>
     $(document).ready(function () {
         var product_price = {{$product->price}};

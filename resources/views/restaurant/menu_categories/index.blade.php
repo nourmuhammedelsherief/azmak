@@ -186,26 +186,19 @@
 
                                     </td>
                                     <td>
-{{--                                        <a class="btn btn-secondary"--}}
-{{--                                           href="{{route('copyMenuCategory' , $category->id)}}">--}}
-{{--                                            <i class="fa fa-file"></i> @lang('messages.copy')--}}
-{{--                                        </a>--}}
+                                        {{--                                        <a class="btn btn-secondary"--}}
+                                        {{--                                           href="{{route('copyMenuCategory' , $category->id)}}">--}}
+                                        {{--                                            <i class="fa fa-file"></i> @lang('messages.copy')--}}
+                                        {{--                                        </a>--}}
                                         <a class="btn btn-primary"
                                            href="{{route('menu_categories.edit' , $category->id)}}">
                                             <i class="fa fa-user-edit"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                            ->wherePermissionId(7)
-                                            ->first();
-                                        @endphp
-                                        @if($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $category->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($category->name_ar == null ? $category->name_en : $category->name_ar) : ($category->name_en == null ? $category->name_ar : $category->name_en) }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
+
+                                        <a class="delete_data btn btn-danger" data="{{ $category->id }}"
+                                           data_name="{{ app()->getLocale() == 'ar' ? ($category->name_ar == null ? $category->name_en : $category->name_ar) : ($category->name_en == null ? $category->name_ar : $category->name_en) }}">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

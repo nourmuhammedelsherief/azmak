@@ -163,18 +163,7 @@ class Restaurant extends Authenticatable
     {
         return $this->belongsTo(City::class, 'city_id');
     }
-    public function package()
-    {
-        return $this->belongsTo(Package::class, 'package_id');
-    }
-    public function archiveCategory()
-    {
-        return $this->belongsTo(ArchiveCategory::class, 'archive_category_id');
-    }
-    public function subscription()
-    {
-        return $this->hasOne(Subscription::class, 'restaurant_id');
-    }
+
     public function marketerOperations()
     {
         return $this->hasMany(MarketerOperation::class, 'restaurant_id');
@@ -184,10 +173,7 @@ class Restaurant extends Authenticatable
     {
         return $this->hasOne(RestaurantColors::class, 'restaurant_id');
     }
-    public function bio_color()
-    {
-        return $this->hasOne(RestaurantBioColor::class, 'restaurant_id');
-    }
+
     public function menu_categories()
     {
         return $this->hasMany(MenuCategory::class, 'restaurant_id');
@@ -228,39 +214,12 @@ class Restaurant extends Authenticatable
     {
         return $this->hasMany(RestaurantSlider::class, 'restaurant_id');
     }
-    public function res_branches()
-    {
-        return $this->hasMany(RestaurantBranch::class, 'restaurant_id');
-    }
-    public function notes()
-    {
-        return $this->hasMany(AdminNote::class, 'restaurant_id');
-    }
 
-    public function rateBranches()
-    {
-        return $this->hasMany(RestaurantFeedbackBranch::class, 'restaurant_id');
-    }
-
-
-    public function serviceSubscriptions()
-    {
-        return $this->hasMany(ServiceSubscription::class);
-    }
     public function banks()
     {
         return $this->hasMany(Bank::class, 'restaurant_id');
     }
 
-    public function reservationBranches()
-    {
-        return $this->hasMany(ReservationBranch::class, 'restaurant_id');
-    }
-
-    public function reservationTables()
-    {
-        return $this->hasMany(ReservationTable::class, 'restaurant_id');
-    }
 
     public function histories()
     {
@@ -279,80 +238,5 @@ class Restaurant extends Authenticatable
     {
         return $this->hasMany(RestaurantContactUs::class, 'restaurant_id');
     }
-    public function reports()
-    {
-        return $this->hasMany(Report::class, 'restaurant_id');
-    }
-    public function theme()
-    {
-        return $this->belongsTo(Theme::class, 'theme_id');
-    }
-    public function controls()
-    {
-        return $this->hasMany(RestaurantControl::class, 'restaurant_id');
-    }
-    public function loyaltyPointPrices()
-    {
-        return $this->hasMany(LoyaltyPointPrice::class, 'restaurant_id');
-    }
-    public function icons()
-    {
-        return $this->hasMany(RestaurantIcon::class, 'restaurant_id');
-    }
-    public function parties()
-    {
-        return $this->hasMany(Party::class, 'restaurant_id');
-    }
-    public function partyBranches()
-    {
-        return $this->hasMany(PartyBranch::class, 'restaurant_id');
-    }
-    public function partyOrder()
-    {
-        return $this->hasMany(PartyOrder::class, 'restaurant_id');
-    }
-    public function waiterItems()
-    {
-        return $this->hasMany(WaiterItem::class, 'restaurant_id');
-    }
 
-    public function waiterOrders()
-    {
-        return $this->hasMany(WaiterOrder::class, 'restaurant_id');
-    }
-    public function waitingOrders()
-    {
-        return $this->hasMany(WaitingOrder::class, 'restaurant_id');
-    }
-
-    public function getRealStatus()
-    {
-        $cNow =  Carbon::now()->addDays(30);
-        $subscription = $this->subscription()->where('package_id', 1)
-            ->where('type', 'restaurant')
-            // ->whereDate('end_at', '>=', Carbon::now()->addDays(30))
-            ->orderBy('created_at', 'desc')->first();
-        if ($this->status == 'active' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'active' and $cNow->lessThanOrEqualTo(Carbon::parse($subscription->end_at))) :
-            $status = 'active';
-        elseif ($this->status == 'tentative' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'tentative_finished') :
-            $status = 'tentative_finished';
-        elseif ($this->status == 'tentative' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'tentative') :
-            $status = 'tentative';
-        elseif ($this->status == 'finished' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'finished') :
-            $status = 'finished';
-
-        elseif ($this->status == 'active' and $this->archive == 'false' and $this->admin_activation == 'true' and $subscription and $subscription->status == 'active' and $cNow->greaterThanOrEqualTo(Carbon::parse($subscription->end_at))) :
-            $status = 'less_30_day';
-        elseif ($this->status == 'inComplete' and $this->archive == 'false') :
-            $status = 'inComplete';
-        elseif ($this->archive == 'true') :
-            $status = 'archived';
-        elseif ($this->archive == 'false' and $this->status != 'inComplete' and $this->admin_activation == 'false') :
-            $status = 'inActive';
-
-        else :
-            $status = $this->status . ' - ' . $subscription->status . ' - ' . $this->archive . ' - ' . $this->admin_activation;
-        endif;
-        return $status;
-    }
 }

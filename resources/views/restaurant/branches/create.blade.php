@@ -3,7 +3,14 @@
 @section('title')
     @lang('messages.add') @lang('messages.branches')
 @endsection
-
+<style>
+    #map {
+        height: 600px;
+        width: 1100px;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
 
 @section('content')
     <section class="content-header">
@@ -88,18 +95,23 @@
                                 {{--                                        </span>--}}
                                 {{--                                    @endif--}}
                                 {{--                                </div>--}}
-                                {{--                                <div class="form-group">--}}
-                                {{--                                    <label class="control-label"> @lang('messages.city') </label>--}}
-                                {{--                                    <select id="register_city" name="city_id" class="form-control" required>--}}
-                                {{--                                        <option disabled selected> @lang('messages.choose_one') </option>--}}
-
-                                {{--                                    </select>--}}
-                                {{--                                    @if ($errors->has('city_id'))--}}
-                                {{--                                        <span class="help-block">--}}
-                                {{--                                            <strong style="color: red;">{{ $errors->first('city_id') }}</strong>--}}
-                                {{--                                        </span>--}}
-                                {{--                                    @endif--}}
-                                {{--                                </div>--}}
+                                <div class="form-group">
+                                    <label class="control-label"> @lang('messages.city') </label>
+                                    <select id="register_city" name="city_id" class="form-control" required>
+                                        <option disabled selected> @lang('messages.choose_one') </option>
+                                        @foreach($cities as $city)
+                                            <option value="{{$city->id}}">
+                                                {{app()->getLocale() == 'ar' ? $city->name_ar : $city->name_en }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('city_id'))
+                                        <span class="help-block">
+                                            <strong
+                                                style="color: red;">{{ $errors->first('city_id') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label"> @lang('messages.name_ar') </label>
                                     <input name="name_ar" type="text" class="form-control" value="{{old('name_ar')}}"
@@ -122,34 +134,6 @@
                                     @endif
                                 </div>
 
-{{--                                @if (auth('restaurant')->user()->ar == 'true')--}}
-{{--                                    <div class="form-group">--}}
-{{--                                        <label class="control-label"> @lang('messages.description_ar') </label>--}}
-{{--                                        <textarea class="textarea" name="description_ar"--}}
-{{--                                                  placeholder="@lang('messages.description_ar')"--}}
-{{--                                                  style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; pediting: 10px;">{{ old('description_ar') }}</textarea>--}}
-{{--                                        @if ($errors->has('description_ar'))--}}
-{{--                                            <span class="help-block">--}}
-{{--                                            <strong--}}
-{{--                                                style="color: red;">{{ $errors->first('description_ar') }}</strong>--}}
-{{--                                        </span>--}}
-{{--                                        @endif--}}
-{{--                                    </div>--}}
-{{--                                @endif--}}
-{{--                                @if (auth('restaurant')->user()->en == 'true')--}}
-{{--                                    <div class="form-group">--}}
-{{--                                        <label class="control-label"> @lang('messages.description_en') </label>--}}
-{{--                                        <textarea class="textarea" name="description_en"--}}
-{{--                                                  placeholder="@lang('messages.description_en')"--}}
-{{--                                                  style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; pediting: 10px;">{{ old('description_en') }}</textarea>--}}
-{{--                                        @if ($errors->has('description_en'))--}}
-{{--                                            <span class="help-block">--}}
-{{--                                            <strong--}}
-{{--                                                style="color: red;">{{ $errors->first('description_en') }}</strong>--}}
-{{--                                        </span>--}}
-{{--                                        @endif--}}
-{{--                                    </div>--}}
-{{--                                @endif--}}
                                 {{--                                <div class="form-group">--}}
                                 {{--                                    <label class="control-label"> @lang('messages.name_barcode_branch') </label>--}}
                                 {{--                                    <input name="name_barcode" type="text" class="form-control" value="{{old('name_barcode')}}" placeholder="@lang('messages.name_barcode_branch')">--}}
@@ -160,15 +144,20 @@
                                 {{--                                    @endif--}}
                                 {{--                                </div>--}}
 
-                                {{--                                <div class="form-group">--}}
-                                {{--                                    <label class="control-label"> @lang('messages.password_confirmation') </label>--}}
-                                {{--                                    <h4 style="text-align: right">  @lang('messages.selectPosition')  </h4>--}}
-                                {{--                                    <input type="text" id="lat" name="latitude" readonly="yes" required />--}}
-                                {{--                                    <input type="text" id="lng" name="longitude" readonly="yes" required />--}}
-                                {{--                                    <a class="btn btn-info" onclick="getLocation()" > @lang('messages.MyPosition') </a>--}}
-                                {{--                                    <hr>--}}
-                                {{--                                    <div id="map" style="position: relative; height: 600px; width: 600px; "></div>--}}
-                                {{--                                </div>--}}
+                                <div class="form-group">
+                                    <label class="control-label"> @lang('messages.branch_location') </label>
+                                    <h4 style="text-align: right">  @lang('messages.selectPosition')  </h4>
+                                    <input type="text" id="lat" name="latitude" readonly="yes" required/>
+                                    <input type="text" id="lng" name="longitude" readonly="yes" required/>
+                                    <a class="btn btn-info" onclick="getLocation()"> @lang('messages.MyPosition') </a>
+                                    @if ($errors->has('latitude'))
+                                        <span class="help-block">
+                                            <strong style="color: red;">{{ $errors->first('latitude') }}</strong>
+                                        </span>
+                                    @endif
+                                    <hr>
+                                    <div id="map" style="position: relative; height: 600px; width: 600px; "></div>
+                                </div>
 
                             </div>
                             <!-- /.card-body -->
@@ -187,43 +176,35 @@
     </section>
 @endsection
 @section('scripts')
-    <script>
-        $(document).ready(function () {
-            $('select[name="country_id"]').on('change', function () {
-                var id = $(this).val();
-                $.ajax({
-                    url: '/get/cities/' + id,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data);
-                        $('#register_city').empty();
-                        // $('select[name="city_id"]').append("<option disabled selected> choose </option>");
-                        // $('select[name="city"]').append('<option value>المدينة</option>');
-                        $('select[name="city_id"]').append("<option disabled selected> @lang('messages.choose_one') </option>");
-                        $.each(data, function (index, cities) {
-                            console.log(cities);
-                            @if(app()->getLocale() == 'ar')
-                            $('select[name="city_id"]').append('<option value="' + cities.id + '">' + cities.name_ar + '</option>');
-                            @else
-                            $('select[name="city_id"]').append('<option value="' + cities.id + '">' + cities.name_en + '</option>');
-                            @endif
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+{{--    <script>--}}
+{{--        $(document).ready(function () {--}}
+{{--            $('select[name="country_id"]').on('change', function () {--}}
+{{--                var id = $(this).val();--}}
+{{--                $.ajax({--}}
+{{--                    url: '/get/cities/' + id,--}}
+{{--                    type: "GET",--}}
+{{--                    dataType: "json",--}}
+{{--                    success: function (data) {--}}
+{{--                        console.log(data);--}}
+{{--                        $('#register_city').empty();--}}
+{{--                        // $('select[name="city_id"]').append("<option disabled selected> choose </option>");--}}
+{{--                        // $('select[name="city"]').append('<option value>المدينة</option>');--}}
+{{--                        $('select[name="city_id"]').append("<option disabled selected> @lang('messages.choose_one') </option>");--}}
+{{--                        $.each(data, function (index, cities) {--}}
+{{--                            console.log(cities);--}}
+{{--                            @if(app()->getLocale() == 'ar')--}}
+{{--                            $('select[name="city_id"]').append('<option value="' + cities.id + '">' + cities.name_ar + '</option>');--}}
+{{--                            @else--}}
+{{--                            $('select[name="city_id"]').append('<option value="' + cities.id + '">' + cities.name_en + '</option>');--}}
+{{--                            @endif--}}
+{{--                        });--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 
     <script>
-        function showDiv(element) {
-            if (element.value == 'online') {
-                document.getElementById('hidden_div').style.display = element.value == 'online' ? 'block' : 'none';
-            } else if (element.value == 'bank') {
-                document.getElementById('hidden_div').style.display = element.value == 'bank' ? 'none' : 'none';
-            }
-        }
-
         function clsAlphaNoOnly(e) {  // Accept only alpha numerics, no special characters
             var regex = new RegExp("^[a-zA-Z0-9 ]+$");
             var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
@@ -246,4 +227,150 @@
             });
         });
     </script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+
+            document.getElementById('lat').value = lat; //latitude
+            document.getElementById('lng').value = lon; //longitude
+            latlon = new google.maps.LatLng(lat, lon)
+            mapholder = document.getElementById('mapholder')
+            //mapholder.style.height='250px';
+            //mapholder.style.width='100%';
+
+            var myOptions = {
+                center: latlon,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: false,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                }
+            };
+            var map = new google.maps.Map(document.getElementById("map"), myOptions);
+            var marker = new google.maps.Marker({
+                position: latlon,
+                map: map,
+                title: "You are here!"
+            });
+            //Listen for any clicks on the map.
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Get the location that the user clicked.
+                var clickedLocation = event.latLng;
+                //If the marker hasn't been added.
+                if (marker === false) {
+                    //Create the marker.
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                        draggable: true //make it draggable
+                    });
+                    //Listen for drag events!
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        markerLocation();
+                    });
+                } else {
+                    //Marker has already been added, so just change its location.
+                    marker.setPosition(clickedLocation);
+                }
+                //Get the marker's location.
+                markerLocation();
+            });
+
+
+            function markerLocation() {
+                //Get location.
+                var currentLocation = marker.getPosition();
+                //Add lat and lng values to a field that we can save.
+                document.getElementById('lat').value = currentLocation.lat(); //latitude
+                document.getElementById('lng').value = currentLocation.lng(); //longitude
+            }
+        }
+
+        function previousYesNoCheck() {
+            if (document.getElementById('previousYes').checked) {
+                document.getElementById('previous_periods').style.display = 'block';
+            } else {
+                document.getElementById('previous_periods').style.display = 'none';
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        var map;
+
+        function initMap() {
+
+            var latitude = 24.5; // YOUR LATITUDE VALUE
+            var longitude = 46.7; // YOUR LONGITUDE VALUE
+
+            var myLatLng = {
+                lat: latitude,
+                lng: longitude
+            };
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 5,
+                gestureHandling: 'true',
+                zoomControl: false // disable the default map zoom on double click
+            });
+
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                //title: 'Hello World'
+                // setting latitude & longitude as title of the marker
+                // title is shown when you hover over the marker
+                title: latitude + ', ' + longitude
+            });
+
+
+            //         //Listen for any clicks on the map.
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Get the location that the user clicked.
+                var clickedLocation = event.latLng;
+                //If the marker hasn't been added.
+                if (marker === false) {
+                    //Create the marker.
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                        draggable: true //make it draggable
+                    });
+                    //Listen for drag events!
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        markerLocation();
+                    });
+                } else {
+                    //Marker has already been added, so just change its location.
+                    marker.setPosition(clickedLocation);
+                }
+                //Get the marker's location.
+                markerLocation();
+            });
+
+
+            function markerLocation() {
+                //Get location.
+                var currentLocation = marker.getPosition();
+                //Add lat and lng values to a field that we can save.
+                document.getElementById('lat').value = currentLocation.lat(); //latitude
+                document.getElementById('lng').value = currentLocation.lng(); //longitude
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFUMq5htfgLMNYvN4cuHvfGmhe8AwBeKU&callback=initMap"
+            async
+            defer></script>
 @endsection
