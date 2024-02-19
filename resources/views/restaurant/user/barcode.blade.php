@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ URL::asset('admin/css/select2-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ URL::asset('admin/css/bootstrap-fileinput.css') }}">
     <style>
-        #barcode-svg{
+        #barcode-svg {
             width: 245px;
         }
     </style>
@@ -21,8 +21,8 @@
                 </div>
                 <!--<div class="col-sm-6">-->
                 <!--    <ol class="breadcrumb float-sm-right">-->
-                <!--        <li class="breadcrumb-item"><a href="{{url('/restaurant/home')}}">@lang('messages.control_panel')</a></li>-->
-                <!--        <li class="breadcrumb-item active"> @lang('messages.barcode') </li>-->
+            <!--        <li class="breadcrumb-item"><a href="{{url('/restaurant/home')}}">@lang('messages.control_panel')</a></li>-->
+            <!--        <li class="breadcrumb-item active"> @lang('messages.barcode') </li>-->
                 <!--    </ol>-->
                 <!--</div>-->
             </div>
@@ -42,7 +42,8 @@
                             <div class="form-group">
                                 <h3 class="text-center">
                                     <a href="#" id="printPage" class="printPage btn">@lang('messages.downloadQr')</a>
-                                    <a href="{{url('/restaurants/' . $name)}}" id="" class=" btn" target="__blank">@lang('messages.view_barcode')</a>
+                                    <a href="{{url('/restaurants/' . $name)}}" id="" class=" btn"
+                                       target="__blank">@lang('messages.view_barcode')</a>
                                     {{--                            <a class="btn btn-primary" href="{{ URL::to('/hotel/create_pdf') }}"> @lang('messages.saveAsPdf')</a>--}}
                                 </h3>
                                 <div class="card">
@@ -53,10 +54,12 @@
 
 
                                         {!! QrCode::size(200)->generate(url('/restaurants/' . $name)) !!}
-                                        <div  class="description" style="margin-top:10px;">
-                                            <img width="20px" height="20px" src="{{asset('/uploads/restaurants/logo/' . $model->logo)}}" >
+                                        <div class="description" style="margin-top:10px;">
+                                            <img width="20px" height="20px"
+                                                 src="{{asset('/uploads/restaurants/logo/' . $model->logo)}}">
 
-                                            <p class="footer-copyright pb-3 mb-1 pt-0 mt-0 font-13 font-600" style="    text-align: center;font-size:12px;display:inline; margin-right:5px;">
+                                            <p class="footer-copyright pb-3 mb-1 pt-0 mt-0 font-13 font-600"
+                                               style="    text-align: center;font-size:12px;display:inline; margin-right:5px;">
                                                 {{trans('messages.made_love')}}
 
                                             </p>
@@ -65,21 +68,21 @@
                                     </div>
                                 </div>
 
-{{--                                <div class="card">--}}
-{{--                                    <div class="card-header">--}}
-{{--                                        <h2>--}}
-{{--                                            @if(app()->getLocale() == 'ar')--}}
-{{--                                                {{$model->name}}--}}
-{{--                                            @else--}}
-{{--                                                {{$model->en_name}}--}}
-{{--                                            @endif--}}
-{{--                                        </h2>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="card-body">--}}
-{{--                                        {!! QrCode::size(200)->backgroundColor(255,90,0)->generate(url('/' . $model->name_en)) !!}--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div> <img width="50px" height="50px" src="{{asset('uploads/logo/'.\App\Setting::find(1)->logo)}}" ></div>--}}
+                                {{--                                <div class="card">--}}
+                                {{--                                    <div class="card-header">--}}
+                                {{--                                        <h2>--}}
+                                {{--                                            @if(app()->getLocale() == 'ar')--}}
+                                {{--                                                {{$model->name}}--}}
+                                {{--                                            @else--}}
+                                {{--                                                {{$model->en_name}}--}}
+                                {{--                                            @endif--}}
+                                {{--                                        </h2>--}}
+                                {{--                                    </div>--}}
+                                {{--                                    <div class="card-body">--}}
+                                {{--                                        {!! QrCode::size(200)->backgroundColor(255,90,0)->generate(url('/' . $model->name_en)) !!}--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
+                                {{--                                <div> <img width="50px" height="50px" src="{{asset('uploads/logo/'.\App\Setting::find(1)->logo)}}" ></div>--}}
                             </div>
 
                         </div>
@@ -101,25 +104,22 @@
         CKEDITOR.replace('description');
         CKEDITOR.replace('description1');
     </script>
-  <script src="{{asset('dist/js/html2canvas.min.js')}}"></script>
+    <script src="{{asset('dist/js/html2canvas.min.js')}}"></script>
     <script>
 
         $(document).ready(function () {
 
-            document.getElementById("printPage").addEventListener("click", function() {
-                    html2canvas(document.getElementById("barcode-svg")).then(function (canvas) {			var anchorTag = document.createElement("a");
-                            document.body.appendChild(anchorTag);
-                            // document.getElementById("previewImg").appendChild(canvas);
-                            anchorTag.download = "{{$name}}-barcode.jpg";
-                            anchorTag.href = canvas.toDataURL();
-                            anchorTag.target = '_blank';
-                            anchorTag.click();
-                        });
+            document.getElementById("printPage").addEventListener("click", function () {
+                html2canvas(document.getElementById("barcode-svg")).then(function (canvas) {
+                    var anchorTag = document.createElement("a");
+                    document.body.appendChild(anchorTag);
+                    // document.getElementById("previewImg").appendChild(canvas);
+                    anchorTag.download = "{{$name}}-barcode.jpg";
+                    anchorTag.href = canvas.toDataURL();
+                    anchorTag.target = '_blank';
+                    anchorTag.click();
                 });
-
-            // $("a.printPage").click(function () {
-            //     $("#printarea").print();
-            // });
+            });
         });
     </script>
 @endsection

@@ -101,12 +101,20 @@ Route::get('/restaurantsAZ/products/{id}' , [AZHome::class , 'product_details'])
 Route::get('/share/restaurantsAZ/products/{id}' , [AZHome::class , 'share_product'])->name('product_details_share');
 
 // user routes
-Route::get('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'join_us'])->name('AZUserRegister');
-Route::post('user/restaurants/{res}/join_us/{branch?}' , [UserController::class , 'register'])->name('AZUserRegisterSubmit');
+Route::controller(UserController::class)->group(function () {
+    Route::get('user/restaurants/{res}/join_us/{branch?}' , 'join_us')->name('AZUserRegister');
+    Route::post('user/restaurants/{res}/join_us/{branch?}' ,'register')->name('AZUserRegisterSubmit');
+    Route::get('user/login/{res?}/{branch?}' ,'show_login')->name('AZUserLogin');
+    Route::post('user/restaurants/{res}/login/{branch?}' ,'login')->name('AZUserLoginSubmit');
 
-Route::get('user/login/{res?}/{branch?}' , [UserController::class , 'show_login'])->name('AZUserLogin');
-Route::post('user/restaurants/{res}/login/{branch?}' , [UserController::class , 'login'])->name('AZUserLoginSubmit');
-Route::post('user/restaurants/add_to_cart' , [CartController::class , 'add_to_cart'])->name('addToAZCart');
+});
+
+Route::controller(CartController::class)->group(function () {
+    Route::post('user/restaurants/add_to_cart' , 'add_to_cart')->name('addToAZCart');
+    Route::get('user_orders/azmak/orders/{order_id}' , 'order_details')->name('AZOrderDetails');
+    Route::get('user/orders/{order_id}/barcode' , 'barcode')->name('AZOrderBarcode');
+
+});
 
 Route::group(['middleware' => 'auth:web'], function () {
     Route::controller(UserController::class)->group(function () {
@@ -122,6 +130,10 @@ Route::group(['middleware' => 'auth:web'], function () {
     Route::controller(OrderController::class)->group(function () {
         Route::get('user/cart/orders/{order_id}' , 'order_info')->name('AZOrderInfo');
         Route::post('user/cart/orders/{order_id}' , 'submit_order_info')->name('AZOrderInfoSubmit');
+        Route::get('user/orders/{order_id}/payment' , 'payment')->name('AZOrderPayment');
+        Route::get('user/orders/{order_id}/status/{id1?}/{id2?}' , 'check_order_fatoourah_status')->name('AZOrderPaymentFatoourahStatus');
+        Route::get('user/orders/{order_id}/tap_status' , 'check_order_tap_status')->name('AZOrderPaymentTapStatus');
+        Route::get('user/orders/{order_id}/edfa_status' , 'edfa_status')->name('AZOrderPaymentEdfa_status');
     });
 });
 

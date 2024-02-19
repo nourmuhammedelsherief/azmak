@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{asset('site/css/global.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/css/home.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/css/cart.css')}}"/>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 </head>
 <body>
 <div class="mycontainer">
@@ -47,6 +48,10 @@
         </div>
     </footer>
 </div>
+<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
+{!! Toastr::message() !!}
+
 <script src="{{asset('site/js/GetProductToCart.js')}}"></script>
 <script src="{{asset('site/js/bootstrap.bundle.js')}}"></script>
 </body>

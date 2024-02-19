@@ -46,6 +46,23 @@
                             <input type='hidden' name='_token' value='{{ Session::token() }}'>
 
                             <div class="card-body">
+                                <div class="form-group">
+                                    <label class="control-label"> @lang('messages.city') </label>
+                                    <select id="register_city" name="city_id" class="form-control" required>
+                                        <option disabled selected> @lang('messages.choose_one') </option>
+                                        @foreach($cities as $city)
+                                            <option value="{{$city->id}}" {{$branch->city_id == $city->id ? 'selected' : ''}}>
+                                                {{app()->getLocale() == 'ar' ? $city->name_ar : $city->name_en }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('city_id'))
+                                        <span class="help-block">
+                                            <strong
+                                                style="color: red;">{{ $errors->first('city_id') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                                     <div class="form-group">
                                         <label class="control-label"> @lang('messages.name_ar') </label>
                                         <input name="name_ar" type="text" class="form-control"

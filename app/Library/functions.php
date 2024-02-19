@@ -430,11 +430,11 @@ function MyFatoorahStatus($api, $PaymentId)
 {
     // dd($PaymentId);
     $token = $api;
-    $basURL = "https://api-sa.myfatoorah.com";
-    if (env('APP_PAYMENT_TEST', false)) {
-        $basURL = myfatooraUrlTest;
-        $token = myfatooraTokenTest;
-    }
+    $basURL = "https://apitest.myfatoorah.com";
+//    if (env('APP_PAYMENT_TEST', false)) {
+//        $basURL = myfatooraUrlTest;
+//        $token = myfatooraTokenTest;
+//    }
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/GetPaymentStatus",
@@ -459,12 +459,11 @@ function MyFatoorahStatus($api, $PaymentId)
 function MyFatoorah($api, $userData)
 {
     $token = $api;
-    // $token = Controller
-    $basURL = "https://api-sa.myfatoorah.com";
-    if (env('APP_PAYMENT_TEST', false)) {
-        $basURL = myfatooraUrlTest;
-        $token = myfatooraTokenTest;
-    }
+    $basURL = "https://apitest.myfatoorah.com";
+//    if (env('APP_PAYMENT_TEST', false)) {
+//        $basURL = myfatooraUrlTest;
+//        $token = myfatooraTokenTest;
+//    }
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/ExecutePayment",
@@ -3876,7 +3875,7 @@ function getShortDescription($string, $start, $last =  0, $isTag = false)
     return $results;
 }
 
-function tap_payment($token, $amount, $user_name, $email, $country_code, $phone, $callBackUrl, $order_id)
+function tap_payment($token = 'sk_test_XKokBfNWv6FIYuTMg5sLPjhJ', $amount, $user_name, $email, $country_code, $phone, $callBackUrl, $order_id)
 {
     $basURL = "https://api.tap.company/v2/charges";
     $headers = array(
@@ -3900,7 +3899,7 @@ function tap_payment($token, $amount, $user_name, $email, $country_code, $phone,
             "id" => "src_card"
         ),
         "redirect" => array(
-            "url" => route($callBackUrl, [$order_id, $token]),
+            "url" => $callBackUrl,
         )
     );
     $order = json_encode($data);
@@ -3924,50 +3923,6 @@ function tap_payment($token, $amount, $user_name, $email, $country_code, $phone,
     }
 }
 
-function express_payment($merchant_key, $password, $amount , $success_url, $orderId, $user_name, $email , $phone_number = '966523658967')
-{
-    $user_name = 'EasyMenu';
-    $email = 'info@email.com';
-    $order_id = 'order-' . mt_rand(1000, 9999);
-    $currency = 'SAR';
-    $order_description = 'pay order value';
-    $str_to_hash = $orderId . $amount . $currency . $order_description . $password;
-    $hash = sha1(md5(strtoupper($str_to_hash)));
-    $main_req = array(
-        'action' => 'SALE',
-        'edfa_merchant_id' => $merchant_key,
-        'order_id' => "$orderId",
-        'order_amount' => $amount,
-        'order_currency' => $currency,
-        'order_description' => $order_description,
-        'req_token' => 'N',
-        'payer_first_name' => $user_name,
-        'payer_last_name' => $user_name,
-        'payer_address' => $email,
-        'payer_country' => 'SA',
-        'payer_city' => 'Riyadh',
-        'payer_zip' => '12221',
-        'payer_email' => $email,
-        'payer_phone' => $phone_number,
-        'payer_ip' => '127.0.0.1',
-        'term_url_3ds' => route($success_url , $orderId),
-        'auth' => 'N',
-        'recurring_init' => 'N',
-        'hash' => $hash,
-    );
-
-    $getter = curl_init('https://api.edfapay.com/payment/initiate'); //init curl
-    curl_setopt($getter, CURLOPT_POST, 1); //post
-    curl_setopt($getter, CURLOPT_POSTFIELDS, $main_req);
-    curl_setopt($getter, CURLOPT_RETURNTRANSFER, true);
-
-    $result = curl_exec($getter);
-    $httpcode = curl_getinfo($getter, CURLINFO_HTTP_CODE);
-    echo $result;
-    $result = json_decode($result);
-    return $result->redirect_url;
-
-}
 function checkUrlAdsType()
 {
 
@@ -4107,4 +4062,43 @@ function saveErrorToFile($error)
 
     $errorMessage = '[' . date('Y-m-d H:i:s') . '] ' . config('app.env') . '.error '  . $error->getMessage()  . PHP_EOL . $error->getTraceAsString() . PHP_EOL;
     file_put_contents($errorFilePath, $errorMessage, FILE_APPEND);
+}
+function edfa_payment($merchant_key, $password, $amount , $success_url, $order_id, $user_name, $email)
+{
+    $currency = 'SAR';
+    $order_description = 'pay order value';
+    $str_to_hash = $order_id . $amount . $currency . $order_description . $password;
+    $hash = sha1(md5(strtoupper($str_to_hash)));
+    $main_req = array(
+        'action' => 'SALE',
+        'edfa_merchant_id' => $merchant_key,
+        'order_id' => "$order_id",
+        'order_amount' => $amount,
+        'order_currency' => $currency,
+        'order_description' => $order_description,
+        'req_token' => 'N',
+        'payer_first_name' => $user_name,
+        'payer_last_name' => $user_name,
+        'payer_address' => $email,
+        'payer_country' => 'SA',
+        'payer_city' => 'Riyadh',
+        'payer_zip' => '12221',
+        'payer_email' => $email,
+        'payer_phone' => '966525789635',
+        'payer_ip' => '127.0.0.1',
+        'term_url_3ds' => $success_url,
+        'auth' => 'N',
+        'recurring_init' => 'N',
+        'hash' => $hash,
+    );
+
+    $getter = curl_init('https://api.edfapay.com/payment/initiate'); //init curl
+    curl_setopt($getter, CURLOPT_POST, 1); //post
+    curl_setopt($getter, CURLOPT_POSTFIELDS, $main_req);
+    curl_setopt($getter, CURLOPT_RETURNTRANSFER, true);
+
+    $result = curl_exec($getter);
+    $httpcode = curl_getinfo($getter, CURLINFO_HTTP_CODE);
+    $result = json_decode($result);
+    return $result->redirect_url;
 }

@@ -50,11 +50,13 @@ class CartController extends Controller
             $order = $check_order;
         } else {
             // create new order
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $order_id = $characters[rand(0, strlen($characters) - 1)] .'-'. mt_rand(1000000, 9999999);
             $order = AZOrder::create([
                 'restaurant_id' => $restaurant->id,
                 'branch_id' => $branch->id,
                 'user_id' => $user->id,
-                'order_id' => $user->id,
+                'order_id' => $order_id,
                 'status' => 'new',
             ]);
         }
@@ -118,5 +120,14 @@ class CartController extends Controller
         endif;
         Toastr::success(trans('messages.cartItemDeletedSuccessfully'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
         return redirect()->route('homeBranchIndex', [$item->order->restaurant->name_barcode, $item->order->branch->name_en]);
+    }
+    public function barcode($id)
+    {
+        $order = AZOrder::findOrFail($id);
+        return view('website.orders.barcode' , compact('order'));
+    }
+    public function order_details($id){
+        $order = AZOrder::findOrFail($id);
+        return view('website.orders.order_details' , compact('order'));
     }
 }
