@@ -169,6 +169,66 @@
                         </p>
                     </a>
                 </li>
+                <li
+                    class="nav-item has-treeview {{ strpos(URL::current(), '/restaurant/azmak_orders/active') !== false ? 'menu-open' : '' }}">
+                    <a href="#"
+                       class="nav-link {{ strpos(URL::current(), '/restaurant/azmak_orders/active') !== false ? 'active' : '' }}">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>
+                            @lang('messages.az_orders')
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ url('restaurant/azmak_orders/new') }}"
+                               class="nav-link {{ Request::is('restaurant/azmak_orders/new') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    @lang('messages.new')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('restaurant/azmak_orders/active') }}"
+                               class="nav-link {{ strpos(URL::current(), '/restaurant/azmak_orders/active') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    @lang('messages.active')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('restaurant/azmak_orders/completed') }}"
+                               class="nav-link {{ Request::is('restaurant/azmak_orders/completed') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    @lang('messages.completed')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('restaurant/azmak_orders/canceled') }}"
+                               class="nav-link {{ Request::is('restaurant/azmak_orders/canceled') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    @lang('messages.canceled')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('restaurant/azmak_orders/finished') }}"
+                               class="nav-link {{ Request::is('restaurant/azmak_orders/finished') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    @lang('messages.finished')
+                                </p>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </li>
                 <li class="nav-item sidebar-title">
                     <i class="nav-icon fa fa-users"></i>
                     <p class="">{{ trans('messages.side_4') }}</p>
@@ -212,49 +272,6 @@
                             @lang('messages.about_app')
                         </p>
                     </a>
-                </li>
-                <li
-                    class="nav-item has-treeview {{ strpos(URL::current(), '/restaurant/sms') !== false ? 'menu-open' : '' }}">
-                    <a href="#"
-                       class="nav-link {{ strpos(URL::current(), '/restaurant/sms') !== false ? 'active' : '' }}">
-                        <i class="fas fa-comments"></i>
-                        <p>
-                            @lang('messages.sms')
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-
-                        <li class="nav-item">
-                            <a href="{{ url('restaurant/sms/history') }}"
-                               class="nav-link {{ strpos(URL::current(), '/restaurant/sms/history') !== false ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    @lang('messages.sms_history')
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('restaurant/sms/send') }}"
-                               class="nav-link {{ Request::is('restaurant/sms/send') !== false ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    @lang('messages.send_sms')
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('restaurant/sms/settings') }}"
-                               class="nav-link {{ Request::is('restaurant/sms/settings') !== false ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    @lang('messages.sms_settings')
-                                </p>
-                            </a>
-                        </li>
-
-
-                    </ul>
                 </li>
             </ul>
         </nav>

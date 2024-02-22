@@ -27,6 +27,7 @@ class AZOrder extends Model
         'person_phone',
         'occasion',
         'occasion_message',
+        'order_code',
     ];
     public function restaurant()
     {

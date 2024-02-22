@@ -48,13 +48,19 @@ class OrderController extends Controller
     public function payment($id)
     {
         $order = AZOrder::findOrFail($id);
-        // tap payment
-        return redirect()->to(tap_payment('sk_test_XKokBfNWv6FIYuTMg5sLPjhJ', $order->total_price, $order->user->name, $order->user->email, $order->restaurant->country->code, $order->user->phone_number, route('AZOrderPaymentTapStatus' , $order->id), $order->order_id));
-        // edfa payment
-        $payment_url = edfa_payment($order->restaurant->merchant_key, $order->restaurant->express_password, $order->total_price,route('AZOrderPaymentEdfa_status' , $order->id), $order->order_id, $order->user->name, $order->user->email);
-        return redirect()->to($payment_url);
-        // get restaurant payment method
-        // 1- my fatoourah payment
+        // check restaurant payment company
+        if ($order->restaurant->a_z_orders_payment_type == 'tap')
+        {
+            // tap payment
+            return redirect()->to(tap_payment($order->restaurant->a_z_tap_token, $order->total_price, $order->user->name, $order->user->email, $order->restaurant->country->code, $order->user->phone_number, route('AZOrderPaymentTapStatus' , $order->id), $order->order_id));
+        }elseif ($order->restaurant->a_z_orders_payment_type == 'edfa')
+        {
+            // edfa payment
+            $payment_url = edfa_payment($order->restaurant->a_z_edfa_merchant, $order->restaurant->a_z_edfa_password, $order->total_price,route('AZOrderPaymentEdfa_status' , $order->id), $order->order_id, $order->user->name, $order->user->email);
+            return redirect()->to($payment_url);
+        }elseif ($order->restaurant->a_z_orders_payment_type == 'myFatoourah')
+        {
+            // 1- my fatoourah payment
 //        if ($request->online_type == 'visa') {
 //            $charge = 2;
 //        } elseif ($request->online_type == 'mada') {
@@ -64,53 +70,54 @@ class OrderController extends Controller
 //        } else {
 //            $charge = 2;
 //        }
-        $name = $order->user->name;
-        $token = $order->restaurant->online_token;
-        $data = array(
-            'PaymentMethodId' => 2,
-            'CustomerName' => $name,
-            'DisplayCurrencyIso' => 'SAR',
-            'MobileCountryCode' => $order->restaurant->country->code,
-            'CustomerMobile' => $order->user->phone_number,
-            'CustomerEmail' => $order->user->email,
-            'InvoiceValue' => $order->total_price,
-            'CallBackUrl' => route('AZOrderPaymentFatoourahStatus' , $order->id),
-            'ErrorUrl' => route('AZOrderInfo' , $order->id),
-            'Language' => app()->getLocale(),
-            'CustomerReference' => 'ref 1',
-            'CustomerCivilId' => '12345678',
-            'UserDefinedField' => 'Custom field',
-            'ExpireDate' => '',
-            'CustomerAddress' => array(
-                'Block' => '',
-                'Street' => '',
-                'HouseBuildingNo' => '',
-                'Address' => '',
-                'AddressInstructions' => '',
-            ),
-            'InvoiceItems' => [array(
-                'ItemName' => $order->occasion,
-                'Quantity' => $order->items->count(),
-                'UnitPrice' => $order->total_price,
-            )],
-        );
-        $data = json_encode($data);
-        $fatooraRes = MyFatoorah($token, $data);
-        $result = json_decode($fatooraRes);
-        if ($result != null and $result->IsSuccess === true) {
-            $order->update([
-                'invoice_id' => $result->Data->InvoiceId,
-            ]);
-            return redirect()->to($result->Data->PaymentURL);
-        } else {
-            Toastr::error(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
-            return back();
+            $name = $order->user->name;
+            $token = $order->restaurant->a_z_myFatoourah_token;
+            $data = array(
+                'PaymentMethodId' => 2,
+                'CustomerName' => $name,
+                'DisplayCurrencyIso' => 'SAR',
+                'MobileCountryCode' => $order->restaurant->country->code,
+                'CustomerMobile' => $order->user->phone_number,
+                'CustomerEmail' => $order->user->email,
+                'InvoiceValue' => $order->total_price,
+                'CallBackUrl' => route('AZOrderPaymentFatoourahStatus' , $order->id),
+                'ErrorUrl' => route('AZOrderInfo' , $order->id),
+                'Language' => app()->getLocale(),
+                'CustomerReference' => 'ref 1',
+                'CustomerCivilId' => '12345678',
+                'UserDefinedField' => 'Custom field',
+                'ExpireDate' => '',
+                'CustomerAddress' => array(
+                    'Block' => '',
+                    'Street' => '',
+                    'HouseBuildingNo' => '',
+                    'Address' => '',
+                    'AddressInstructions' => '',
+                ),
+                'InvoiceItems' => [array(
+                    'ItemName' => $order->occasion,
+                    'Quantity' => $order->items->count(),
+                    'UnitPrice' => $order->total_price,
+                )],
+            );
+            $data = json_encode($data);
+            $fatooraRes = MyFatoorah($token, $data);
+            $result = json_decode($fatooraRes);
+            if ($result != null and $result->IsSuccess === true) {
+                $order->update([
+                    'invoice_id' => $result->Data->InvoiceId,
+                ]);
+                return redirect()->to($result->Data->PaymentURL);
+            } else {
+                Toastr::error(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+                return back();
+            }
         }
     }
     public function check_order_fatoourah_status(Request $request , $id)
     {
         $order = AZOrder::find($id);
-        $token = $order->restaurant->online_token;
+        $token = $order->restaurant->a_z_myFatoourah_token;
         $PaymentId = $request->query('paymentId');
         $resData = MyFatoorahStatus($token, $PaymentId);
         $result = json_decode($resData);
@@ -119,10 +126,14 @@ class OrderController extends Controller
                 'status'  => 'active',
             ]);
             // send order details to user whatsapp
-            $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text=لا  اله  الا  الله';
+            $content = trans('messages.welcome') . $order->person_name . ' ' . trans('messages.at') .' ' . trans('messages.az_orders') . '%0a %0a';
+            $content.= $order->user->name . ' : ' . trans('messages.invitedYouToAZOrders'). '%0a %0a';
+            $content.= trans('messages.order_details'). '%0a %0a';
+            $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
+            $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
+
+            $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
             return redirect()->to($url);
-            Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
-            return redirect()->route('AZOrderBarcode' ,$order->id);
         } else {
             $error = [
                 'message' => trans('messages.errorPayment')
@@ -136,8 +147,17 @@ class OrderController extends Controller
         $order->update([
             'status'  => 'active',
         ]);
-        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
-        return redirect()->route('AZOrderBarcode' ,$order->id);
+        // send order details to user whatsapp
+        $content = trans('messages.welcome') . $order->person_name . ' ' . trans('messages.at') .' ' . trans('messages.az_orders') . '%0a %0a';
+        $content.= $order->user->name . ' : ' . trans('messages.invitedYouToAZOrders'). '%0a %0a';
+        $content.= trans('messages.order_details'). '%0a %0a';
+        $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
+        $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
+
+        $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
+        return redirect()->to($url);
+//        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+//        return redirect()->route('AZOrderBarcode' ,$order->id);
     }
     public function check_order_tap_status(Request $request , $id)
     {
@@ -146,11 +166,15 @@ class OrderController extends Controller
             'status'  => 'active',
         ]);
         // send order details to user whatsapp
-        $content = 'تفاصيل الطلب : ';
-        $content.= route('AZOrderBarcode' , $order->id);
+        $content = trans('messages.welcome') . $order->person_name . ' ' . trans('messages.at') .' ' . trans('messages.az_orders') . '%0a %0a';
+        $content.= $order->user->name . ' : ' . trans('messages.invitedYouToAZOrders'). '%0a %0a';
+        $content.= trans('messages.order_details'). '%0a %0a';
+        $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
+        $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
+
         $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
         return redirect()->to($url);
-        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
-        return redirect()->route('AZOrderBarcode' ,$order->id);
+//        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+//        return redirect()->route('AZOrderBarcode' ,$order->id);
     }
 }

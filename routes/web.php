@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 
 // restaurant uses
 use \App\Http\Controllers\RestaurantController\BranchController;
+use \App\Http\Controllers\RestaurantController\AZOrderController;
 use \App\Http\Controllers\RestaurantController\RestaurantController as UserRestaurant;
 use \App\Http\Controllers\RestaurantController\Restaurant\LoginController as ResLogin;
 use \App\Http\Controllers\RestaurantController\Restaurant\ForgotPasswordController as ResForgetPassword;
@@ -327,29 +328,6 @@ Route::prefix('restaurant')->group(function () {
             Route::resource('/socials', SocialController::class, []);
             Route::get('/socials/delete/{id}', [SocialController::class, 'destroy']);
 
-            // Restaurant Order Seller Codes Routes
-            Route::resource('/order_seller_codes', RestaurantOrderSellerCodeController::class, []);
-            Route::get('/order_seller_codes/delete/{id}', [RestaurantOrderSellerCodeController::class, 'destroy']);
-
-            Route::resource('whatsapp/order_seller_codes', RestaurantOrderSellerCodeWhatsappController::class, [])->names([
-                'index'   => 'restaurant.whatsapp.order_seller_codes.index',
-                'create'  => 'restaurant.whatsapp.order_seller_codes.create',
-                'store'   => 'restaurant.whatsapp.order_seller_codes.store',
-                'show'    => 'restaurant.whatsapp.order_seller_codes.show',
-                'edit'    => 'restaurant.whatsapp.order_seller_codes.edit',
-                'update'  => 'restaurant.whatsapp.order_seller_codes.update',
-                'destroy' => 'restaurant.whatsapp.order_seller_codes.destroy',
-            ]);;
-            Route::get('whatsapp/order_seller_codes/delete/{id}', [RestaurantOrderSellerCodeWhatsappController::class, 'destroy']);
-
-            // employees Routes
-            Route::resource('/employees', EmployeeController::class, []);
-            Route::get('/employees/delete/{id}', [EmployeeController::class, 'destroy']);
-
-            // deliveries Routes
-            Route::resource('/deliveries', DeliveryController::class, []);
-            Route::get('/deliveries/delete/{id}', [DeliveryController::class, 'destroy']);
-
             // sensitivities Routes
             Route::resource('/sensitivities', SensitivityController::class, []);
             Route::get('/sensitivities/delete/{id}', [SensitivityController::class, 'destroy']);
@@ -362,10 +340,6 @@ Route::prefix('restaurant')->group(function () {
             Route::get('/sliders/stopSlider/{id}/{status}', [SliderController::class, 'stopSlider'])->name('stopSlider');
 
 
-            // res_branches Routes
-            Route::resource('/res_branches', ResBranchesController::class, []);
-            Route::get('/res_branches/delete/{id}', [ResBranchesController::class, 'destroy']);
-
             // sub_categories Routes
             Route::controller(SubCategoryController::class)->group(function () {
                 Route::get('/sub_categories/{id}', 'index')->name('sub_categories.index');
@@ -373,7 +347,7 @@ Route::prefix('restaurant')->group(function () {
                 Route::post('/sub_categories/store/{id}', 'store')->name('sub_categories.store');
                 Route::get('/sub_categories/edit/{id}', 'edit')->name('sub_categories.edit');
                 Route::post('/sub_categories/update/{id}', 'update')->name('sub_categories.update');
-                Route::get('/sub_categories/delete/{id}', [SubCategoryController::class, 'destroy']);
+                Route::get('/sub_categories/delete/{id}', 'destroy');
             });
 
             // home_icons
@@ -385,13 +359,6 @@ Route::prefix('restaurant')->group(function () {
             // posters Routes
             Route::resource('/posters', PosterController::class, []);
             Route::get('/posters/delete/{id}', [PosterController::class, 'destroy']);
-
-            // sms_methods
-            Route::match(['get', 'post'], '/sms/settings', [SmsController::class, 'settings'])->name('restaurant.sms.settings');
-            Route::match(['get', 'post'], '/sms/send', [SmsController::class, 'sendSms'])->name('restaurant.sms.sendSms');
-            Route::match(['get'], '/sms/history', [SmsController::class, 'index'])->name('restaurant.sms.index');
-            Route::match(['get'], '/sms/show/phone', [SmsController::class, 'showDetails'])->name('restaurant.sms.phone');
-            Route::match(['get'], '/sms/delete/{id}', [SmsController::class, 'delete'])->name('restaurant.sms.delete');
 
 
             // Offer Routes
@@ -463,14 +430,13 @@ Route::prefix('restaurant')->group(function () {
             Route::get('/az_contacts/delete/{id}', [TermsConditionController::class, 'delete_az_contact'])->name('restaurant.delete_az_contact');
 
 
-            // restaurant period Routes
-            Route::controller(PeriodController::class)->group(function () {
-                Route::get('/periods/{id}', 'index')->name('BranchPeriod');
-                Route::get('/periods/{id}/create', 'create')->name('createBranchPeriod');
-                Route::post('/periods/{id}/store', 'store')->name('storeBranchPeriod');
-                Route::get('/periods/{id}/edit', 'edit')->name('editBranchPeriod');
-                Route::post('/periods/{id}/update', 'update')->name('updateBranchPeriod');
-                Route::get('/periods/delete/{id}', 'destroy')->name('deleteBranchPeriod');
+            // restaurant azmak orders Routes
+            Route::controller(AZOrderController::class)->group(function () {
+                Route::get('/azmak_orders/{status}', 'index')->name('AzmakOrders');
+                Route::get('/azmak_orders/delete/{id}', 'destroy')->name('DeleteAzmakOrder');
+                Route::get('/show/azmak_orders/{order_id}', 'show')->name('AzmakOrderShow');
+                Route::get('/cancel/azmak_order/{order_id}', 'cancel')->name('cancelAzmakOrder');
+                Route::post('/complete/azmak_order/{order_id}', 'complete_order')->name('completeAzmakOrder');
             });
 
         });

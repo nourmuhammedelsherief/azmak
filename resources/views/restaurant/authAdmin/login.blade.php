@@ -120,20 +120,20 @@
                 {{--            </div>--}}
 
                 <br>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p class="mb-1">
-                            <a href="{{ route('restaurant.password.phone') }}"  class="forget-password">{{ trans('messages.forget_password') }}</a>
-                        </p>
-                    </div>
-                    <div class="col-sm-6">
-                        <p class="mb-0">
-                            <a href="{{route('restaurant.step1Register')}}" class="text-center">
-                                @lang('messages.registerAccount')
-                            </a>
-                        </p>
-                    </div>
-                </div>
+{{--                <div class="row">--}}
+{{--                    <div class="col-sm-6">--}}
+{{--                        <p class="mb-1">--}}
+{{--                            <a href="{{ route('restaurant.password.phone') }}"  class="forget-password">{{ trans('messages.forget_password') }}</a>--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-sm-6">--}}
+{{--                        <p class="mb-0">--}}
+{{--                            <a href="{{route('restaurant.step1Register')}}" class="text-center">--}}
+{{--                                @lang('messages.registerAccount')--}}
+{{--                            </a>--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
 
 
             </div>

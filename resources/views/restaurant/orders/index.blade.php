@@ -1,7 +1,7 @@
 @extends('restaurant.lteLayout.master')
 
 @section('title')
-    @lang('messages.order_seller_codes')
+    @lang('messages.orders')
 @endsection
 
 @section('style')
@@ -16,21 +16,28 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>@lang('messages.order_seller_codes')</h1>
+                    <h1>
+                        @lang('messages.az_orders')
+                        (
+                        @switch($status)
+                            @case('active')
+                            @lang('messages.active')
+                            @break
+                            @case('completed')
+                            @lang('messages.completed')
+                            @break
+                            @case('finished')
+                            @lang('messages.finished')
+                            @break
+                            @case('canceled')
+                            @lang('messages.canceled')
+                            @break
+                            @default
+                            @lang('messages.new_not_paid')
+                        @endswitch
+                        )
+                    </h1>
                 </div>
-                <!--<div class="col-sm-6">-->
-                <!--    <ol class="breadcrumb float-sm-right">-->
-                <!--        <li class="breadcrumb-item">-->
-                <!--            <a href="{{url('/restaurant/home')}}">-->
-                <!--                @lang('messages.control_panel')-->
-                <!--            </a>-->
-                <!--        </li>-->
-                <!--        <li class="breadcrumb-item active">-->
-                <!--            <a href="{{route('restaurant.whatsapp.order_seller_codes.index')}}"></a>-->
-                <!--            @lang('messages.order_seller_codes')-->
-                <!--        </li>-->
-                <!--    </ol>-->
-                <!--</div>-->
             </div>
         </div><!-- /.container-fluid -->
     </section>
@@ -39,12 +46,6 @@
     <section class="content">
         <div class="row">
             <div class="col-12">
-                <h3>
-                    <a href="{{route('restaurant.whatsapp.order_seller_codes.create')}}" class="btn">
-                        <i class="fa fa-plus"></i>
-                        @lang('messages.add_new')
-                    </a>
-                </h3>
                 <div class="card">
 
                     <!-- /.card-header -->
@@ -60,17 +61,17 @@
                                     </label>
                                 </th>
                                 <th></th>
+                                <th> @lang('messages.order_no') </th>
                                 <th> @lang('messages.branch') </th>
-                                <th> @lang('messages.seller_code') </th>
-                                <th> @lang('messages.discount_percentage') </th>
-                                <th> @lang('messages.start_at') </th>
-                                <th> @lang('messages.end_at') </th>
+                                <th> @lang('messages.city') </th>
+                                <th> @lang('messages.user') </th>
+                                <th> @lang('messages.client') </th>
                                 <th> @lang('messages.operations') </th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php $i = 0 ?>
-                            @foreach($codes as $code)
+                            @foreach($orders as $order)
                                 <tr class="odd gradeX">
                                     <td>
                                         <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
@@ -80,40 +81,27 @@
                                     </td>
                                     <td><?php echo ++$i ?></td>
                                     <td>
-                                        @if($code->branch != null)
-                                            {{app()->getLocale() == 'ar' ? $code->branch->name_ar : $code->branch->name_en}}
-                                        @endif
+                                        {{$order->order_id}}
                                     </td>
                                     <td>
-                                        {{$code->seller_code}}
-                                    </td>
-
-                                    <td>
-                                        {{$code->discount_percentage}} %
+                                        {{app()->getLocale() == 'ar' ? $order->branch->name_ar : $order->branch->name_en}}
                                     </td>
                                     <td>
-                                        {{$code->start_at->format('Y-m-d')}}
+                                        {{app()->getLocale() == 'ar' ? $order->branch->city->name_ar : $order->branch->city->name_en}}
                                     </td>
                                     <td>
-                                        {{$code->end_at->format('Y-m-d')}}
+                                        {{$order->user->name}}
                                     </td>
                                     <td>
-
-                                        <a class="btn btn-primary" href="{{route('restaurant.whatsapp.order_seller_codes.edit' , $code->id)}}">
-                                            <i class="fa fa-user-edit"></i>
+                                        {{$order->person_name}}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-success" href="{{route('AzmakOrderShow' , $order->id)}}">
+                                            <i class="fa fa-eye"></i>
                                         </a>
-                                        @php
-                                            $user = Auth::guard('restaurant')->user();
-                                            $deletePermission = \App\Models\RestaurantPermission::whereRestaurantId($user->id)
-                                            ->wherePermissionId(7)
-                                            ->first();
-                                        @endphp
-                                        @if($user->type == 'restaurant' or $deletePermission)
-                                            <a class="delete_data btn btn-danger" data="{{ $code->id }}"
-                                               data_name="{{ app()->getLocale() == 'ar' ? ($code->name_ar == null ? $code->name_en : $code->name_ar) : ($code->name_en == null ? $code->name_ar : $code->name_en) }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        @endif
+                                        <a class="delete_data btn btn-danger" data="{{ $order->id }}" data_name="{{ $order->order_id }}" >
+                                            <i class="fa fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -125,7 +113,8 @@
             </div>
             <!-- /.col -->
         </div>
-    {{$codes->links()}}
+    {{$orders->links()}}
+
     <!-- /.row -->
     </section>
 @endsection
@@ -172,7 +161,7 @@
                     cancelButtonText: "{{trans('messages.close')}}"
                 }, function () {
 
-                    window.location.href = "{{ url('/') }}" + "/restaurant/whatsapp/order_seller_codes/delete/" + id;
+                    window.location.href = "{{ url('/') }}" + "/restaurant/azmak_orders/delete/" + id;
 
                 });
 

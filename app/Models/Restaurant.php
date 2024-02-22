@@ -116,6 +116,11 @@ class Restaurant extends Authenticatable
         'waiting_progress_time', 'waiting_max_new_request', 'waiting_new_request', 'waiting_alert_type', 'enable_waiting', 'waiting_privacy_en', 'waiting_privacy_ar',
         'lucky_day_wins_count', 'enable_lucky_wheel',
         'enable_loyalty_offer', 'enable_contact_us_links' ,
+        'a_z_orders_payment_type',
+        'a_z_tap_token',
+        'a_z_myFatoourah_token',
+        'a_z_edfa_merchant',
+        'a_z_edfa_password',
     ];
     protected $hidden = [
         'password', 'remember_token',

@@ -52,12 +52,14 @@ class CartController extends Controller
             // create new order
             $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $order_id = $characters[rand(0, strlen($characters) - 1)] .'-'. mt_rand(1000000, 9999999);
+            $order_code = $characters[rand(0, strlen($characters) - 1)] .'-'. mt_rand(1000000, 9999999);
             $order = AZOrder::create([
                 'restaurant_id' => $restaurant->id,
                 'branch_id' => $branch->id,
                 'user_id' => $user->id,
                 'order_id' => $order_id,
                 'status' => 'new',
+                'order_code' => $order_code,
             ]);
         }
         //create order items
