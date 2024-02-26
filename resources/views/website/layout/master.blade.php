@@ -79,7 +79,7 @@
 </div>
 <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
-{!! Toastr::message() !!}
+{!! \Brian2694\Toastr\Facades\Toastr::message() !!}
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
