@@ -72,6 +72,7 @@ class OrderController extends Controller
 //        }
             $name = $order->user->name;
             $token = $order->restaurant->a_z_myFatoourah_token;
+            $amount = number_format((float)$order->total_price, 2, '.', '');
             $data = array(
                 'PaymentMethodId' => 2,
                 'CustomerName' => $name,
@@ -79,9 +80,9 @@ class OrderController extends Controller
                 'MobileCountryCode' => $order->restaurant->country->code,
                 'CustomerMobile' => $order->user->phone_number,
                 'CustomerEmail' => $order->user->email,
-                'InvoiceValue' => $order->total_price,
+                'InvoiceValue' => $amount,
                 'CallBackUrl' => route('AZOrderPaymentFatoourahStatus' , $order->id),
-                'ErrorUrl' => route('AZOrderInfo' , $order->id),
+                'ErrorUrl' => route('AZUserCart' , $order->branch->id),
                 'Language' => app()->getLocale(),
                 'CustomerReference' => 'ref 1',
                 'CustomerCivilId' => '12345678',
@@ -97,7 +98,7 @@ class OrderController extends Controller
                 'InvoiceItems' => [array(
                     'ItemName' => $order->occasion,
                     'Quantity' => $order->items->count(),
-                    'UnitPrice' => $order->total_price,
+                    'UnitPrice' => $amount,
                 )],
             );
             $data = json_encode($data);
@@ -135,10 +136,8 @@ class OrderController extends Controller
             $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
             return redirect()->to($url);
         } else {
-            $error = [
-                'message' => trans('messages.errorPayment')
-            ];
-            return ApiController::respondWithErrorObject($error);
+            Toastr::error(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+            return back();
         }
     }
     public function edfa_status(Request $request , $id)

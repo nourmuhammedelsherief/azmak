@@ -430,11 +430,8 @@ function MyFatoorahStatus($api, $PaymentId)
 {
     // dd($PaymentId);
     $token = $api;
-    $basURL = "https://apitest.myfatoorah.com";
-//    if (env('APP_PAYMENT_TEST', false)) {
-//        $basURL = myfatooraUrlTest;
-//        $token = myfatooraTokenTest;
-//    }
+//    $basURL = "https://api-sa.myfatoorah.com/";
+    $basURL = "https://apitest.myfatoorah.com/";
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/GetPaymentStatus",
@@ -446,9 +443,7 @@ function MyFatoorahStatus($api, $PaymentId)
     $response = curl_exec($curl);
     $err = curl_error($curl);
     curl_close($curl);
-
     if ($err) {
-
         return $err;
     } else {
         return $response;
@@ -458,12 +453,10 @@ function MyFatoorahStatus($api, $PaymentId)
 // ===============================  MyFatoorah public  function  =========================
 function MyFatoorah($api, $userData)
 {
+    // dd($userData);
     $token = $api;
-    $basURL = "https://apitest.myfatoorah.com";
-//    if (env('APP_PAYMENT_TEST', false)) {
-//        $basURL = myfatooraUrlTest;
-//        $token = myfatooraTokenTest;
-//    }
+//    $basURL = "https://api-sa.myfatoorah.com/";
+    $basURL = "https://apitest.myfatoorah.com/";
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/ExecutePayment",
@@ -481,7 +474,6 @@ function MyFatoorah($api, $userData)
         return $response;
     }
 }
-
 /**
  * calculate the distance between tow places on the earth
  *
