@@ -41,8 +41,13 @@
             border-radius: 8px;
         }
     </style>
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
+
 </head>
 <body>
+{!! \Brian2694\Toastr\Facades\Toastr::message() !!}
+
 <div class="mycontainer">
 @include('website.layout.header')
 
@@ -77,9 +82,6 @@
 <!-- </main> -->
     @include('website.layout.footer')
 </div>
-<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-
-{!! \Brian2694\Toastr\Facades\Toastr::message() !!}
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
