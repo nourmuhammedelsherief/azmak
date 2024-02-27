@@ -433,6 +433,7 @@
     });
 </script>
 <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 {!! \Brian2694\Toastr\Facades\Toastr::message() !!}
 </body>
