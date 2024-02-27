@@ -95,7 +95,7 @@
     });
 </script>
 
-{!! \Brian2694\Toastr\Facades\Toastr::message() !!}
+{{--{!! \Brian2694\Toastr\Facades\Toastr::message() !!}--}}
 <script src="{{asset('site/js/bootstrap.bundle.js')}}"></script>
 <script src="{{asset('site/js/cart.js')}}"></script>
 <script src="{{asset('site/assets/js/swiper-bundle.min.js')}}"></script>
