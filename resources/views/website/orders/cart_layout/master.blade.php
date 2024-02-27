@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{asset('site/css/home.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/css/cart.css')}}"/>
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+
 </head>
 <body>
 <div class="mycontainer">
@@ -32,7 +34,6 @@
     @yield('content')
 
 </div>
-<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
 {!! \Brian2694\Toastr\Facades\Toastr::message() !!}
 

@@ -32,6 +32,7 @@
 {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>--}}
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 {{--    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">--}}
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
     <style>
         .active_categery {
@@ -93,7 +94,6 @@
         });
     });
 </script>
-<script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
 {!! \Brian2694\Toastr\Facades\Toastr::message() !!}
 <script src="{{asset('site/js/bootstrap.bundle.js')}}"></script>
