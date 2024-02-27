@@ -8,11 +8,7 @@
         {{app()->getLocale() == 'ar' ? $restaurant->name_ar : $restaurant->name_en}}
     </title>
     <!-- //font -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
-        crossorigin=""
-    />
+
 
     <!--=============== SWIPER CSS ===============-->
     <link rel="stylesheet" href="{{asset('site/assets/css/swiper-bundle.min.css')}}"/>
