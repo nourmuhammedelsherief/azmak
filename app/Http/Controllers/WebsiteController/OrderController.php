@@ -110,7 +110,7 @@ class OrderController extends Controller
                 ]);
                 return redirect()->to($result->Data->PaymentURL);
             } else {
-                Toastr::error(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+                Toastr::warning(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
                 return back();
             }
         }
@@ -136,7 +136,7 @@ class OrderController extends Controller
             $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
             return redirect()->to($url);
         } else {
-            Toastr::error(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
+            Toastr::warning(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
             return back();
         }
     }
