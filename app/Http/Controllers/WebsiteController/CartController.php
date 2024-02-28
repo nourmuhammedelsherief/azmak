@@ -29,7 +29,7 @@ class CartController extends Controller
             ->count();
         if (($request->options == null and $check_required_options > 0) or ($request->options != null and $check_required_options > count($request->options))) {
             Toastr::error(trans('messages.optionsRequired'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
-            return redirect()->route('homeBranchIndex', [$restaurant->name_barcode, $branch->name_en]);
+            return redirect()->back();
         }
         if (!auth('web')->check()) {
             session()->put('current_order', $request->all());
