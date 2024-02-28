@@ -204,4 +204,5 @@ return [
     'invitedYouToAZOrders' => 'قام بعزيمتك في طلبات عازمك من ايزي مينو ',
     'order_code' => 'الكود السري لاستلام الطلب هو : ',
     'at' => 'في',
+    'AzmakFreeSubscriptionDoneSuccessfully' => 'تم الاشتراك المجاني بنجاح في لوحة عازمك',
 ];

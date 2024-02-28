@@ -205,4 +205,5 @@ return [
     'invitedYouToAZOrders' => 'Invited You At AZmak Orders ',
     'order_code' => 'Secret Code For Order Reception is : ',
     'at' => 'At',
+    'AzmakFreeSubscriptionDoneSuccessfully' => 'Azmak Free Subscription Done Successfully',
 ];

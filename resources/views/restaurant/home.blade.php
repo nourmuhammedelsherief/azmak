@@ -1,7 +1,7 @@
 @extends('restaurant.lteLayout.master')
 
 @section('title')
-    @lang('messages.restaurant_control_panel')
+    @lang('messages.control_panel')
 @endsection
 
 @section('content')
@@ -16,19 +16,20 @@
                 <!--    <ol class="breadcrumb float-sm-right">-->
 
                 <!--        <li class="breadcrumb-item active">-->
-                <!--            {{trans('messages.control_panel')}}-->
+            <!--            {{trans('messages.control_panel')}}-->
                 <!--        </li>-->
                 <!--    </ol>-->
                 <!--</div><!- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
+    @include('flash::message')
     <!-- /.content-header -->
     @php
         $user = Auth::guard('restaurant')->user();
+        $subscription = App\Models\AzSubscription::whereRestaurantId($user->id)->first();
     @endphp
     @if(auth('restaurant')->check() and $user->type == 'restaurant')
-
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -36,6 +37,9 @@
                     @lang('messages.welcome') {{app()->getLocale() == 'ar' ? $user->name_ar : $user->name_en}}
                 </h3>
                 <!-- /.row (main row) -->
+                @if($subscription == null or ($subscription and $subscription->status == 'finished'))
+                    <a href="{{route('AzmakSubscription' , $user->id)}}" class="btn btn-success"> active azmak </a>
+                @endif
             </div><!-- /.container-fluid -->
         </section>
         <!-- /.content -->

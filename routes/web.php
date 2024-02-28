@@ -51,6 +51,7 @@ use App\Http\Controllers\RestaurantController\ServiceProviderController as Resta
 use App\Http\Controllers\RestaurantController\ServiceStoreController;
 use App\Http\Controllers\RestaurantController\SmsController;
 use App\Http\Controllers\RestaurantController\TermsConditionController;
+use App\Http\Controllers\RestaurantController\AzmakSubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
@@ -86,6 +87,10 @@ Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
     return redirect()->back();
 })->name('restaurant.language');
 
+Route::get('/test-toastre' , function (){
+    \Brian2694\Toastr\Facades\Toastr::success('Message to test toastre on locale and online', 'Title', ["positionClass" => "toast-top-center"]);
+    return view('test_toastre');
+});
 
 /**
  *  Start @user routes
@@ -182,46 +187,7 @@ Route::prefix('restaurant')->group(function () {
     Route::post('not_allowed_ads', [AdsController::class, 'notWatchAgain'])->name('ads.not_allowed');
     Route::group(['middleware' => 'auth:restaurant'], function () {
         Route::get('/home', [ResHome::class, 'index'])->name('restaurant.home');
-
-
-
-        // whatsapp_branches
-        Route::resource('/whatsapp_branches', WhatsappBranchController::class, []);
-        Route::get('/whatsapp_branches/delete/{id}', [WhatsappBranchController::class, 'destroy']);
-
-        Route::match(['get', 'post'], '/banks-settings', [RestaurantControllerBankController::class, 'settings'])->name('restaurant.banks.setting');
-        Route::resource('/banks', RestaurantControllerBankController::class, ['as' => 'restaurant']);
-        Route::get('/banks/delete/{id}', [RestaurantControllerBankController::class, 'destroy']);
-
-        // rate us routes
-        Route::resource('restaurant_rate_us' , RestaurantRateUsController::class , []);
-        Route::get('restaurant_rate_us/delete/{id}' ,   [RestaurantRateUsController::class,'destroy']);
-        Route::get('restaurant_our_rates' ,   [RestaurantRateUsController::class,'our_rates'])->name('restaurant_our_rates');
-        Route::get('restaurant_our_rates/delete/{id}' ,   [RestaurantRateUsController::class,'delete_our_rate']);
-        Route::get('show_restaurant_rate/{id}' ,   [RestaurantRateUsController::class,'show_restaurant_rate'])->name('show_restaurant_rate');
-
-
-
-        Route::resource('/related_code', HeaderFooterController::class, ['as' => 'restaurant']);
-        Route::get('/related_code/delete/{id}', [HeaderFooterController::class, 'destroy']);
-
-        Route::resource('ads', AdsController::class, ['as' => 'restaurant'])->only(['create', 'store', 'edit', 'update']);
-        Route::get('ads/delete/{id}', [AdsController::class, 'delete'])->name('restaurant.ads.delete');
-        Route::get('ads', [AdsController::class, 'mainIndex'])->name('restaurant.ads.index');
-
-        // link_contact_us
-        Route::resource('link_contact_us', RestaurantContactUsLinkController::class, ['as' => 'restaurant'])->only(['create', 'store', 'edit', 'update', 'index']);
-        Route::get('link_contact_us/delete/{id}', [RestaurantContactUsLinkController::class, 'delete'])->name('restaurant.link_contact_us.delete');
-        Route::get('link_contact_us/change_status/{id}', [RestaurantContactUsLinkController::class, 'changeStatus'])->name('restaurant.link_contact_us.changeStatus');
-        Route::get('link_contact_us/{id}', [RestaurantContactUsLinkController::class, 'show'])->name('restaurant.link_contact_us.show');
-
-
-        // contact_us
-        Route::resource('contact_us', RestaurantContactUsController::class, ['as' => 'restaurant'])->only(['create', 'store', 'edit', 'update', 'index']);
-        Route::get('contact_us/delete/{id}', [RestaurantContactUsController::class, 'delete'])->name('restaurant.contact_us.delete');
-        Route::match(['get', 'post'], 'contact_us/settings', [RestaurantContactUsController::class, 'setting'])->name('restaurant.contact_us.setting');
-        Route::match(['get', 'post'], 'contact_us/barcode', [RestaurantContactUsController::class, 'setting'])->name('restaurant.contact_us.barcode');
-
+        Route::get('/AzmakSubscription/{id}', [AzmakSubscriptionController::class, 'show_subscription'])->name('AzmakSubscription');
 
     });
 
