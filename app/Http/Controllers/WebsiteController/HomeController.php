@@ -12,6 +12,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantTermsCondition;
 use App\Models\RestaurantAboutAzmak;
 use App\Models\RestaurantSlider;
+use App\Models\AzSubscription;
 use DB;
 use Illuminate\Support\Facades\App;
 
@@ -38,60 +39,69 @@ class HomeController extends Controller
     public function homeBranch(Request $request , $res , $branch , $category_id = null)
     {
         $restaurant = Restaurant::whereNameBarcode($res)->firstOrFail();
-        $branch = AZBranch::whereNameEn($branch)->first();
-        $sliders = $restaurant->sliders()
-            ->where('slider_type', 'home')
-            ->whereStop('false')
-            ->get();
-        $branches = AZBranch::whereRestaurantId($restaurant->id)->get();
-        $categories = AZMenuCategory::whereRestaurantId($restaurant->id)
-            ->where('branch_id', $branch->id)
-            ->where('active', 'true')
-            ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
-            ->get();
-        if ($category_id)
+        /**
+         * @check for restaurant subscription to show menu
+        */
+        $subscription = AzSubscription::whereRestaurantId($restaurant->id)->first();
+        if ($subscription and ($subscription->status == 'active' or $subscription->status == 'free'))
         {
-            $products = AZProduct::whereRestaurantId($restaurant->id)
-                ->where('branch_id', $branch->id)
-                ->where('menu_category_id', $category_id)
-                ->where('active', 'true')
-                ->where('available', 'true')
-                ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
-                ->paginate(100);
-        }else{
-            $menu_category =AZMenuCategory::whereRestaurantId($restaurant->id)
+            $branch = AZBranch::whereNameEn($branch)->first();
+            $sliders = $restaurant->sliders()
+                ->where('slider_type', 'home')
+                ->whereStop('false')
+                ->get();
+            $branches = AZBranch::whereRestaurantId($restaurant->id)->get();
+            $categories = AZMenuCategory::whereRestaurantId($restaurant->id)
                 ->where('branch_id', $branch->id)
                 ->where('active', 'true')
                 ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
-                ->first();
-            if ($menu_category != null) {
+                ->get();
+            if ($category_id)
+            {
                 $products = AZProduct::whereRestaurantId($restaurant->id)
                     ->where('branch_id', $branch->id)
-                    ->where('menu_category_id', $menu_category->id)
+                    ->where('menu_category_id', $category_id)
                     ->where('active', 'true')
                     ->where('available', 'true')
                     ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
                     ->paginate(100);
-                $category_id = $menu_category->id;
-            } else {
-                $products = AZProduct::whereRestaurantId($restaurant->id)
+            }else{
+                $menu_category =AZMenuCategory::whereRestaurantId($restaurant->id)
                     ->where('branch_id', $branch->id)
                     ->where('active', 'true')
-                    ->where('available', 'true')
                     ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
-                    ->paginate(100);
+                    ->first();
+                if ($menu_category != null) {
+                    $products = AZProduct::whereRestaurantId($restaurant->id)
+                        ->where('branch_id', $branch->id)
+                        ->where('menu_category_id', $menu_category->id)
+                        ->where('active', 'true')
+                        ->where('available', 'true')
+                        ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
+                        ->paginate(100);
+                    $category_id = $menu_category->id;
+                } else {
+                    $products = AZProduct::whereRestaurantId($restaurant->id)
+                        ->where('branch_id', $branch->id)
+                        ->where('active', 'true')
+                        ->where('available', 'true')
+                        ->orderBy(DB::raw('ISNULL(arrange), arrange'), 'ASC')
+                        ->paginate(100);
+                }
             }
+            if ($request->is_category == 'true')
+            {
+                return response([
+                    'status' => true,
+                    'data' => [
+                        'products' => view('website.accessories.products', compact(['restaurant' ,'products', 'branch' ,'categories', 'sliders' , 'branches' , 'category_id']))->render(),
+                    ],
+                ]);
+            }
+            return view('website.home' , compact('restaurant' ,'products', 'branch' ,'categories', 'sliders' , 'branches' , 'category_id'));
+        }else{
+            return $this->index($restaurant->name_barcode);
         }
-        if ($request->is_category == 'true')
-        {
-            return response([
-                'status' => true,
-                'data' => [
-                    'products' => view('website.accessories.products', compact(['restaurant' ,'products', 'branch' ,'categories', 'sliders' , 'branches' , 'category_id']))->render(),
-                ],
-            ]);
-        }
-        return view('website.home' , compact('restaurant' ,'products', 'branch' ,'categories', 'sliders' , 'branches' , 'category_id'));
     }
 
     public function terms($res , $branch)

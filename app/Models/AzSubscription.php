@@ -24,6 +24,7 @@ class AzSubscription extends Model
         'invoice_id',
     ];
 
+    protected $casts = ['end_at' => 'datetime'];
 
     public function restaurant()
     {

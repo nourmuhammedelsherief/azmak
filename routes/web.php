@@ -87,11 +87,6 @@ Route::get('restaurant/locale/{locale}', function (Request $request, $locale) {
     return redirect()->back();
 })->name('restaurant.language');
 
-Route::get('/test-toastre' , function (){
-    \Brian2694\Toastr\Facades\Toastr::success('Message to test toastre on locale and online', 'Title', ["positionClass" => "toast-top-center"]);
-    return view('test_toastre');
-});
-
 /**
  *  Start @user routes
  */
@@ -188,7 +183,8 @@ Route::prefix('restaurant')->group(function () {
     Route::group(['middleware' => 'auth:restaurant'], function () {
         Route::get('/home', [ResHome::class, 'index'])->name('restaurant.home');
         Route::get('/AzmakSubscription/{id}', [AzmakSubscriptionController::class, 'show_subscription'])->name('AzmakSubscription');
-
+        Route::get('/Azmak/payment_menthod/{id}', [AzmakSubscriptionController::class, 'show_payment_methods'])->name('AzmakPaymentMethod');
+        Route::get('/AZSubscriptionStatusF/{id1?}/{id2?}', [AzmakSubscriptionController::class, 'subscription_status'])->name('AZSubscriptionStatusF');
     });
 
     Route::group(['middleware' => ['web']], function () {
@@ -411,3 +407,6 @@ Route::prefix('restaurant')->group(function () {
 /**
  * End @restaurant Routes
  */
+// Bank: CIB
+//Account Number: 100061456583
+//IBAN: EG860010009600000100061456583
