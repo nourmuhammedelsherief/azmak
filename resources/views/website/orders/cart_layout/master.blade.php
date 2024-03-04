@@ -13,6 +13,8 @@
         rel="stylesheet"
     />
     <!-- //bootstrap -->
+    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}"  type="image/x-icon">
+
     <link rel="stylesheet" href="{{asset('site/css/bootstrap-grid.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/css/bootstrap.css')}}"/>
     <!-- fontawsome -->

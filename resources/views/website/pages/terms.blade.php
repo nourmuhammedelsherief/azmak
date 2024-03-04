@@ -12,6 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400&display=swap"
         rel="stylesheet"
     />
+    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}"  type="image/x-icon">
+
     <!-- //bootstrap -->
     <link rel="stylesheet" href="{{asset('site/css/bootstrap-grid.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('site/css/bootstrap.css')}}"/>
