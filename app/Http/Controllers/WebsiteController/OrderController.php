@@ -72,7 +72,7 @@ class OrderController extends Controller
 //        }
             $name = $order->user->name;
             $token = $order->restaurant->a_z_myFatoourah_token;
-            $amount = number_format((float)$order->total_price, 2, '.', '');
+//            $amount = number_format((float)$order->total_price, 2, '.', '');
             $data = array(
                 'PaymentMethodId' => 2,
                 'CustomerName' => $name,
@@ -80,7 +80,7 @@ class OrderController extends Controller
                 'MobileCountryCode' => $order->restaurant->country->code,
                 'CustomerMobile' => $order->user->phone_number,
                 'CustomerEmail' => $order->user->email,
-                'InvoiceValue' => $amount,
+                'InvoiceValue' => $order->total_price,
                 'CallBackUrl' => route('AZOrderPaymentFatoourahStatus' , $order->id),
                 'ErrorUrl' => route('AZUserCart' , $order->branch->id),
                 'Language' => app()->getLocale(),
@@ -98,13 +98,12 @@ class OrderController extends Controller
                 'InvoiceItems' => [array(
                     'ItemName' => $order->occasion,
                     'Quantity' => $order->items->count(),
-                    'UnitPrice' => $amount,
+                    'UnitPrice' => $order->total_price,
                 )],
             );
             $data = json_encode($data);
             $fatooraRes = MyFatoorah($token, $data);
             $result = json_decode($fatooraRes);
-            dd($result);
             if ($result != null and $result->IsSuccess === true) {
                 $order->update([
                     'invoice_id' => $result->Data->InvoiceId,
