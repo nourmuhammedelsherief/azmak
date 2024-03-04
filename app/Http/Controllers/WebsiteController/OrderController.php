@@ -104,6 +104,7 @@ class OrderController extends Controller
             $data = json_encode($data);
             $fatooraRes = MyFatoorah($token, $data);
             $result = json_decode($fatooraRes);
+            dd($result);
             if ($result != null and $result->IsSuccess === true) {
                 $order->update([
                     'invoice_id' => $result->Data->InvoiceId,
