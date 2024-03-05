@@ -63,6 +63,19 @@ use App\Http\Controllers\WebsiteController\UserController;
 use App\Http\Controllers\WebsiteController\CartController;
 use App\Http\Controllers\WebsiteController\OrderController;
 
+// admin uses
+use \App\Http\Controllers\AdminController\RegisterQuestionController;
+use \App\Http\Controllers\AdminController\AdminController;
+use \App\Http\Controllers\AdminController\SettingController;
+use \App\Http\Controllers\AdminController\BankController;
+use \App\Http\Controllers\AdminController\MarketerController;
+use \App\Http\Controllers\AdminController\SellerCodeController;
+use \App\Http\Controllers\AdminController\Admin\LoginController;
+use \App\Http\Controllers\AdminController\Admin\ForgotPasswordController;
+use \App\Http\Controllers\AdminController\Admin\ResetPasswordController;
+use App\Http\Controllers\AdminController\AdminDetailController;
+use \App\Http\Controllers\AdminController\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -195,28 +208,6 @@ Route::prefix('restaurant')->group(function () {
             Route::get('/urgent-barcode', 'urgentBarcode')->name('RestauranturgentBarcode');
             Route::post('/profileEdit/{id?}', 'my_profile_edit')->name('RestaurantUpdateProfile');
             Route::post('/updateBarcode/{id?}', 'updateBarcode')->name('RestaurantUpdateBarcode');
-            Route::match(['get', 'post'], '/my-information/{id?}', 'updateMyInformation')->name('RestaurantUpdateInformation');
-            Route::get('/subscription/{id}/{admin?}', 'renew_subscription')->name('renewSubscription');
-            Route::get('/subscription/{id}/renew/{admin?}', 'store_subscription')->name('renewSubscriptionPost');
-            Route::post('/subscription/{id}/bank/{admin?}', 'renewSubscriptionBank')->name('renewSubscriptionBank');
-            Route::get('/check-status/{id1?}/{id2?}/{admin?}', 'check_status')->name('checkRestaurantStatus');
-            Route::get('/check-service-status/{id1?}/{id2?}', 'check_service_status')->name('checkServiceStatus');
-            Route::post('/profileChangePass/{id?}', 'change_pass_update')->name('RestaurantChangePassword');
-            Route::post('/RestaurantChangeExternal/{id?}', 'RestaurantChangeExternal')->name('RestaurantChangeExternal');
-            Route::get('/information', 'information')->name('information');
-            Route::post('/information', 'store_information')->name('store_information');
-            Route::post('/RestaurantChangeColors/{id}', 'RestaurantChangeColors')->name('RestaurantChangeColors');
-            Route::post('/RestaurantChangeBioColors/{id}', 'RestaurantChangeBioColors')->name('RestaurantChangeBioColors');
-
-            Route::get('/reset_to_main/{id}', 'Reset_to_main')->name('Reset_to_main');
-            Route::get('/Reset_to_bio_main/{id}', 'Reset_to_bio_main')->name('Reset_to_bio_main');
-
-            Route::get('/myfatoora_token', 'myfatoora_token')->name('myfatoora_token');
-            Route::post('/myfatoora_token', 'update_myfatoora_token')->name('myfatoora_token.update');
-            Route::get('/my_restaurant_users', 'my_restaurant_users')->name('my_restaurant_users');
-
-
-
             // restaurant colors
         });
         //branches routes
@@ -407,6 +398,61 @@ Route::prefix('restaurant')->group(function () {
 /**
  * End @restaurant Routes
  */
-// Bank: CIB
-//Account Number: 100061456583
-//IBAN: EG860010009600000100061456583
+/**
+ * Start @admin Routes
+ */
+Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
+Route::prefix('admin')->group(function () {
+
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('login', [LoginController::class, 'login'])->name('admin.login.submit');
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('admin.password.request');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('admin.password.email');
+    Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('admin.password.reset');
+    Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('admin.password.update');
+    Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+    Route::group(['middleware' => ['web', 'auth:admin']], function () {
+        Route::controller(RestaurantController::class)->group(function () {
+            Route::get('/restaurants/{restaurant}/login', 'loginToRestaurant')->name('admin.restaurant.login');
+            Route::get('/restaurants/{status}', 'index')->name('restaurants');
+            Route::get('/restaurant_gold/{status}', 'index_gold')->name('restaurants_gold');
+            Route::get('/restaurant_family/{status}', 'index_family')->name('restaurants_family');
+            Route::get('/branches/{status}', 'branches')->name('branches');
+            Route::get('/branches/{id}/edit', 'edit_branch')->name('editRestaurantBranch');
+            Route::post('/branches/{id}/update', 'update_branch')->name('updateRestaurantBranch');
+            Route::get('/branches/delete/{id}', 'delete_branches')->name('delete_branches')->middleware('admin');
+            Route::get('/create/restaurants', 'create')->name('createRestaurant');
+            Route::post('/restaurants/store', 'store')->name('storeRestaurant');
+            Route::get('/restaurants/{id}/show', 'show')->name('showRestaurant');
+            Route::get('/restaurants/{id}/edit', 'edit')->name('editRestaurant');
+            Route::post('/restaurants/{id}/update', 'update')->name('updateRestaurant');
+
+
+
+            Route::get('/restaurants/delete/{id}', 'destroy')->name('deleteRestaurant')->middleware('admin');
+            Route::get('/restaurants/subscription/{id}/control', 'control_subscription')->name('ControlRestaurantSubscription');
+            Route::post('/restaurants/subscription/{id}/control', 'controlChanges')->name('controlChanges');
+            Route::get('/restaurants/service/{id}/control', 'control_service_subscription')->name('ControlServiceSubscription');
+            Route::post('/restaurants/service/{id}/control', 'controlServiceChanges')->name('controlServiceChanges');
+            Route::post('/restaurants/controlPackage/{id}/control', 'controlPackage')->name('controlPackage');
+            Route::get('/restaurants/archive/{id}/{state}', 'ArchiveRestaurant')->name('ArchiveRestaurant')->middleware('auth:admin');
+            Route::get('/branches/archive/{id}/{state}', 'ArchiveBranch')->name('ArchiveBranch')->middleware('admin');
+            Route::get('/restaurants/ActiveRestaurant/{id}', 'ActiveRestaurant')->name('ActiveRestaurant');
+            Route::get('/branches/subscription/{id}/control', 'control_branch_subscription')->name('ControlBranchSubscription');
+            Route::post('/branches/subscription/{id}/control', 'controlBranchChanges')->name('controlBranchChanges');
+        });
+        Route::controller(SettingController::class)->group(function () {
+            Route::get('/azmak_setting', 'setting')->name('AzmakSetting');
+            Route::post('/azmak_setting', 'setting_update')->name('AzmakSettingUpdate');
+        });
+        Route::resource('/seller_codes' , SellerCodeController::class);
+        Route::get('/seller_codes/delete/{id}' , [SellerCodeController::class , 'destroy'])->name('deleteSellerCode');
+        Route::get('/seller_codes/{id}/active/{status}' , [SellerCodeController::class , 'activate'])->name('activateSellerCode');
+
+    });
+});
+/**
+ * End @admin Routes
+ */
+

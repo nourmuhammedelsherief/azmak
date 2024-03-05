@@ -10,6 +10,8 @@ use App\Models\Restaurant;
 use App\Models\AzSellerCode;
 use App\Models\Setting;
 use App\Models\AzSubscription;
+use App\Models\AzmakSetting;
+
 
 class AzmakSubscriptionController extends Controller
 {
@@ -17,18 +19,23 @@ class AzmakSubscriptionController extends Controller
     {
         $restaurant = Restaurant::find($id);
         // get azmak setting subscription type
-        // 1 - Online Payment
-        return view('restaurant.payments.payment_method');
-//        return redirect()->route('AzmakPaymentMethod' , $restaurant->id);
-        // 2 - free subscription
-        AzSubscription::updateOrCreate(
-            ['restaurant_id' => $restaurant->id],
-            [
-                'status' => 'free',
-                'end_at' => Carbon::now()->addYears(10),
-            ]);
-        flash(trans('messages.AzmakFreeSubscriptionDoneSuccessfully'))->success();
-        return redirect()->back();
+        $settings = AzmakSetting::first();
+        if ($settings->subscription_type == 'free')
+        {
+            // 1 - free subscription
+            AzSubscription::updateOrCreate(
+                ['restaurant_id' => $restaurant->id],
+                [
+                    'status' => 'free',
+                    'end_at' => Carbon::now()->addYears(10),
+                ]);
+            flash(trans('messages.AzmakFreeSubscriptionDoneSuccessfully'))->success();
+            return redirect()->back();
+        }elseif ($settings->subscription_type == 'paid')
+        {
+            // 2 - Online Payment
+            return view('restaurant.payments.payment_method');
+        }
     }
 
     public function show_payment_methods(Request $request, $id)
