@@ -99,6 +99,7 @@
                                                 id="city{{$branch->id}}"
                                                 name="branch"
                                                 value="{{$branch->id}}"
+                                                required
                                             />
                                             <label for="city{{$branch->id}}">
                                                 {{app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en}}
