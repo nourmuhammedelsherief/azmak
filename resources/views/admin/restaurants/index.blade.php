@@ -238,42 +238,16 @@
                                                 @lang('messages.login_to_restaurant')
                                             </span>
                                         </li>
-                                        <!--start login_res-->
-
-                                        @if ($restaurant->status != 'inComplete')
-                                            @if(auth()->guard('admin')->user()->role != 'customer_services')
-                                                <li class="login_res">
-                                                    <a class="btn btn-info"
-                                                       href="{{ route('showRestaurant', $restaurant->id) }}">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                    <span
-                                                        class="show_text">              @lang('messages.show')  </span>
-
-                                                </li>
-                                            @endif
-                                        @endif
-                                        @if ($restaurant->status == 'inComplete')
-                                            <li class="login_res">
-                                                <a class="btn btn-info"
-                                                   href="{{ route('inCompleteRestaurant', $restaurant->id) }}">
-                                                    <i class="fa fa-edit"></i>
-
-                                                </a>
-
-                                                <span
-                                                    class="show_text">               {{ app()->getLocale() == 'ar' ? 'أكمال التسجيل' : 'Complete Register' }} </span>
-                                            </li>
-                                        @else
-                                            <li class="login_res">
-                                                <a class="btn btn-primary"
-                                                   href="{{ route('editRestaurant', $restaurant->id) }}">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <span class="show_text">              @lang('messages.edit')  </span>
-                                            </li>
-                                    @endif
-                                    <!--</div>-->
+                                        <li class="login_res">
+                                            <a class="btn btn-primary"
+                                               href="{{ route('editRestaurant', $restaurant->id) }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <span class="show_text">
+                                                @lang('messages.edit')
+                                            </span>
+                                        </li>
+                                        <!--</div>-->
                                         <!--</div>-->
 
                                     </td>
