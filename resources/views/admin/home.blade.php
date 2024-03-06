@@ -32,10 +32,32 @@
                             <div class="small-box">
                                 <!--bg-success-->
                                 <div class="inner">
-                                    <p>@lang('messages.restaurants')</p>
+                                    <p>@lang('messages.restaurants') (@lang('messages.active_restaurants'))</p>
 
                                     <h3>
-                                        {{ \App\Models\Restaurant::where('archive', 'false')->where('status', 'active')->count() }}
+                                        {{\App\Models\AzSubscription::where('status', 'active')->count() }}
+                                    </h3>
+
+                                </div>
+                                <!--<div class="icon">-->
+                                <!--    <i class="ion ion-person-add"></i>-->
+                                <!--</div>-->
+
+                            </div>
+                        </a>
+
+                    </div>
+                    <div class="col-lg-4 col-6">
+                        <a href="{{ url('/admin/restaurants/free') }}">
+
+                            <!-- small box -->
+                            <div class="small-box">
+                                <!--bg-success-->
+                                <div class="inner">
+                                    <p>@lang('messages.restaurants') (@lang('messages.free_restaurants'))</p>
+
+                                    <h3>
+                                        {{\App\Models\AzSubscription::where('status', 'free')->count() }}
                                     </h3>
 
                                 </div>
@@ -49,19 +71,17 @@
                     </div>
                     <div class="col-lg-4 col-6">
                         <!-- small box -->
-                        <a href="{{ url('/admin/restaurants/InActive') }}">
+                        <a href="{{ url('/admin/restaurants/new') }}">
 
                             <div class="small-box ">
                                 <!--bg-blue-->
                                 <div class="inner">
                                     <p>
-                                        @lang('messages.restaurants') @lang('messages.restaurantsInActive')
+                                        @lang('messages.restaurants') @lang('messages.new_restaurants')
                                     </p>
                                     <h3>
-                                        {{ $restaurants = \App\Models\Restaurant::where('admin_activation', 'false')->count() }}
+                                        {{\App\Models\AzSubscription::where('status', 'new')->count() }}
                                     </h3>
-
-
                                 </div>
 
 
@@ -70,19 +90,18 @@
 
                     </div>
                     <div class="col-lg-4 col-6">
-                        <a href="{{ url('/admin/restaurants/inComplete') }}">
-                            <!-- small box -->
+                        <!-- small box -->
+                        <a href="{{ url('/admin/restaurants/finished') }}">
+
                             <div class="small-box ">
-                                <!--bg-gray-->
+                                <!--bg-blue-->
                                 <div class="inner">
                                     <p>
-                                        @lang('messages.rest_inComplete')
+                                        @lang('messages.restaurants') @lang('messages.finished_restaurants')
                                     </p>
                                     <h3>
-                                        {{ $restaurants = \App\Models\Restaurant::where('status', 'inComplete')->where('archive', 'false')->count() }}
+                                        {{\App\Models\AzSubscription::where('status', 'finished')->count() }}
                                     </h3>
-
-
                                 </div>
 
 
@@ -90,8 +109,24 @@
                         </a>
 
                     </div>
-                @endif
+                    <div class="col-lg-4 col-6">
+                        <!-- small box -->
+                        <a href="{{ url('/admin/seller_codes') }}">
 
+                            <div class="small-box ">
+                                <!--bg-blue-->
+                                <div class="inner">
+                                    <p>
+                                        @lang('messages.seller_codes')
+                                    </p>
+                                    <h3>
+                                        {{\App\Models\AzSellerCode::count() }}
+                                    </h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endif
             <!-- ./col -->
             </div>
             <!-- /.row -->

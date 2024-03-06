@@ -81,8 +81,6 @@
         background-color: red !important;
     }
 </style>
-
-
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar">
 
@@ -120,10 +118,9 @@
                 <li class="nav-item has-treeview" id="has-test">
                     <!--delet open menue-->
                     <a href="#"
-                       class="nav-link {{ (isUrlActive('restaurants/tentative_active') or
-                            isUrlActive('restaurants/tentative_finished') or
+                       class="nav-link {{ (isUrlActive('restaurants/new') or
+                            isUrlActive('restaurants/free') or
                             isUrlActive('restaurants/active') or
-                            isUrlActive('restaurants/less_30_day') or
                             isUrlActive('restaurants/finished'))
                                 ? 'active'
                                 : '' }}">
@@ -136,26 +133,14 @@
                     <ul class="nav nav-treeview test-open">
 
                         <li class="nav-item">
-                            <a href="{{ url('/admin/restaurants/tentative_active') }}"
-                               class="nav-link {{ strpos(URL::current(), '/admin/restaurants/tentative_active') !== false ? 'active' : '' }}">
+                            <a href="{{ url('/admin/restaurants/new') }}"
+                               class="nav-link {{ strpos(URL::current(), '/admin/restaurants/new') !== false ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <span class="badge badge-info right">
-                                        {{ $restaurants = \App\Models\Restaurant::where('status', 'tentative')->where('admin_activation', 'true')->where('archive', 'false')->count() }}
-                                    </span>
+                                    {{\App\Models\AzSubscription::where('status', 'new')->count() }}
+                                </span>
                                 <p>
-                                    @lang('messages.tentative_active')
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/restaurants/tentative_finished') }}"
-                               class="nav-link {{ strpos(URL::current(), '/admin/restaurants/tentative_finished') !== false ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <span class="badge badge-info right">
-                                        {{ $restaurants = \App\Models\Restaurant::where('status', 'tentative')->where('admin_activation', 'true')->where('archive', 'false')->count() }}
-                                    </span>
-                                <p>
-                                    @lang('messages.tentative_finished')
+                                    @lang('messages.new_restaurants')
                                 </p>
                             </a>
                         </li>
@@ -164,10 +149,34 @@
                                class="nav-link {{ strpos(URL::current(), '/admin/restaurants/active') !== false ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <span class="badge badge-info right">
-                                        {{ $restaurants = \App\Models\Restaurant::where('status', 'active')->where('archive', 'false')->count() }}
-                                    </span>
+                                    {{\App\Models\AzSubscription::where('status', 'active')->count() }}
+                                </span>
                                 <p>
-                                    @lang('messages.active')
+                                    @lang('messages.active_restaurants')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/restaurants/free') }}"
+                               class="nav-link {{ strpos(URL::current(), '/admin/restaurants/free') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <span class="badge badge-info right">
+                                    {{\App\Models\AzSubscription::where('status', 'free')->count() }}
+                                </span>
+                                <p>
+                                    @lang('messages.free_restaurants')
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/restaurants/finished') }}"
+                               class="nav-link {{ strpos(URL::current(), '/admin/restaurants/finished') !== false ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <span class="badge badge-info right">
+                                    {{\App\Models\AzSubscription::where('status', 'finished')->count() }}
+                                </span>
+                                <p>
+                                    @lang('messages.finished_restaurants')
                                 </p>
                             </a>
                         </li>

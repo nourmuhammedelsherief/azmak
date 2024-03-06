@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Reservation\ReservationBranch;
 use App\Models\Reservation\ReservationTable;
 use App\Models\Waiting\WaitingOrder;
+use App\Models\Restaurant\Azmak\AZProduct;
+use App\Models\Restaurant\Azmak\AZBranch;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -189,7 +191,7 @@ class Restaurant extends Authenticatable
     }
     public function branches()
     {
-        return $this->hasMany(Branch::class, 'restaurant_id');
+        return $this->hasMany(AZBranch::class, 'restaurant_id');
     }
     public function tables()
     {
@@ -197,7 +199,7 @@ class Restaurant extends Authenticatable
     }
     public function products()
     {
-        return $this->hasMany(Product::class, 'restaurant_id');
+        return $this->hasMany(AZProduct::class, 'restaurant_id');
     }
     public function deliveries()
     {
@@ -243,5 +245,8 @@ class Restaurant extends Authenticatable
     {
         return $this->hasMany(RestaurantContactUs::class, 'restaurant_id');
     }
-
+    public function az_subscription()
+    {
+        return $this->hasOne(AzSubscription::class , 'restaurant_id');
+    }
 }

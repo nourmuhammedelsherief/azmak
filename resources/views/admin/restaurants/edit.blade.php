@@ -39,161 +39,70 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form role="form" action="{{(isset($inComplete) and $inComplete == true) ? route('inCompleteRestaurant' , $restaurant->id) : route('updateRestaurant' , $restaurant->id)}}" method="post"
+                        <form role="form" action="{{route('updateRestaurant' , $restaurant->id)}}" method="post"
                               enctype="multipart/form-data">
                             <input type='hidden' name='_token' value='{{Session::token()}}'>
 
                             <div class="card-body">
-                                @if($tempSeller = $restaurant->marketerOperations()->with('seller_code' , 'subscription')->first() and isset($tempSeller->seller_code->id) and $tempSeller->seller_code->used_type == 'url')
-                                    <div class="form-group text-left">
-                                        <a href="{{url('admin/seller_codes/' . $tempSeller->seller_code_id)}}?custom_url={{$tempSeller->seller_code->custom_url}}">تسجيل مباشر : {{$tempSeller->seller_code->custom_url}}</a>
-                                    </div>
-                                @endif
                                 <div class="form-group">
-                                    <label class="control-label"> @lang('messages.country') </label>
-                                    <select name="country_id" class="form-control" required>
-                                        <option disabled selected> @lang('messages.choose_one') </option>
-                                        @foreach($countries as $country)
-                                            <option value="{{$country->id}}" {{$restaurant->country_id == $country->id ? 'selected' : ''}}>
-                                                @if(app()->getLocale() == 'ar')
-                                                    {{$country->name_ar}}
-                                                @else
-                                                    {{$country->name_en}}
-                                                @endif
-                                            </option>
-                                        @endforeach
+                                    <label class="control-label"> @lang('messages.az_payment_type') </label>
+                                    <select name="a_z_orders_payment_type" class="form-control">
+                                        <option selected disabled> @lang('messages.choose_one')</option>
+                                        <option value="myFatoourah" {{$restaurant->a_z_orders_payment_type == 'myFatoourah' ? 'selected' : ''}}> @lang('messages.myFatoourah') </option>
+                                        <option value="tap" {{$restaurant->a_z_orders_payment_type == 'tap' ? 'selected' : ''}}> @lang('messages.tap') </option>
+                                        <option value="edfa" {{$restaurant->a_z_orders_payment_type == 'edfa' ? 'selected' : ''}}> @lang('messages.edfa') </option>
                                     </select>
-                                    @if ($errors->has('country_id'))
+                                    @if ($errors->has('a_z_orders_payment_type'))
                                         <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('country_id') }}</strong>
+                                            <strong style="color: red;">{{ $errors->first('a_z_orders_payment_type') }}</strong>
                                         </span>
                                     @endif
                                 </div>
-                                @if($restaurant->city != null)
+                                <div id="myFatoourah" style="display: {{$restaurant->a_z_orders_payment_type == 'myFatoourah' ? 'block' : 'none'}}">
                                     <div class="form-group">
-                                        <label class="control-label"> @lang('messages.city') </label>
-                                        <select id="register_city" name="city_id" class="form-control" required>
-                                            <option disabled selected> @lang('messages.choose_one') </option>
-                                            @foreach ($countries as $country)
-                                                @if($country->id == $restaurant->country_id)
-                                                    @foreach ($country->cities as $city)
-                                                        <option value="{{$city->id}}">{{$city->name}}</option>
-                                                    @endforeach
-                                                @endif
-                                            @endforeach
-                                            <option value="{{$restaurant->city_id}}"
-                                                    selected> {{app()->getLocale() == 'ar' ? $restaurant->city->name_ar : $restaurant->city->name_en}}
-                                            </option>
-                                        </select>
-                                        @if ($errors->has('city_id'))
+                                        <label class="control-label"> @lang('messages.a_z_myFatoourah_token') </label>
+                                       <input name="a_z_myFatoourah_token" value="{{$restaurant->a_z_myFatoourah_token}}" class="form-control"
+                                       placeholder="@lang('messages.a_z_myFatoourah_token')">
+                                        @if ($errors->has('a_z_myFatoourah_token'))
                                             <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('city_id') }}</strong>
+                                            <strong style="color: red;">{{ $errors->first('a_z_myFatoourah_token') }}</strong>
                                         </span>
                                         @endif
                                     </div>
-                                @else
+                                </div>
+                                <div id="tap" style="display: {{$restaurant->a_z_orders_payment_type == 'tap' ? 'block' : 'none'}}">
                                     <div class="form-group">
-                                        <label class="control-label"> @lang('messages.city') </label>
-                                        <select id="register_city" name="city_id" class="form-control" required>
-                                            <option disabled selected> @lang('messages.choose_one') </option>
-                                            {{--                                            <option value="{{$restaurant->city_id}}"--}}
-                                            {{--                                                    selected> {{app()->getLocale() == 'ar' ? $restaurant->city->name_ar : $restaurant->city->name_en}}--}}
-                                            {{--                                            </option>--}}
-                                        </select>
-                                        @if ($errors->has('city_id'))
+                                        <label class="control-label"> @lang('messages.a_z_tap_token') </label>
+                                        <input name="a_z_tap_token" value="{{$restaurant->a_z_tap_token}}" class="form-control"
+                                               placeholder="@lang('messages.a_z_tap_token')">
+                                        @if ($errors->has('a_z_tap_token'))
                                             <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('city_id') }}</strong>
+                                            <strong style="color: red;">{{ $errors->first('a_z_tap_token') }}</strong>
                                         </span>
                                         @endif
                                     </div>
-                                @endif
-
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.name_ar') </label>
-                                    <input name="name_ar" type="text" class="form-control" value="{{$restaurant->name_ar}}"
-                                           placeholder="@lang('messages.name_ar')">
-                                    @if ($errors->has('name_ar'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('name_ar') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.name_en') </label>
-                                    <input name="name_en" type="text" class="form-control" value="{{$restaurant->name_en}}"
-                                           placeholder="@lang('messages.name_en')">
-                                    @if ($errors->has('name_en'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('name_en') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.name_barcode_rules') </label>
-                                    <input type="text" name="name_barcode"  class="form-control" value="{{$restaurant->name_barcode}}" placeholder="@lang('messages.name_barcode')">
-                                    @if ($errors->has('name_barcode'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('name_barcode') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.email') </label>
-                                    <input name="email" type="email" class="form-control"
-                                           value="{{$restaurant->email}}"
-                                           placeholder="@lang('messages.email')">
-                                    @if ($errors->has('email'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('email') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.phone_number') </label>
-                                    <input name="phone_number" type="number" class="form-control"
-                                           value="{{$restaurant->phone_number}}"
-                                           placeholder="@lang('messages.phone_number')">
-                                    @if ($errors->has('phone_number'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('phone_number') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                                @if($restaurant->status != 'inComplete')
+                                <div id="edfa" style="display: {{$restaurant->a_z_orders_payment_type == 'edfa' ? 'block' : 'none'}}">
                                     <div class="form-group">
-                                        <label class="control-label"> @lang('messages.end_at') </label>
-                                        <input name="end_at" type="date" class="form-control"
-                                               value="{{$restaurant->subscription->end_at->format('Y-m-d')}}"
-                                               placeholder="@lang('messages.end_at')">
-                                        @if ($errors->has('end_at'))
+                                        <label class="control-label"> @lang('messages.a_z_edfa_merchant') </label>
+                                        <input name="a_z_edfa_merchant" value="{{$restaurant->a_z_edfa_merchant}}" class="form-control"
+                                               placeholder="@lang('messages.a_z_edfa_merchant')">
+                                        @if ($errors->has('a_z_edfa_merchant'))
                                             <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('end_at') }}</strong>
+                                            <strong style="color: red;">{{ $errors->first('a_z_edfa_merchant') }}</strong>
                                         </span>
                                         @endif
                                     </div>
-                                @endif
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.password') </label>
-                                    <input name="password" type="password" class="form-control"
-                                           value="{{old('password')}}"
-                                           placeholder="@lang('messages.password')">
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('password') }}</strong>
+                                    <div class="form-group">
+                                        <label class="control-label"> @lang('messages.a_z_edfa_password') </label>
+                                        <input name="a_z_edfa_password" value="{{$restaurant->a_z_edfa_password}}" class="form-control"
+                                               placeholder="@lang('messages.a_z_edfa_password')">
+                                        @if ($errors->has('a_z_edfa_password'))
+                                            <span class="help-block">
+                                            <strong style="color: red;">{{ $errors->first('a_z_edfa_password') }}</strong>
                                         </span>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label"> @lang('messages.password_confirmation') </label>
-                                    <input name="password_confirmation" type="password" class="form-control"
-                                           value="{{old('password_confirmation')}}"
-                                           placeholder="@lang('messages.password_confirmation')">
-                                    @if ($errors->has('password_confirmation'))
-                                        <span class="help-block">
-                                            <strong style="color: red;">{{ $errors->first('password_confirmation') }}</strong>
-                                        </span>
-                                    @endif
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -212,43 +121,24 @@
     </section>
 @endsection
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
     <script>
         $(document).ready(function() {
-            // Select2 Multiple
-            $('.select2-multiple').select2({
-                placeholder: "Select",
-                allowClear: true
-            });
-
-        });
-
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('select[name="country_id"]').on('change', function() {
+            $('select[name="a_z_orders_payment_type"]').on('change', function() {
                 var id = $(this).val();
-                $.ajax({
-                    url: '/get/cities/'+id,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-                        console.log(data);
-                        $('#register_city').empty();
-                        // $('select[name="city_id"]').append("<option disabled selected> choose </option>");
-                        // $('select[name="city"]').append('<option value>المدينة</option>');
-                        $('select[name="city_id"]').append("<option disabled selected> @lang('messages.choose_one') </option>");
-                        $.each(data, function(index , cities) {
-                            console.log(cities);
-                            @if(app()->getLocale() == 'ar')
-                            $('select[name="city_id"]').append('<option value="'+ cities.id +'">'+ cities.name_ar+'</option>');
-                            @else
-                            $('select[name="city_id"]').append('<option value="'+ cities.id +'">'+ cities.name_en+'</option>');
-                            @endif
-                        });
-                    }
-                });
+                if($(this).val() == 'myFatoourah'){
+                    document.getElementById('myFatoourah').style.display = 'block';
+                    document.getElementById('edfa').style.display = 'none';
+                    document.getElementById('tap').style.display = 'none';
+                }else if ($(this).val() == 'tap'){
+                    document.getElementById('tap').style.display = 'block';
+                    document.getElementById('myFatoourah').style.display = 'none';
+                    document.getElementById('edfa').style.display = 'none';
+                }else if($(this).val() == 'edfa')
+                {
+                    document.getElementById('edfa').style.display = 'block';
+                    document.getElementById('tap').style.display = 'none';
+                    document.getElementById('myFatoourah').style.display = 'none';
+                }
             });
         });
     </script>

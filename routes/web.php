@@ -75,6 +75,7 @@ use \App\Http\Controllers\AdminController\Admin\ForgotPasswordController;
 use \App\Http\Controllers\AdminController\Admin\ResetPasswordController;
 use App\Http\Controllers\AdminController\AdminDetailController;
 use \App\Http\Controllers\AdminController\HomeController;
+use \App\Http\Controllers\AdminController\AZRestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -413,7 +414,7 @@ Route::prefix('admin')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     Route::group(['middleware' => ['web', 'auth:admin']], function () {
-        Route::controller(RestaurantController::class)->group(function () {
+        Route::controller(AZRestaurantController::class)->group(function () {
             Route::get('/restaurants/{restaurant}/login', 'loginToRestaurant')->name('admin.restaurant.login');
             Route::get('/restaurants/{status}', 'index')->name('restaurants');
             Route::get('/restaurant_gold/{status}', 'index_gold')->name('restaurants_gold');
@@ -446,9 +447,12 @@ Route::prefix('admin')->group(function () {
             Route::get('/azmak_setting', 'setting')->name('AzmakSetting');
             Route::post('/azmak_setting', 'setting_update')->name('AzmakSettingUpdate');
         });
+        // seller codes
         Route::resource('/seller_codes' , SellerCodeController::class);
         Route::get('/seller_codes/delete/{id}' , [SellerCodeController::class , 'destroy'])->name('deleteSellerCode');
         Route::get('/seller_codes/{id}/active/{status}' , [SellerCodeController::class , 'activate'])->name('activateSellerCode');
+
+        // restaurants
 
     });
 });

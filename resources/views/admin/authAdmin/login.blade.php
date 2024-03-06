@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
 
     <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css?v=3.2.0')}}">
-    
+
 
 <style>
 .login-page{
@@ -20,7 +20,7 @@
 }
 .wrapper-login{
     margin-top: 100px;
-    
+
 }
 .image-login{
     margin:15px auto;
@@ -52,7 +52,7 @@
                 font-family: 'Cairo', sans-serif;
                             font-weight: 500;
 
-                
+
 
 }
         .login-logo .change-lang{
@@ -81,17 +81,17 @@
     <div class="login-logo">
         <a href="{{url('locale/' . (app()->getLocale() == 'ar' ? 'en' : 'ar'))}}" class="change-lang" style="{{app()->getLocale() == 'en' ? 'left:unset;right:17px !important;top:24px !important;' : ''}}">{{app()->getLocale() == 'ar' ? 'English' : 'عربي'}}</a>
         <!--<a href="{{route('admin.login')}}">@lang('messages.login')</a>-->
-        <div class="wrapper-login">   
+        <div class="wrapper-login">
           <div class="image-login">
               <img src="{{ asset('/uploads/img/logo.png') }}" alt="AdminLTE Logo"
-             style="opacity: .8"> 
+             style="opacity: .8">
              <span> Easy Menu</span>
           </div>
     <!--</div>-->
 
     <div class="card">
         <div class="card-body login-card-body">
-            <h4 class="text-center mb-4">{{trans('dashboard.dash_admin')}}</h4>
+            <h4 class="text-center mb-4">{{trans('messages.dash_admin')}}</h4>
             <form action="{{route('admin.login.submit')}}" method="post">
                 @csrf
                 <div class="input-group mb-3">
@@ -153,16 +153,16 @@
 {{--                </a>--}}
 {{--            </div>--}}
 
-            
+
 {{--            <p class="mb-0">--}}
 {{--                <a href="register.html" class="text-center">Register a new membership</a>--}}
 {{--            </p>--}}
         </div>
 
     </div>
-   
+
 </div>
- </div> 
+ </div>
     <!--wraaper-->
 
 
