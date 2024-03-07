@@ -153,6 +153,7 @@
                                 <th>@lang('messages.restaurant')</th>
                                 <th>@lang('messages.products')</th>
                                 <th> @lang('messages.branches') </th>
+                                <th> @lang('messages.payment_type') </th>
                                 <th>@lang('messages.operations')</th>
                             </tr>
                             </thead>
@@ -217,6 +218,15 @@
                                     <td>
                                         {{$restaurant->branches->count()}}
                                     </td>
+                                    <td>
+                                        @if($restaurant->a_z_orders_payment_type == 'myFatoourah')
+                                            @lang('messages.myFatoourah')
+                                        @elseif($restaurant->a_z_orders_payment_type == 'tap')
+                                            @lang('messages.tap')
+                                        @elseif($restaurant->a_z_orders_payment_type == 'edfa')
+                                            @lang('messages.edfa')
+                                        @endif
+                                    </td>
                                     <td class="control_progress">
                                         <!--<div class="dropdown">-->
                                         <!--    <button type="button" class="btn btn-primary dropbtn"-->
@@ -244,7 +254,7 @@
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                             <span class="show_text">
-                                                @lang('messages.edit')
+                                                @lang('messages.edit') @lang('messages.payment_type')
                                             </span>
                                         </li>
                                         <!--</div>-->

@@ -18,23 +18,10 @@
                 <div class="col-sm-6">
                     <h1>@lang('messages.histories')</h1>
                 </div>
-                <!--<div class="col-sm-6">-->
-                <!--    <ol class="breadcrumb float-sm-right">-->
-                <!--        <li class="breadcrumb-item">-->
-            <!--            <a href="{{url('/admin/home')}}">-->
-            <!--                @lang('messages.control_panel')-->
-                <!--            </a>-->
-                <!--        </li>-->
-                <!--        <li class="breadcrumb-item active">-->
-            <!--            <a href="{{route('admin.histories')}}"></a>-->
-            <!--            @lang('messages.histories')-->
-                <!--        </li>-->
-                <!--    </ol>-->
-                <!--</div>-->
             </div>
         </div><!-- /.container-fluid -->
     </section>
-    {{--    @include('flash::message')--}}
+    @include('flash::message')
 
     <section class="content">
         <div class="row">
@@ -170,74 +157,6 @@
             <div class="col-lg-1"></div>
         </div>
         <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-5 col-5">
-                <!-- small box -->
-                <div class="small-box bg-silver">
-                    <div class="inner">
-                        <h5>
-                            {{$subscribed_branches}}
-                        </h5>
-
-                        <p>عدد الفروع المشتركة</p>
-                    </div>
-                    <div class="icon" style="color: black">
-                        <i class="fa fa-users"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5 col-5">
-                <!-- small box -->
-                <div class="small-box bg-silver">
-                    <div class="inner">
-                        <h5>
-                            {{$renewed_branches}}
-                        </h5>
-
-                        <p>عدد الفروع المجددة</p>
-                    </div>
-                    <div class="icon" style="color: black">
-                        <i class="fa fa-users"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-1"></div>
-        </div>
-        <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="col-lg-5 col-5">
-                <!-- small box -->
-                <div class="small-box bg-silver">
-                    <div class="inner">
-                        <h5>
-                            {{$registered_services}}
-                        </h5>
-
-                        <p>عدد الخدمات المشتركة</p>
-                    </div>
-                    <div class="icon" style="color: black">
-                        <i class="fa fa-cogs"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5 col-5">
-                <!-- small box -->
-                <div class="small-box bg-silver">
-                    <div class="inner">
-                        <h5>
-                            {{$renewed_services}}
-                        </h5>
-
-                        <p>عدد الخدمات المجددة</p>
-                    </div>
-                    <div class="icon" style="color: black">
-                        <i class="fa fa-cogs"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-1"></div>
-        </div>
-        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <!-- /.card-header -->
@@ -259,11 +178,11 @@
                                 <th> @lang('messages.tax') </th>
                                 <th> @lang('messages.total') </th>
                                 <th> @lang('messages.seller_code') </th>
-                                <th> @lang('messages.payment_way') </th>
-                                <th> @lang('messages.verification') </th>
+{{--                                <th> @lang('messages.payment_way') </th>--}}
+                                <th> @lang('messages.invoice_id') </th>
                                 <th> @lang('messages.details') </th>
                                 <th> @lang('messages.date') </th>
-                                <th> @lang('dashboard.accepted_by') </th>
+{{--                                <th> @lang('dashboard.accepted_by') </th>--}}
                                 <th> @lang('messages.operations') </th>
                             </tr>
                             </thead>
@@ -285,10 +204,10 @@
                                     {{--                                        @endif--}}
                                     {{--                                    </td>--}}
                                     <td>
-                                        {{number_format((float)($history->paid_amount - $history->tax_value), 0, '.', '')}}
+                                        {{number_format((float)($history->paid_amount - $history->tax), 0, '.', '')}}
                                     </td>
                                     <td>
-                                        {{number_format((float)$history->tax_value, 0, '.', '')}}
+                                        {{number_format((float)$history->tax, 0, '.', '')}}
                                     </td>
                                     <td>
                                         {{number_format((float)$history->paid_amount, 0, '.', '')}}
@@ -296,13 +215,13 @@
                                     <td>
                                         {{$history->seller_code ? $history->seller_code->seller_name : ''}}
                                     </td>
-                                    <td>
-                                        @if($history->payment_type == 'bank')
-                                            {{trans('messages.bank_transfer')}}
-                                        @elseif($history->payment_type == 'online')
-                                            @lang('messages.online')
-                                        @endif
-                                    </td>
+{{--                                    <td>--}}
+{{--                                        @if($history->payment_type == 'bank')--}}
+{{--                                            {{trans('messages.bank_transfer')}}--}}
+{{--                                        @elseif($history->payment_type == 'online')--}}
+{{--                                            @lang('messages.online')--}}
+{{--                                        @endif--}}
+{{--                                    </td>--}}
                                     <td>
                                         @if($history->payment_type == 'bank')
                                             <button type="button" class="btn btn-info" data-toggle="modal"
@@ -323,8 +242,8 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <img
-                                                                    src="{{asset('/uploads/transfers/' . $history->transfer_photo)}}"
-                                                                    width="475" height="400">
+                                                                src="{{asset('/uploads/transfers/' . $history->transfer_photo)}}"
+                                                                width="475" height="400">
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
                                                             <button type="button" class="btn btn-outline-light"
@@ -338,24 +257,25 @@
                                                 <!-- /.modal-dialog -->
                                             </div>
                                         @else
-                                            @lang('messages.operation_no') {{$history->invoice_id}}
+                                            {{$history->invoice_id}}
                                         @endif
                                     </td>
                                     <td>
                                         {{$history->details}}
                                     </td>
                                     <td>
-                                        {{$history->operation_date->format('Y-m-d')}}
+                                        {{$history->created_at->format('Y-m-d')}}
                                     </td>
+{{--                                    <td>--}}
+{{--                                        @if (isset($history->acceptedAdmin->id))--}}
+{{--                                            <a href="{{route('admins.show' , $history->acceptedAdmin->id)}}">{{$history->acceptedAdmin->name}}</a>--}}
+{{--                                        @else--}}
+{{--                                            {{$history->accepted_admin_name}};--}}
+{{--                                        @endif--}}
+{{--                                    </td>--}}
                                     <td>
-                                        @if (isset($history->acceptedAdmin->id))
-                                            <a href="{{route('admins.show' , $history->acceptedAdmin->id)}}">{{$history->acceptedAdmin->name}}</a>
-                                        @else
-                                            {{$history->accepted_admin_name}};
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a class="delete_data btn btn-danger" data="{{ $history->id }}" data_name="{{app()->getLocale() == 'ar' ? $history->restaurant->name_ar : $history->restaurant->name_en}}" >
+                                        <a class="delete_data btn btn-danger" data="{{ $history->id }}"
+                                           data_name="{{app()->getLocale() == 'ar' ? $history->restaurant->name_ar : $history->restaurant->name_en}}">
                                             <i class="fa fa-trash"></i>
 
                                         </a>

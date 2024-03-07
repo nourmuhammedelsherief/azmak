@@ -25,12 +25,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AzmakSetting;
 
-const myfatooraTokenTest = "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";
-const myfatooraUrlTest  = 'https://apitest.myfatoorah.com';
-
-const foodicsSandboxClientId = '9420d9c2-b5bb-4feb-8c26-72526c3e572b';
-const foodicsSandboxSecret = 'tTfFHFxa2XVkOm4NbCI27RcJbhsacgGZPfkjZ8wT';
 $restaurantId = null;
 //use FCM;
 function SetUserName($id)
@@ -152,9 +148,9 @@ function gold_services($id, $service_id, $end_at)
             'service_id' => $service->id,
             'restaurant_name' => $restaurant->name_ar,
             'restaurant_phone' => $restaurant->phone_number,
-            'price'  => $service->price,
+            'price' => $service->price,
             'paid_at' => \Carbon\Carbon::now(),
-            'type'  => 'online',
+            'type' => 'online',
             'end_at' => $end_at,
             'status' => 'active',
         ]);
@@ -253,6 +249,7 @@ function UploadVideoEdit($file, $old)
         return $filename;
     }
 }
+
 //function UploadImageEdit($inputRequest, $prefix, $folderName, $oldImage, $height = null, $width = 1500)
 //{
 //    $allowedImages = ['logo.png', 'slider2.png', 'slider1.png', 'fish.png', 'egg.png', 'hop.png', 'aqra.png', 'milk.png', 'kardal.png', 'raky.png', 'butter.png', 'capret.png', 'rfs.png', 'kago.png', 'smsm.png', 'soia.png', 'terms.png'];
@@ -280,31 +277,30 @@ function UploadVideoEdit($file, $old)
 //
 //    return $image ? $image : false;
 //}
- function UploadImageEdit($inputRequest, $prefix, $folderNam, $oldImage, $height = null, $width = 1500)
- {
-     if ($oldImage != 'logo.png' && $oldImage != 'slider2.png' && $oldImage != 'slider1.png' && $oldImage != 'fish.png' && $oldImage != 'egg.png' && $oldImage != 'hop.png' && $oldImage != 'aqra.png' && $oldImage != 'milk.png' && $oldImage != 'kardal.png' && $oldImage != 'raky.png' && $oldImage != 'butter.png' && $oldImage != 'capret.png' && $oldImage != 'rfs.png' && $oldImage != 'kago.png' && $oldImage != 'smsm.png' && $oldImage != 'soia.png' && $oldImage != 'terms.png' ) {
-         // if(Storage::disk('public_storage')->exists('/' . $folderNam . '/' . $oldImage))
-         @unlink(public_path('/' . $folderNam . '/' . $oldImage));
-     }
-     $path = public_path() . $folderNam;
+function UploadImageEdit($inputRequest, $prefix, $folderNam, $oldImage, $height = null, $width = 1500)
+{
+    if ($oldImage != 'logo.png' && $oldImage != 'slider2.png' && $oldImage != 'slider1.png' && $oldImage != 'fish.png' && $oldImage != 'egg.png' && $oldImage != 'hop.png' && $oldImage != 'aqra.png' && $oldImage != 'milk.png' && $oldImage != 'kardal.png' && $oldImage != 'raky.png' && $oldImage != 'butter.png' && $oldImage != 'capret.png' && $oldImage != 'rfs.png' && $oldImage != 'kago.png' && $oldImage != 'smsm.png' && $oldImage != 'soia.png' && $oldImage != 'terms.png') {
+        // if(Storage::disk('public_storage')->exists('/' . $folderNam . '/' . $oldImage))
+        @unlink(public_path('/' . $folderNam . '/' . $oldImage));
+    }
+    $path = public_path() . $folderNam;
 
 
-     if (!file_exists($path)) :
-         File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
-     endif;
-     if (in_array($inputRequest->getClientOriginalExtension(), ['gif'])) {
-         return basename(Storage::disk('public_storage')->put($folderNam, $inputRequest));
-     }
-     $image = time() . '' . rand(11111, 99999) . '.' . $inputRequest->getClientOriginalExtension();
-     $destinationPath = public_path('/' . $folderNam);
-     $img = Image::make($inputRequest->getRealPath());
-     $img->resize($height, $width, function ($constraint) {
-         $constraint->aspectRatio();
-         // $constraint->upsize();
-     })->save($destinationPath . '/' . $image);
-     return $image ? $image : false;
- }
-
+    if (!file_exists($path)) :
+        File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
+    endif;
+    if (in_array($inputRequest->getClientOriginalExtension(), ['gif'])) {
+        return basename(Storage::disk('public_storage')->put($folderNam, $inputRequest));
+    }
+    $image = time() . '' . rand(11111, 99999) . '.' . $inputRequest->getClientOriginalExtension();
+    $destinationPath = public_path('/' . $folderNam);
+    $img = Image::make($inputRequest->getRealPath());
+    $img->resize($height, $width, function ($constraint) {
+        $constraint->aspectRatio();
+        // $constraint->upsize();
+    })->save($destinationPath . '/' . $image);
+    return $image ? $image : false;
+}
 
 
 function sendNotification($notificationTitle, $notificationBody, $deviceToken)
@@ -409,16 +405,16 @@ function check_time_between($start_at, $end_at)
         // the end at another day
         if ($start_at < $now) {
             $start = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $start_at);
-            $end  = \Carbon\Carbon::now()->addDay()->format('Y-m-d' . ' ' . $end_at);
+            $end = \Carbon\Carbon::now()->addDay()->format('Y-m-d' . ' ' . $end_at);
             $check = \Carbon\Carbon::now()->between($start, $end, true);
         } else {
             $start = \Carbon\Carbon::now()->addDays(-1)->format('Y-m-d' . ' ' . $start_at);
-            $end  = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $end_at);
+            $end = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $end_at);
             $check = \Carbon\Carbon::now()->between($start, $end, true);
         }
     } else {
         $start = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $start_at);
-        $end  = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $end_at);
+        $end = \Carbon\Carbon::now()->format('Y-m-d' . ' ' . $end_at);
         $check = \Carbon\Carbon::now()->between($start, $end, true);
     }
     return $check;
@@ -430,8 +426,12 @@ function MyFatoorahStatus($api, $PaymentId)
 {
     // dd($PaymentId);
     $token = $api;
-//    $basURL = "https://api-sa.myfatoorah.com/";
-    $basURL = "https://apitest.myfatoorah.com/";
+    $setting = AzmakSetting::first();
+    if ($setting->online_payment_type == 'test') {
+        $basURL = "https://apitest.myfatoorah.com/";
+    } else {
+        $basURL = "https://api-sa.myfatoorah.com/";
+    }
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/GetPaymentStatus",
@@ -453,10 +453,13 @@ function MyFatoorahStatus($api, $PaymentId)
 // ===============================  MyFatoorah public  function  =========================
 function MyFatoorah($api, $userData)
 {
-    // dd($userData);
+    $setting = AzmakSetting::first();
     $token = $api;
-//    $basURL = "https://api-sa.myfatoorah.com/";
-    $basURL = "https://apitest.myfatoorah.com/";
+    if ($setting->online_payment_type == 'test') {
+        $basURL = "https://apitest.myfatoorah.com/";
+    } else {
+        $basURL = "https://api-sa.myfatoorah.com/";
+    }
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => "$basURL/v2/ExecutePayment",
@@ -474,6 +477,7 @@ function MyFatoorah($api, $userData)
         return $response;
     }
 }
+
 /**
  * calculate the distance between tow places on the earth
  *
@@ -531,6 +535,7 @@ function checkOrderService($restaurant_id, $service_id, $branch_id = null)
     }
     return !($service == null) ? true : false;
 }
+
 function checkOrderSetting($restaurant_id, $type, $branch_id = null)
 {
     if ($branch_id) {
@@ -886,6 +891,7 @@ function create_restaurant_sensitivity($restaurant)
         'details_en' => 'like lupine oil',
     ]);
 }
+
 function check_restaurant_branches($id)
 {
     $restaurant = \App\Models\Restaurant::find($id);
@@ -895,6 +901,7 @@ function check_restaurant_branches($id)
         ->count();
     return $chech_branches;
 }
+
 function check_restaurant_amount($id, $amount)
 {
     $branch = \App\Models\Branch::find($id);
@@ -932,6 +939,7 @@ function restaurantPackageId($restaurant)
 
     return false;
 }
+
 function employeeGetPackageId(RestaurantEmployee $employee = null)
 {
     $employee = $employee == null ? auth('employee')->user() : $employee;
@@ -944,9 +952,9 @@ function employeeGetPackageId(RestaurantEmployee $employee = null)
 /**
  * Check if a given URL is currently active based on specified conditions.
  *
- * @param string $url      The URL to check against.
- * @param bool   $checkFull Whether to check for a full match (including query parameters).
- * @param array  $data     Additional data to check against request parameters.
+ * @param string $url The URL to check against.
+ * @param bool $checkFull Whether to check for a full match (including query parameters).
+ * @param array $data Additional data to check against request parameters.
  *
  * @return bool Returns true if the URL is active; otherwise, false.
  */
@@ -974,7 +982,7 @@ function defaultResturantData(Restaurant $restaurant)
         'logo' => 'logo.png',
 
         'status' => 'tentative',
-        'menu_arrange'  => 'false',
+        'menu_arrange' => 'false',
         'product_arrange' => 'false',
         'logo' => 'logo.png',
         'menu' => 'vertical',
@@ -998,6 +1006,7 @@ function defaultResturantData(Restaurant $restaurant)
 
     return true;
 }
+
 function defaultPostersAndSens($restaurant)
 {
     $sent = Sensitivity::all();
@@ -1023,9 +1032,6 @@ function defaultPostersAndSens($restaurant)
 }
 
 
-
-
-
 function foodics_url()
 {
     if (isFoodicsSandbox()) :
@@ -1034,6 +1040,7 @@ function foodics_url()
         return 'https://api.foodics.com/v5/';
     endif;
 }
+
 function foodics_token($user_id = null)
 {
     return \App\Models\Restaurant::find($user_id)->foodics_access_token;
@@ -1071,12 +1078,12 @@ function OAuth2($code = null, $state = null, $user_id = null)
                 "grant_type" => "authorization_code",
                 "code" => $code,
                 "client_id" => isFoodicsSandbox() ? foodicsSandboxClientId : "94a7eeac-5881-4b19-ae6a-024debd9ac05",
-                "client_secret" => isFoodicsSandbox() ? foodicsSandboxSecret :  "P6LeZgtB2JLwwzxvzDeu82AMPSZrqVvH0x7rvEX7",
+                "client_secret" => isFoodicsSandbox() ? foodicsSandboxSecret : "P6LeZgtB2JLwwzxvzDeu82AMPSZrqVvH0x7rvEX7",
                 "redirect_uri" => "https://easymenu.site/redirect_back"
             );
             // Make Post Fields Array
             $curl = curl_init();
-            $url = isFoodicsSandbox()  ? "https://api-sandbox.foodics.com/oauth/token" :  "https://api.foodics.com/oauth/token";
+            $url = isFoodicsSandbox() ? "https://api-sandbox.foodics.com/oauth/token" : "https://api.foodics.com/oauth/token";
             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => true,
@@ -1515,7 +1522,7 @@ function create_foodics_order($restaurant_id, $branch_id, $products, $user, $ord
     $address = 'Address - ' . mt_rand(1000, 9999);
     $restaurant = Restaurant::find($restaurant_id);
     //    dd($customers[0]);
-    if ($customers[0] == [] or !isset($customers[0])  or !isset($customers[0][0])) {
+    if ($customers[0] == [] or !isset($customers[0]) or !isset($customers[0][0])) {
         // create new customer
 
         $customer_id = create_customer($user->phone_number . ' EasyMenu', $user->phone_number, $restaurant_id);
@@ -1578,7 +1585,7 @@ function create_foodics_order($restaurant_id, $branch_id, $products, $user, $ord
             if ($order->silver_order_options->count() > 0) {
                 foreach ($order->silver_order_options as $option) {
                     $option_tax = [];
-                    if ($restaurant->tax == 'true'  and $restaurant->tax_foodics_id != null) {
+                    if ($restaurant->tax == 'true' and $restaurant->tax_foodics_id != null) {
                         $option_tax = array(array(
                             "id" => $restaurant->tax_foodics_id,
                             "amount" => $option->quantity,
@@ -2104,6 +2111,7 @@ function getFoodicsOrder($id, $token)
 function pay_online_order()
 {
 }
+
 function getFoodicsSettings($restaurant_id)
 {
     $basURL = foodics_url() . "settings";
@@ -2141,7 +2149,6 @@ function getFoodicsSettings($restaurant_id)
 
         return $err;
     } else {
-
 
 
         $res = json_decode($response, true);
@@ -2192,7 +2199,6 @@ function create_customer($name, $phone, $restaurant_id)
 
         return $err;
     } else {
-
 
 
         $res = json_decode($response, true);
@@ -2286,6 +2292,7 @@ function get_customers($user_id)
         return $response;
     }
 }
+
 function whoAmI($user_id)
 {
     $basURL = foodics_url() . "whoami";
@@ -2440,6 +2447,7 @@ function get_branches_with_taxes($user_id = null)
         return $response;
     }
 }
+
 // get the foodics settings
 function foodics_settings($user_id = null)
 {
@@ -2476,6 +2484,7 @@ function foodics_settings($user_id = null)
         return $response;
     }
 }
+
 // get foodics taxes
 function tax_groups($user_id = null)
 {
@@ -2614,6 +2623,7 @@ function get_sections($user_id = null)
         return $response;
     }
 }
+
 // get categories from foodics
 function get_categories($user_id = null, $page = 1)
 {
@@ -2650,6 +2660,7 @@ function get_categories($user_id = null, $page = 1)
         return $response;
     }
 }
+
 function getFoodicsCategory($user_id = null, $categoryId = 0, $page = 1)
 {
     $basURL = foodics_url() . 'categories/' . $categoryId . '?page=' . $page;
@@ -2685,6 +2696,7 @@ function getFoodicsCategory($user_id = null, $categoryId = 0, $page = 1)
         return $response;
     }
 }
+
 // get charges from foodics
 function get_charges($user_id = null)
 {
@@ -2722,6 +2734,7 @@ function get_charges($user_id = null)
         return $response;
     }
 }
+
 // create restaurant payment method for foodics payments
 function payment_methods($user_id = null)
 {
@@ -2759,6 +2772,7 @@ function payment_methods($user_id = null)
         return $response;
     }
 }
+
 // create tables
 function create_tables($restaurant_id, $data, $foodics_branch)
 {
@@ -2780,13 +2794,13 @@ function create_tables($restaurant_id, $data, $foodics_branch)
                             if ($check_table == null) {
                                 // create new table
                                 \App\Models\Table::create([
-                                    'restaurant_id'      => $restaurant->id,
-                                    'branch_id'          => $foodics_branch,
-                                    'foodics_branch_id'  => $branch->id,
-                                    'name_ar'       => $tValue['name'],
-                                    'name_en'       => $tValue['name'],
-                                    'name_barcode'  => $tValue['name'],
-                                    'foodics_id'    => $tValue['id'],
+                                    'restaurant_id' => $restaurant->id,
+                                    'branch_id' => $foodics_branch,
+                                    'foodics_branch_id' => $branch->id,
+                                    'name_ar' => $tValue['name'],
+                                    'name_en' => $tValue['name'],
+                                    'name_barcode' => $tValue['name'],
+                                    'foodics_id' => $tValue['id'],
                                 ]);
                             }
                         }
@@ -2796,6 +2810,7 @@ function create_tables($restaurant_id, $data, $foodics_branch)
         }
     }
 }
+
 function create_payment_method($user_id, $name)
 {
     $basURL = foodics_url() . "payment_methods";
@@ -2816,7 +2831,7 @@ function create_payment_method($user_id, $name)
     }
     $method = array(
         'name' => $name,
-        'code' => strtolower(str_replace(['-' , ' ' , '.' , ','] , '' , $name)) . '' . $user_id,
+        'code' => strtolower(str_replace(['-', ' ', '.', ','], '', $name)) . '' . $user_id,
         'name_localized' => $name,
         'type' => 7,
         'auto_open_drawer' => true,
@@ -2851,6 +2866,7 @@ function create_payment_method($user_id, $name)
         return $response;
     }
 }
+
 // create foodics categories
 function create_categories($restaurant_id, $categories, $foodics_branch)
 {
@@ -2905,7 +2921,7 @@ function updateCategories($restaurant_id, $value, $foodics_branch)
         ->where('branch_id', $foodics_branch)
         ->first();
     if ($value['deleted_at'] != null) {
-        if (isset($check_cat->id))  $check_cat->delete();
+        if (isset($check_cat->id)) $check_cat->delete();
         return 'delete';
     } elseif ($check_cat == null) {
         // create new category
@@ -2957,6 +2973,7 @@ function create_charges($restaurant_id, $data)
         }
     }
 }
+
 // create menu from foodics
 // get foodics products and modifiers
 function get_products_with_modifiers($user_id, $page = 1)
@@ -2996,6 +3013,7 @@ function get_products_with_modifiers($user_id, $page = 1)
         return $response;
     }
 }
+
 // get foodics modifiers and options
 function get_modifiers_options($user_id)
 {
@@ -3032,6 +3050,7 @@ function get_modifiers_options($user_id)
         return $response;
     }
 }
+
 function getFoodicsModifier($user_id, $id)
 {
     $basURL = foodics_url() . "modifiers/" . $id;
@@ -3067,6 +3086,7 @@ function getFoodicsModifier($user_id, $id)
         return $response;
     }
 }
+
 function getFoodicsProduct(Restaurant $restaurant, $id)
 {
     $headers = array(
@@ -3074,7 +3094,7 @@ function getFoodicsProduct(Restaurant $restaurant, $id)
         'Accept: application/json',
         'Authorization: Bearer ' . foodics_token($restaurant->id),
     );
-    $basURL = foodics_url() . 'products/'  . $id;
+    $basURL = foodics_url() . 'products/' . $id;
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => $basURL,
@@ -3102,6 +3122,7 @@ function getFoodicsProduct(Restaurant $restaurant, $id)
         return $response;
     }
 }
+
 function getFoodicsProducts(Restaurant $restaurant)
 {
 
@@ -3138,6 +3159,7 @@ function getFoodicsProducts(Restaurant $restaurant)
         return $response;
     }
 }
+
 function updateFoodicsModifier($v, $restaurant_id, $foodics_branch)
 {
     $check_modifier = \App\Models\Modifier::where('foodics_id', $v['id'])
@@ -3198,6 +3220,7 @@ function updateFoodicsModifier($v, $restaurant_id, $foodics_branch)
 
     return 'edit';
 }
+
 function productAndModifierCreation($value, $restaurant_id, $foodics_branch)
 {
     // start with product
@@ -3329,7 +3352,7 @@ function productAndModifierCreation($value, $restaurant_id, $foodics_branch)
                                 ->first();
                             if ($check_product_modifier == null) {
                                 \App\Models\ProductModifier::create([
-                                    'product_id'  => $check_product->id,
+                                    'product_id' => $check_product->id,
                                     'modifier_id' => $modifier->id
                                 ]);
                             }
@@ -3380,6 +3403,7 @@ function productAndModifierCreation($value, $restaurant_id, $foodics_branch)
         }
     }
 }
+
 function productAndModifierCreationAndDelete($value, $restaurant_id, $foodics_branch)
 {
 
@@ -3478,7 +3502,7 @@ function productAndModifierCreationAndDelete($value, $restaurant_id, $foodics_br
                 }
                 return 'create';
             } else {
-                file_put_contents(storage_path('app/foodics_update_menu.json'), ' - ' . date('Y-m-d H:i:s') . ' foodics_referance update product  ' . $value['id']  . ' not belong to branch (' . $restaurant_id . ' restaurant) ' . PHP_EOL . PHP_EOL, FILE_APPEND);
+                file_put_contents(storage_path('app/foodics_update_menu.json'), ' - ' . date('Y-m-d H:i:s') . ' foodics_referance update product  ' . $value['id'] . ' not belong to branch (' . $restaurant_id . ' restaurant) ' . PHP_EOL . PHP_EOL, FILE_APPEND);
             }
         } else { // edit
             $category = \App\Models\MenuCategory::where('foodics_id', $value['category']['id'])
@@ -3522,7 +3546,7 @@ function productAndModifierCreationAndDelete($value, $restaurant_id, $foodics_br
                                 ->first();
                             if ($check_product_modifier == null) {
                                 \App\Models\ProductModifier::create([
-                                    'product_id'  => $check_product->id,
+                                    'product_id' => $check_product->id,
                                     'modifier_id' => $modifier->id
                                 ]);
                             }
@@ -3603,6 +3627,7 @@ function productAndModifierCreationAndDelete($value, $restaurant_id, $foodics_br
         }
     }
 }
+
 // create foodics products and modifiers and options
 function create_product_and_modifiers($restaurant_id, $products_modifiers, $foodics_branch)
 {
@@ -3783,19 +3808,19 @@ function create_discounts($restaurant_id, $data, $branch_id)
                     $discount = \App\Models\FoodicsDiscount::create([
                         'branch_id' => $branch_id,
                         'foodics_id' => $value['id'],
-                        'name_ar'  => $value['name_localized'],
-                        'name_en'  => $value['name'],
-                        'amount'   => $value['amount'],
-                        'is_percentage'   => $value['is_percentage'] == true ? 'true' : 'false',
+                        'name_ar' => $value['name_localized'],
+                        'name_en' => $value['name'],
+                        'amount' => $value['amount'],
+                        'is_percentage' => $value['is_percentage'] == true ? 'true' : 'false',
                         'minimum_product_price' => $value['minimum_product_price'],
-                        'minimum_order_price'   => $value['minimum_order_price'],
-                        'maximum_amount'        => $value['maximum_amount'],
-                        'is_taxable'      => $value['is_taxable'] == true ? 'true' : 'false',
-                        'order_types'     => json_encode($value['order_types']),
+                        'minimum_order_price' => $value['minimum_order_price'],
+                        'maximum_amount' => $value['maximum_amount'],
+                        'is_taxable' => $value['is_taxable'] == true ? 'true' : 'false',
+                        'order_types' => json_encode($value['order_types']),
                         'associate_to_all_branches' => $value['associate_to_all_branches'] == true ? 'true' : 'false',
-                        'branches'   => !empty($branches) ? json_encode($branches) : null,
+                        'branches' => !empty($branches) ? json_encode($branches) : null,
                         'categories' => !empty($categories) ? json_encode($categories) : null,
-                        'products'   => !empty($products) ? json_encode($products) : null,
+                        'products' => !empty($products) ? json_encode($products) : null,
                     ]);
                 }
             }
@@ -3837,7 +3862,7 @@ function updateCurrency()
     $err = curl_error($curl);
     curl_close($curl);
 
-    $data =  json_decode($response, true);
+    $data = json_decode($response, true);
     if (isset($data['rates']) and is_array($data['rates']) and count($data['rates'])) :
         foreach ($data['rates'] as $key => $value) :
             if ($country = Country::where('currency_code', $key)->first()) :
@@ -3852,13 +3877,14 @@ function updateCurrency()
 
 function checkWordsCount($string, $count, $isTag = false)
 {
-    $words  = $isTag == true ? explode(' ', strip_tags($string)) : explode(' ', $string);
+    $words = $isTag == true ? explode(' ', strip_tags($string)) : explode(' ', $string);
     if (count($words) > $count) return true;
     return false;
 }
-function getShortDescription($string, $start, $last =  0, $isTag = false)
+
+function getShortDescription($string, $start, $last = 0, $isTag = false)
 {
-    $words  = $isTag == true ? explode(' ', strip_tags($string)) : explode(' ', $string);
+    $words = $isTag == true ? explode(' ', strip_tags($string)) : explode(' ', $string);
     $results = '';
     foreach ($words as $index => $temp) :
         if ($index >= $start and ($last == 0 or $index <= $last)) $results .= $temp . ' ';
@@ -3950,6 +3976,7 @@ function deleteImageFile($path)
 
     return false;
 }
+
 function getTaqnyatPhones($phones)
 {
     $items = explode(',', $phones);
@@ -3968,6 +3995,7 @@ function getTaqnyatPhones($phones)
     return $list;
     return implode(',', $list);
 }
+
 function restaurantSendSms($restaurant, $message, $phones, $smsType = 'system')
 {
     $phones = getTaqnyatPhones($phones);
@@ -3975,7 +4003,7 @@ function restaurantSendSms($restaurant, $message, $phones, $smsType = 'system')
         $sms = new TaqnyatSms($restaurant->sms_token);
         $res = json_decode($sms->sendMsg($message, $phones, $restaurant->sms_sender), true);
 
-        if ($res['statusCode'] ==  201) :
+        if ($res['statusCode'] == 201) :
             $accepted = explode(',', str_replace(['[', ']'], '', $res['accepted']));
             $rejected = explode(',', str_replace(['[', ']'], '', $res['rejected']));
 
@@ -4013,6 +4041,7 @@ function restaurantSendSms($restaurant, $message, $phones, $smsType = 'system')
     endif;
     return false;
 }
+
 // function will check if image exists or not
 function checkProductImage($product)
 {
@@ -4028,7 +4057,7 @@ function breakWords($str, $count = 2)
     $t = explode(' ', $str);
     $result = '';
     $td = 0;
-    foreach ($t as $index =>  $tt) :
+    foreach ($t as $index => $tt) :
         if ($count == $td) {
             $td = 0;
             $result .= '<br>';
@@ -4041,7 +4070,6 @@ function breakWords($str, $count = 2)
 }
 
 
-
 function saveErrorToFile($error)
 {
     $errorFolderPath = storage_path('general-errors/' . date('Y-m'));
@@ -4052,10 +4080,11 @@ function saveErrorToFile($error)
         mkdir($errorFolderPath, 0777, true);
     }
 
-    $errorMessage = '[' . date('Y-m-d H:i:s') . '] ' . config('app.env') . '.error '  . $error->getMessage()  . PHP_EOL . $error->getTraceAsString() . PHP_EOL;
+    $errorMessage = '[' . date('Y-m-d H:i:s') . '] ' . config('app.env') . '.error ' . $error->getMessage() . PHP_EOL . $error->getTraceAsString() . PHP_EOL;
     file_put_contents($errorFilePath, $errorMessage, FILE_APPEND);
 }
-function edfa_payment($merchant_key, $password, $amount , $success_url, $order_id, $user_name, $email)
+
+function edfa_payment($merchant_key, $password, $amount, $success_url, $order_id, $user_name, $email)
 {
     $currency = 'SAR';
     $order_description = 'pay order value';

@@ -115,7 +115,7 @@
                      with font-awesome or any other icon font library -->
 
                 <!--teeeeeeeeeeeeeeeeest-->
-                <li class="nav-item has-treeview" id="has-test">
+                <li class="nav-item has-treeview menu-open" id="has-test">
                     <!--delet open menue-->
                     <a href="#"
                        class="nav-link {{ (isUrlActive('restaurants/new') or
@@ -189,6 +189,15 @@
                         <i class="nav-icon fa fa-code"></i>
                         <p>
                             @lang('messages.seller_codes')
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.histories') }}"
+                       class="nav-link {{ strpos(URL::current(), '/admin/histories') !== false ? 'active' : '' }}">
+                        <i class="nav-icon fa fa-file"></i>
+                        <p>
+                            @lang('messages.histories')
                         </p>
                     </a>
                 </li>

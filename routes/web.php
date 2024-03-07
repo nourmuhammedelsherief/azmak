@@ -446,6 +446,10 @@ Route::prefix('admin')->group(function () {
         Route::controller(SettingController::class)->group(function () {
             Route::get('/azmak_setting', 'setting')->name('AzmakSetting');
             Route::post('/azmak_setting', 'setting_update')->name('AzmakSettingUpdate');
+            Route::get('/histories', 'histories')->name('admin.histories');
+            Route::get('/month_histories', 'report_histories')->name('admin.month_histories');
+            Route::get('/histories/delete/{id}', 'delete_histories')->name('admin.delete_histories');
+
         });
         // seller codes
         Route::resource('/seller_codes' , SellerCodeController::class);

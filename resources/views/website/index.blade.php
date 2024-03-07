@@ -47,7 +47,7 @@
                             <span> @lang('messages.continue') </span>
                         </a>
 
-                    @else
+                    @elseif($branches->count() > 1)
                         <button
                             class="btn btn_custom"
                             type="button"

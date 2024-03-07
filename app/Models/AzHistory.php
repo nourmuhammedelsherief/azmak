@@ -5,38 +5,39 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AzSubscription extends Model
+class AzHistory extends Model
 {
     use HasFactory;
-    protected $table = 'az_subscriptions';
+    protected $table = 'az_histories';
     protected $fillable = [
         'restaurant_id',
-        'seller_code_id',
         'bank_id',
-        'status',
-        'payment_type',
-        'payment',
-        'tax_value',
-        'discount_value',
-        'price',
-        'end_at',
+        'admin_id',
+        'seller_code_id',
+        'paid_amount',
+        'discount',
+        'tax',
         'transfer_photo',
         'invoice_id',
+        'payment_type',
+        'details',
         'subscription_type',
     ];
-
-    protected $casts = ['end_at' => 'datetime'];
 
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class , 'restaurant_id');
     }
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class , 'bank_id');
+    }
     public function seller_code()
     {
         return $this->belongsTo(AzSellerCode::class , 'seller_code_id');
     }
-    public function bank()
+    public function admin()
     {
-        return $this->belongsTo(Bank::class , 'bank_id');
+        return $this->belongsTo(Admin::class , 'admin_id');
     }
 }

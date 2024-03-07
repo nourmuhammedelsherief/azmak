@@ -11,6 +11,7 @@ use App\Models\AzSellerCode;
 use App\Models\Setting;
 use App\Models\AzSubscription;
 use App\Models\AzmakSetting;
+use App\Models\AzHistory;
 
 
 class AzmakSubscriptionController extends Controller
@@ -28,6 +29,7 @@ class AzmakSubscriptionController extends Controller
                 [
                     'status' => 'free',
                     'end_at' => Carbon::now()->addYears(10),
+                    'subscription_type' => 'new',
                 ]);
             flash(trans('messages.AzmakFreeSubscriptionDoneSuccessfully'))->success();
             return redirect()->back();
@@ -45,11 +47,12 @@ class AzmakSubscriptionController extends Controller
             'seller_code' => 'nullable|exists:az_seller_codes,seller_name',
         ]);
         $restaurant = Restaurant::findOrFail($id);
+        $setting = AzmakSetting::first();
         $name = $restaurant->name_en;
-        $token = "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";;
-        $amount = 1000;
+        $token = $setting->online_token;
+        $amount = $setting->subscription_amount;
         $seller_code = null;
-        $tax = Setting::find(1)->tax;
+        $tax = $setting->tax;
         $discount = 0;
         if ($request->seller_code != null) {
             $seller_code = AzSellerCode::where('seller_name', $request->seller_code)
@@ -114,7 +117,6 @@ class AzmakSubscriptionController extends Controller
             AzSubscription::updateOrCreate(
                 ['restaurant_id' => $restaurant->id],
                 [
-                    'status' => 'new',
                     'invoice_id' => $result->Data->InvoiceId,
                     'payment_type' => 'online',
                     'payment' => 'false',
@@ -132,17 +134,33 @@ class AzmakSubscriptionController extends Controller
 
     public function subscription_status(Request $request)
     {
-        $token = "rLtt6JWvbUHDDhsZnfpAhpYk4dxYDQkbcPTyGaKp2TYqQgG7FGZ5Th_WD53Oq8Ebz6A53njUoo1w3pjU1D4vs_ZMqFiz_j0urb_BH9Oq9VZoKFoJEDAbRZepGcQanImyYrry7Kt6MnMdgfG5jn4HngWoRdKduNNyP4kzcp3mRv7x00ahkm9LAK7ZRieg7k1PDAnBIOG3EyVSJ5kK4WLMvYr7sCwHbHcu4A5WwelxYK0GMJy37bNAarSJDFQsJ2ZvJjvMDmfWwDVFEVe_5tOomfVNt6bOg9mexbGjMrnHBnKnZR1vQbBtQieDlQepzTZMuQrSuKn-t5XZM7V6fCW7oP-uXGX-sMOajeX65JOf6XVpk29DP6ro8WTAflCDANC193yof8-f5_EYY-3hXhJj7RBXmizDpneEQDSaSz5sFk0sV5qPcARJ9zGG73vuGFyenjPPmtDtXtpx35A-BVcOSBYVIWe9kndG3nclfefjKEuZ3m4jL9Gg1h2JBvmXSMYiZtp9MR5I6pvbvylU_PP5xJFSjVTIz7IQSjcVGO41npnwIxRXNRxFOdIUHn0tjQ-7LwvEcTXyPsHXcMD8WtgBh-wxR8aKX7WPSsT1O8d8reb2aR7K3rkV3K82K_0OgawImEpwSvp9MNKynEAJQS6ZHe_J_l77652xwPNxMRTMASk1ZsJL";;
+        $setting = AzmakSetting::first();
+        $token = $setting->online_token;
         $PaymentId = $request->query('paymentId');
         $resData = MyFatoorahStatus($token, $PaymentId);
         $result = json_decode($resData);
         if ($result->IsSuccess === true and $result->Data->InvoiceStatus === "Paid") {
             $InvoiceId = $result->Data->InvoiceId;
             $subscription = AzSubscription::whereInvoiceId($InvoiceId)->first();
+            // store operation at history
+            AzHistory::create([
+                'restaurant_id'   => $subscription->restaurant_id,
+                'bank_id'         => $subscription->bank_id,
+                'seller_code_id'  => $subscription->seller_code_id,
+                'paid_amount'     => $subscription->price,
+                'discount'        => $subscription->discount_value,
+                'tax'             => $subscription->tax_value,
+                'transfer_photo'  => $subscription->transfer_photo,
+                'invoice_id'      => $subscription->invoice_id,
+                'payment_type'    => 'online',
+                'subscription_type' => $subscription->status == 'finished' ? 'renew' : 'new',
+                'details'         => $subscription->status == 'finished' ? trans('messages.renew_subscription') : trans('messages.new_subscription'),
+            ]);
             $subscription->update([
                 'status' => 'active',
                 'payment' => 'true',
                 'end_at' => Carbon::now()->addYear(),
+                'subscription_type' => $subscription->status == 'finished' ? 'renew' : 'new',
             ]);
             flash(trans('messages.paymentDoneSuccessfully'))->success();
             return redirect()->route('restaurant.home');
