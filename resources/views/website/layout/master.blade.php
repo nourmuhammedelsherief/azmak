@@ -9,7 +9,7 @@
     </title>
     <!-- //font -->
 
-    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}"  type="image/x-icon">
+    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $restaurant->az_logo)}}"  type="image/x-icon">
 
     <!--=============== SWIPER CSS ===============-->
     <link rel="stylesheet" href="{{asset('site/assets/css/swiper-bundle.min.css')}}"/>
@@ -62,10 +62,7 @@
         </div>
         <!-- end location branch -->
         <p class="description my-3 p-2">
-            نبذة عن المطعم كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.
-            ومن هنا وجب على المصمم أن يضع نصوصا مؤقتة على التصميم ليظهر للعميل
-            الشكل كاملاً،دور مولد النص العربى أن يوفر على المصمم عناء البحث عن نص
-            بديل لا علاقة له بالموضوع
+            {!! app()->getLocale() == 'ar' ? $restaurant->description_ar : $restaurant->description_en !!}
         </p>
         @include('website.accessories.categories')
     </div>

@@ -53,7 +53,7 @@
 <aside class="main-sidebar elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('restaurant.home') }}" class="brand-link">
-        <img src="{{asset('/uploads/restaurants/logo/' . $user->logo)}}" alt="AdminLTE Logo" class="brand-image"
+        <img src="{{asset('/uploads/restaurants/logo/' . $user->az_logo)}}" alt="AdminLTE Logo" class="brand-image"
              style="opacity: .8">
         <span class="brand-text font-weight-light"> @lang('messages.control_panel') </span>
     </a>
@@ -237,8 +237,8 @@
                     </li>
                     <li
                         class="nav-item {{ strpos(URL::current(), '/restaurant/sliders') !== false ? 'active' : '' }}">
-                        <a href="{{ url('/restaurant/sliders') }}?type=home"
-                           class="nav-link {{ (strpos(URL::current(), '/restaurant/sliders') and request('type') == 'home') !== false ? 'active' : '' }}">
+                        <a href="{{ url('/restaurant/sliders') }}"
+                           class="nav-link {{ (strpos(URL::current(), '/restaurant/sliders') ) !== false ? 'active' : '' }}">
                             <i class="fas fa-sliders-h"></i>
                             <p>
                                 @lang('messages.sliders')

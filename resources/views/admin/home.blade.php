@@ -125,6 +125,23 @@
                         </div>
                     </a>
                 </div>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <a href="{{ url('/admin/histories') }}">
+
+                        <div class="small-box ">
+                            <!--bg-blue-->
+                            <div class="inner">
+                                <p>
+                                    @lang('messages.histories')
+                                </p>
+                                <h3>
+                                    {{\App\Models\AzHistory::count() }}
+                                </h3>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             <!-- ./col -->
             </div>
             <!-- /.row -->

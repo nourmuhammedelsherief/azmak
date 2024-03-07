@@ -47,7 +47,6 @@ class HomeController extends Controller
         {
             $branch = AZBranch::whereNameEn($branch)->first();
             $sliders = $restaurant->sliders()
-                ->where('slider_type', 'home')
                 ->whereStop('false')
                 ->get();
             $branches = AZBranch::whereRestaurantId($restaurant->id)->get();

@@ -67,7 +67,7 @@
             class="my_account d-flex flex-column align-items-center px-1 m-3 justify-content-center bg-white"
         >
             <br><br><br>
-            <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}" width="75" height="75" alt="logo" />
+            <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->az_logo)}}" width="75" height="75" alt="logo" />
             <br>
             <form method="post" action="{{route('AZUserProfileUpdate' , [$restaurant->name_barcode , $branch->name_en])}}">
                 @csrf

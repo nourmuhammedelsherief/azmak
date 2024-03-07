@@ -123,6 +123,7 @@ class Restaurant extends Authenticatable
         'a_z_myFatoourah_token',
         'a_z_edfa_merchant',
         'a_z_edfa_password',
+        'az_logo',
     ];
     protected $hidden = [
         'password', 'remember_token',
@@ -219,7 +220,7 @@ class Restaurant extends Authenticatable
     }
     public function sliders()
     {
-        return $this->hasMany(RestaurantSlider::class, 'restaurant_id');
+        return $this->hasMany(AzRestaurantSlider::class, 'restaurant_id');
     }
 
     public function banks()

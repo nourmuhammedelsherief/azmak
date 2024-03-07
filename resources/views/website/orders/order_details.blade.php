@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@lang('messages.order_details')</title>
-    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $order->restaurant->logo)}}"
+    <link type="text/css" rel="icon" href="{{asset('/uploads/restaurants/logo/' . $order->restaurant->az_logo)}}"
           type="image/x-icon">
 
     <!-- //font -->

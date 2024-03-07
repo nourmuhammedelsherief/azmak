@@ -30,7 +30,7 @@
             <div class="offcanvas-body">
                 <div class="container_ifno">
                     <div class="image">
-                        <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}" alt="3azmak_title"/>
+                        <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->az_logo)}}" alt="3azmak_title"/>
                     </div>
                     @if(auth()->guard('web')->check())
                         <h2 class="name">
@@ -106,7 +106,7 @@
             </div>
         </div>
     </div>
-    <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->logo)}}" alt=""/>
+    <img src="{{asset('/uploads/restaurants/logo/' . $restaurant->az_logo)}}" alt=""/>
     <div class="icons">
         @if(app()->getLocale() == 'ar')
             <a href="{{route('language' , 'en')}}">

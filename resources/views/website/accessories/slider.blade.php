@@ -8,8 +8,7 @@
 
             @if($sliders->count() > 0)
                 @php
-                    $FS = \App\Models\RestaurantSlider::whereRestaurantId($restaurant->id)
-                     ->whereSliderType('home')
+                    $FS = \App\Models\AzRestaurantSlider::whereRestaurantId($restaurant->id)
                      ->whereStop('false')
                      ->first();
                 @endphp

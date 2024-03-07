@@ -268,4 +268,5 @@ return [
     'total' => 'Total',
     'details' => 'Details',
     'invoice_id' => 'Invoice Id',
+    'error_slider_count' => 'Slider Count At Least Must Be 1',
 ];

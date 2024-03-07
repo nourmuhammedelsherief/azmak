@@ -4,7 +4,7 @@ namespace App\Http\Controllers\RestaurantController;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
-use App\Models\RestaurantSlider;
+use App\Models\AzRestaurantSlider;
 use App\Models\TemporaryFile;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,16 +21,8 @@ class SliderController extends Controller
     public function index(Request $request)
     {
         $restaurant = auth('restaurant')->user();
-        if ($restaurant->type == 'employee'):
-            if (check_restaurant_permission($restaurant->id , 5) == false):
-                abort(404);
-            endif;
-            $restaurant = Restaurant::find($restaurant->restaurant_id);
-        endif;
-        $type = in_array($request->type , ['home' , 'contact_us' , 'contact_us_client']) ? $request->type : 'home';
-        $sliders  = RestaurantSlider::whereRestaurant_id($restaurant->id)
+        $sliders  = AzRestaurantSlider::whereRestaurant_id($restaurant->id)
             ->orderBy('id' , 'desc')
-            ->where('slider_type' , $type)
             ->paginate(100);
         return view('restaurant.sliders.index' , compact('sliders' , 'restaurant'));
     }
@@ -63,12 +55,6 @@ class SliderController extends Controller
     public function store(Request $request)
     {
         $restaurant = auth('restaurant')->user();
-        if ($restaurant->type == 'employee'):
-            if (check_restaurant_permission($restaurant->id , 5) == false):
-                abort(404);
-            endif;
-            $restaurant = Restaurant::find($restaurant->restaurant_id);
-        endif;
         $data = $request->validate( [
             'type' => 'required|in:image,youtube,local_video,gif' ,
             'youtube' => 'nullable|required_if:type,youtube|min:1' ,
@@ -76,7 +62,6 @@ class SliderController extends Controller
             'video_path' => 'required_if:type,local_video|nullable|min:10' ,
             'description_en'  => 'nullable|min:1' ,
             'description_ar'  => 'nullable|min:1' ,
-            'slider_type' => 'required|in:contact_us,home,contact_us_client'
         ]);
 
         $image = ($request->hasFile('photo') and $request->type == 'image') ? UploadImage($request->file('photo')  , 'photo' , '/uploads/sliders') : null;
@@ -94,17 +79,16 @@ class SliderController extends Controller
             $temp->delete();
         endif;
         // create new slider
-        $item = RestaurantSlider::create([
+        $item = AzRestaurantSlider::create([
             'restaurant_id'  => $restaurant->id,
             'photo'  => $image  ,
             'type' => $request->type ,
             'youtube' => $request->youtube ,
             'description_ar' => $request->description_ar ,
             'description_en' => $request->description_en ,
-            'slider_type' => $request->slider_type ,
         ]);
         flash(trans('messages.created'))->success();
-        return redirect(route('sliders.index') . '?type=' . $item->slider_type);
+        return redirect(route('sliders.index'));
     }
 
 
@@ -119,7 +103,7 @@ class SliderController extends Controller
                 'video' => 'required|mimes:gif' ,
             ]);
         }
-        if(!empty($request->id) and !$slider = RestaurantSlider::find($request->id)):
+        if(!empty($request->id) and !$slider = AzRestaurantSlider::find($request->id)):
             return trans('dashboard.errors.slider_not_found');
         endif;
 
@@ -173,7 +157,7 @@ class SliderController extends Controller
      */
     public function edit($id)
     {
-        $slider = RestaurantSlider::findOrFail($id);
+        $slider = AzRestaurantSlider::findOrFail($id);
         return view('restaurant.sliders.edit' , compact('slider'));
     }
 
@@ -186,7 +170,7 @@ class SliderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $slider = RestaurantSlider::findOrFail($id);
+        $slider = AzRestaurantSlider::findOrFail($id);
 
         $data = $request->validate( [
             'type' => 'required|in:image,youtube,local_video,gif' ,
@@ -213,7 +197,7 @@ class SliderController extends Controller
             'description_en' => $request->description_en ,
         ]);
         flash(trans('messages.updated'))->success();
-        return redirect(route('sliders.index') . '?type=' . $slider->slider_type);
+        return redirect(route('sliders.index'));
     }
 
     /**
@@ -224,9 +208,9 @@ class SliderController extends Controller
      */
     public function destroy($id)
     {
-        $slider = RestaurantSlider::findOrFail($id);
+        $slider = AzRestaurantSlider::findOrFail($id);
 
-        if(RestaurantSlider::where('restaurant_id' , $slider->restaurant_id)->count() <= 1):
+        if(AzRestaurantSlider::where('restaurant_id' , $slider->restaurant_id)->count() <= 1):
             flash(trans('messages.error_slider_count'))->error();
             return redirect(route('sliders.index') . '?type=' . $slider->slider_type);
         endif;
@@ -236,15 +220,15 @@ class SliderController extends Controller
         }
         $slider->delete();
         flash(trans('messages.deleted'))->success();
-        return redirect(route('sliders.index') . '?type=' . $slider->slider_type);
+        return redirect(route('sliders.index'));
     }
     public function stopSlider($id, $status)
     {
-        $slider = RestaurantSlider::findOrFail($id);
+        $slider = AzRestaurantSlider::findOrFail($id);
         $slider->update([
             'stop' => $status,
         ]);
         flash(trans('messages.updated'))->success();
-        return redirect(route('sliders.index') . '?type=' . $slider->slider_type);
+        return redirect(route('sliders.index'));
     }
 }

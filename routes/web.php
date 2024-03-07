@@ -192,8 +192,6 @@ Route::prefix('restaurant')->group(function () {
     Route::post('password/reset', [ResResetPassword::class, 'reset'])->name('restaurant.password.update');
     Route::post('logout', [ResLogin::class, 'logout'])->name('restaurant.logout');
 
-    Route::post('{id}/rate_us', [FeedbackController::class, 'rateUs'])->name('restaurant.rateUs');
-    Route::post('not_allowed_ads', [AdsController::class, 'notWatchAgain'])->name('ads.not_allowed');
     Route::group(['middleware' => 'auth:restaurant'], function () {
         Route::get('/home', [ResHome::class, 'index'])->name('restaurant.home');
         Route::get('/AzmakSubscription/{id}', [AzmakSubscriptionController::class, 'show_subscription'])->name('AzmakSubscription');
@@ -208,6 +206,7 @@ Route::prefix('restaurant')->group(function () {
             Route::get('/pdf-barcode', 'barcodePDF')->name('RestaurantBarcodePDF');
             Route::get('/urgent-barcode', 'urgentBarcode')->name('RestauranturgentBarcode');
             Route::post('/profileEdit/{id?}', 'my_profile_edit')->name('RestaurantUpdateProfile');
+            Route::post('/RestaurantUpdateLogo', 'update_logo')->name('RestaurantUpdateLogo');
             Route::post('/updateBarcode/{id?}', 'updateBarcode')->name('RestaurantUpdateBarcode');
             // restaurant colors
         });
@@ -232,32 +231,6 @@ Route::prefix('restaurant')->group(function () {
         Route::get('/print_invoice/{id}', [BranchController::class, 'print_invoice'])->name('print_invoice');
 
         Route::group(['middleware' => 'auth:restaurant'], function () {
-            // Table Routes
-            Route::resource('/tables', TableController::class, []);
-            Route::get('/service_tables/create/{id}', [TableController::class, 'create_service_table'])->name('createServiceTable');
-            Route::get('/foodics/tables/{id}',  [TableController::class, 'foodics_tables'])->name('FoodicsOrderTable');
-            // Foodics table order
-            Route::get('/foodics/orders',  [TableController::class, 'tableOrder'])->name('FoodicsTableOrder');
-            Route::get('/foodics/foodics-info',  [TableController::class, 'getFoodicsDetails'])->name('FoodicsTableInfo');
-            Route::get('/foodics/create-foodics-order',  [TableController::class, 'createFoodicsOrder'])->name('CreateFoodicsOrder');
-            Route::get('/order/details',  [TableController::class, 'orderDetails'])->name('orderDetails');
-            Route::get('/tables/delete/{id}', [TableController::class, 'destroy']);
-            Route::get('/tables/barcode/{id}/show', [TableController::class, 'show_barcode'])->name('showTableBarcode');
-            Route::get('/whatsApp/tables/{id}',  [TableController::class, 'service_tables'])->name('WhatsAppTable');
-            Route::get('/easymenu/tables/{id}',  [TableController::class, 'service_tables'])->name('EasyMenuTable');
-
-
-            // Foodics Order
-            Route::get('/foodics-orders',  [RestaurantControllerOrderController::class, 'foodicsOrder'])->name('FoodicsOrder');
-            Route::get('/foodics-orders/foodics-info',  [RestaurantControllerOrderController::class, 'getFoodicsDetails'])->name('FoodicsOrderInfo');
-            Route::get('/foodics-orders/create-foodics-order',  [RestaurantControllerOrderController::class, 'createFoodicsOrder'])->name('CreateFoodicsOrder');
-            Route::get('foodics-orders/order/details',  [RestaurantControllerOrderController::class, 'orderDetails'])->name('foodicsOrderDetails');
-
-            // Restaurant Employee Routes
-            Route::resource('/restaurant_employees', RestaurantEmployeeController::class, []);
-            Route::get('/restaurant_employees/delete/{id}', [RestaurantEmployeeController::class, 'destroy']);
-
-
             // MenuCategory Routes
             Route::resource('/menu_categories', MenuCategoryController::class, []);
             Route::get('/branch/menu_categories/{id}', [MenuCategoryController::class, 'branch_categories'])->name('BranchMenuCategory');

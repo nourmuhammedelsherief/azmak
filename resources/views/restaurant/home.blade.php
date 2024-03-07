@@ -4,6 +4,13 @@
     @lang('messages.control_panel')
 @endsection
 
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/select2-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('admin/css/bootstrap-fileinput.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.css') }}">
+@endsection
+
 @section('content')
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -12,14 +19,6 @@
                 <div class="col-sm-6">
                     <h1 class="m-0 text-dark">{{trans('messages.control_panel')}}</h1>
                 </div><!-- /.col -->
-                <!--<div class="col-sm-6">-->
-                <!--    <ol class="breadcrumb float-sm-right">-->
-
-                <!--        <li class="breadcrumb-item active">-->
-            <!--            {{trans('messages.control_panel')}}-->
-                <!--        </li>-->
-                <!--    </ol>-->
-                <!--</div><!- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
@@ -29,7 +28,7 @@
         $user = Auth::guard('restaurant')->user();
         $subscription = App\Models\AzSubscription::whereRestaurantId($user->id)->first();
     @endphp
-    @if(auth('restaurant')->check() and $user->type == 'restaurant')
+    @if(auth('restaurant')->check())
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -90,11 +89,55 @@
                 @endif
             </div><!-- /.container-fluid -->
         </section>
+        <div class="col-sm-6">
+            <form action="{{ route('RestaurantUpdateLogo') }}" class="form-horizontal"
+                  method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group type_image ">
+                    <label class="control-label col-md-3"> @lang('messages.photo') </label>
+                    <div class="col-md-9">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <div class="fileinput-preview thumbnail" data-trigger="fileinput"
+                                 style="width: 200px; height: 150px; border: 1px solid black;">
+                                @if ($user->az_logo != null)
+                                    <img src="{{ asset('/uploads/restaurants/logo/' . $user->az_logo) }}">
+                                @endif
+                            </div>
+                            <div>
+                                <span class="btn red btn-outline btn-file">
+                                    <span class="fileinput-new btn btn-info"> @lang('messages.choose_photo') </span>
+                                    <span class="fileinput-exists btn btn-primary"> @lang('messages.change')
+                                    </span>
+                                    <input type="file" name="logo">
+                                </span>
+                                <a href="javascript:;" class="btn btn-danger fileinput-exists"
+                                   data-dismiss="fileinput">
+                                    @lang('messages.remove')
+                                </a>
+                            </div>
+                        </div>
+                        @if ($errors->has('logo'))
+                            <span class="help-block">
+                                <strong style="color: red;">{{ $errors->first('logo') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-danger">@lang('messages.save')</button>
+                    </div>
+                </div>
+            </form>
+        </div>
         <!-- /.content -->
-    @else
-        <h1>
-            @lang('messages.welcome')
-            {{$user->name_ar}}
-        </h1>
     @endif
 @endsection
+@section('scripts')
+    <script src="{{ URL::asset('admin/js/select2.full.min.js') }}"></script>
+    <script src="{{ URL::asset('admin/js/components-select2.min.js') }}"></script>
+    <script src="{{ URL::asset('admin/js/bootstrap-fileinput.js') }}"></script>
+@endsection
+
