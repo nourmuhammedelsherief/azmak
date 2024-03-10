@@ -137,7 +137,7 @@ class OrderController extends Controller
             if ($check == true) {
                 $phone = '+966' . ltrim($order->person_phone, '0');
             } else {
-                $phone = '+2' . $order->person_phone;
+                $phone = '002' . $order->person_phone;
             }
 
             $url = 'https://api.whatsapp.com/send?phone=' . $phone . '&text='.$content;
