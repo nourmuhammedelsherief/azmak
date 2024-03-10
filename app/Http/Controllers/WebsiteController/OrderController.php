@@ -139,7 +139,6 @@ class OrderController extends Controller
             } else {
                 $phone = '+2' . $order->person_phone;
             }
-
             $url = 'https://api.whatsapp.com/send?phone=' . $phone . '&text='.$content;
             return redirect()->to($url);
         } else {
@@ -159,8 +158,13 @@ class OrderController extends Controller
         $content.= trans('messages.order_details'). '%0a %0a';
         $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
         $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
-
-        $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
+        $check = substr($order->person_phone, 0, 2) === '05';
+        if ($check == true) {
+            $phone = '+966' . ltrim($order->person_phone, '0');
+        } else {
+            $phone = '+2' . $order->person_phone;
+        }
+        $url = 'https://api.whatsapp.com/send?phone=' . $phone . '&text='.$content;
         return redirect()->to($url);
 //        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
 //        return redirect()->route('AZOrderBarcode' ,$order->id);
@@ -177,8 +181,13 @@ class OrderController extends Controller
         $content.= trans('messages.order_details'). '%0a %0a';
         $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
         $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
-
-        $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
+        $check = substr($order->person_phone, 0, 2) === '05';
+        if ($check == true) {
+            $phone = '+966' . ltrim($order->person_phone, '0');
+        } else {
+            $phone = '+2' . $order->person_phone;
+        }
+        $url = 'https://api.whatsapp.com/send?phone=' . $phone . '&text='.$content;
         return redirect()->to($url);
 //        Toastr::success(trans('messages.paymentSuccess'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
 //        return redirect()->route('AZOrderBarcode' ,$order->id);
