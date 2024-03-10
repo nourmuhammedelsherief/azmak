@@ -157,7 +157,6 @@
         <!--    <p>-->
         <!--        <a href="https://easymenu.site/restaurants/easyMenuu">-->
         <!--            <img src="https://web.easymenu.site/wp-content/themes/tqnee/img/qr.png" data-src="https://web.easymenu.site/wp-content/themes/tqnee/img/qr.png" class="download lazy loaded" data-was-processed="true">-->
-        <!--        </a>-->
         <!--        <span>-->
         <!--            {{ trans('messages.qr_code_try') }}-->
         <!--        </span>-->

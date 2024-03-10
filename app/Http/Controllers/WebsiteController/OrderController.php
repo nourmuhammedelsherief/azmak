@@ -193,3 +193,4 @@ class OrderController extends Controller
 //        return redirect()->route('AZOrderBarcode' ,$order->id);
     }
 }
+// test
