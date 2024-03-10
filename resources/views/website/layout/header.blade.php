@@ -45,6 +45,12 @@
                         </button>
                     @endif
                     <ul class="p-0">
+                        <li class="my-2">
+                            <a href="{{route('homeBranchIndex' , [$restaurant->name_barcode , $branch->name_en])}}">
+                                <i class="fa fa-home mx-1"></i>
+                                @lang('messages.home')
+                            </a>
+                        </li>
                         <hr/>
                         @if(auth()->guard('web')->check())
                             <li class="my-2">
@@ -54,7 +60,6 @@
                                 </a>
                             </li>
                             <hr/>
-
                     @endif
                     <!-- <li class="my-2">
                           <i class="fa-solid fa-gear mx-2"></i> الإعدادت
@@ -90,7 +95,8 @@
                             <i class="fas fa-key"></i>
                             @lang('messages.logout')
                         </a>
-                        <form style="display: none;" id="logout_form" action="{{ route('azUser.logout') }}"
+                        <form style="display: none;" id="logout_form"
+                              action="{{ route('azUser.logout' , [$restaurant->name_barcode , $branch->name_en]) }}"
                               method="post">
                             {!! csrf_field() !!}
                         </form>

@@ -133,6 +133,13 @@ class OrderController extends Controller
             $content.= route('AZOrderBarcode' , $order->id). '%0a %0a';
             $content.= trans('messages.order_code') . ' ' . $order->order_code. '%0a %0a';
 
+            $check = substr($order->person_phone, 0, 2) === '05';
+            if ($check == true) {
+                $phone = '+966' . ltrim($order->person_phone, '0');
+            } else {
+                $phone = '+2' . $order->person_phone;
+            }
+
             $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
             return redirect()->to($url);
         } else {

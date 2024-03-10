@@ -87,7 +87,7 @@
 
     <!-- Brand Logo -->
     <a href="{{ url('/admin/home') }}" class="brand-link">
-        <img src="{{ asset('/uploads/img/logo.png') }}" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
+        <img src="{{ asset('/3azmkheader.jpg') }}" alt="AdminLTE Logo" class="brand-image" style="opacity: .8">
         <span class="brand-text">@lang('messages.control_panel')</span>
     </a>
 

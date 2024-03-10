@@ -135,9 +135,11 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request , $res = null , $branch = null)
     {
+        $restaurant = Restaurant::whereNameBarcode($res)->firstOrFail();
+        $branch = AZBranch::whereNameEn($branch)->first();
         auth()->guard('web')->logout();
-        return redirect()->back();
+        return redirect()->route('homeBranchIndex', [$restaurant->name_barcode, $branch->name_en]);
     }
 }

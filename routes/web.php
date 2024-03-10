@@ -133,7 +133,7 @@ Route::controller(CartController::class)->group(function () {
 
 Route::group(['middleware' => 'auth:web'], function () {
     Route::controller(UserController::class)->group(function () {
-        Route::post('logout', 'logout')->name('azUser.logout');
+        Route::post('logout/{res?}/{branch?}', 'logout')->name('azUser.logout');
         Route::get('user/restaurants/{res}/profile/{branch?}' ,'profile')->name('AZUserProfile');
         Route::post('user/restaurants/{res}/profile/{branch?}' , 'edit_profile')->name('AZUserProfileUpdate');
     });

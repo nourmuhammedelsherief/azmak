@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@lang('messages.control_panel') | @lang('messages.login')</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cairo:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cairo:300,400,400i,700&display=fallback">
 
     <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
 
@@ -83,7 +83,7 @@
         <!--<a href="{{route('admin.login')}}">@lang('messages.login')</a>-->
         <div class="wrapper-login">
           <div class="image-login">
-              <img src="{{ asset('/uploads/img/logo.png') }}" alt="AdminLTE Logo"
+              <img src="{{ asset('/3azmkheader.jpg') }}" alt="AdminLTE Logo"
              style="opacity: .8">
              <span> Easy Menu</span>
           </div>
