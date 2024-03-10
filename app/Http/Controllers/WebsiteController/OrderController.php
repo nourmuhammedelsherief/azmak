@@ -140,7 +140,7 @@ class OrderController extends Controller
                 $phone = '+2' . $order->person_phone;
             }
 
-            $url = 'https://api.whatsapp.com/send?phone=' . $order->person_phone . '&text='.$content;
+            $url = 'https://api.whatsapp.com/send?phone=' . $phone . '&text='.$content;
             return redirect()->to($url);
         } else {
             Toastr::warning(trans('messages.paymentError'), trans('messages.cart'), ["positionClass" => "toast-top-right"]);
